@@ -1,0 +1,33 @@
+{
+  "name": "bib-web-fe",
+  "version": "0.1.0",
+  "scripts": {
+    "dev": "vite",
+    "build": "vuedx-typecheck . && vite build"
+  },
+  "dependencies": {
+    "@vueuse/core": "^4.0.8",
+    "ant-design-vue": "^2.0.0-rc.8",
+    "axios": "^0.21.1",
+    "underscore": "^1.12.0",
+    "vue": "^3.0.5",
+    "vue-router": "^4.0.3",
+    "vuex": "^4.0.0-rc.2"
+  },
+  "devDependencies": {
+    "@types/node": "^14.14.21",
+    "@types/underscore": "^1.10.24",
+    "@vitejs/plugin-vue": "^1.0.4",
+    "@vue/compiler-sfc": "^3.0.5",
+    "@vuedx/typecheck": "^0.4.1",
+    "@vuedx/typescript-plugin-vue": "^0.4.1",
+    "eslint": "^6.7.2",
+    "eslint-plugin-prettier": "^3.1.3",
+    "eslint-plugin-vue": "^7.0.0-0",
+    "less": "^3.0.4",
+    "less-loader": "^6.0.0",
+    "prettier": "^1.19.1",
+    "typescript": "^4.1.3",
+    "vite": "^2.0.0-beta.12"
+  }
+}

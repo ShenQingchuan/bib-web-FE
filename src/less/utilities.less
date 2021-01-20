@@ -1,0 +1,13 @@
+@fontWeightPoints: 300, 400, 500, 700, 900;
+.for(@data, @i: 1) when(@i =< length(@data)) {
+  @item: extract(@data, @i);
+  .fw-@{item} {
+    font-weight: @item;
+  }
+  .for(@data, (@i + 1));
+}
+.for(@fontWeightPoints);
+
+.text-center {
+  text-align: center;
+}

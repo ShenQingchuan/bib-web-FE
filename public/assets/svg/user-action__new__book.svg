@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 15 16" id="new_book">
+  <g fill-rule="nonzero" fill="none">
+    <rect fill="#93C3FF" x=".615" width="14.154" height="16" rx="1.075"></rect>
+    <path fill="#6CA4EA" d="M10.462 0h1.846v16h-1.846z"></path>
+    <rect fill="#6CA4EA" y="2.462" width="1.846" height="1.231" rx=".307"></rect>
+    <rect fill="#6CA4EA" y="7.385" width="1.846" height="1.231" rx=".307"></rect>
+    <rect fill="#6CA4EA" y="12.308" width="1.846" height="1.231" rx=".307"></rect>
+  </g>
+</svg>

@@ -3,7 +3,7 @@ import App from "./App.vue";
 import router from "./router";
 import store from "./store";
 import "./less/global.less";
-import "ant-design-vue/dist/antd.css";
+import "ant-design-vue/dist/antd.less";
 
 import {
   Space,
@@ -21,6 +21,7 @@ import {
   Tooltip,
   Radio,
   Switch,
+  Layout,
 } from "ant-design-vue";
 
 createApp(App)
@@ -42,4 +43,5 @@ createApp(App)
   .use(Tooltip)
   .use(Radio)
   .use(Switch)
+  .use(Layout)
   .mount("#app");

@@ -11,13 +11,12 @@ function pathResolve(dir: string) {
  */
 export default defineConfig({
   plugins: [vue()],
-  alias: {
-    "/@/": pathResolve("src"),
-  },
+  alias: {},
   optimizeDeps: {
     include: [
       "@ant-design/icons-vue",
       "ant-design-vue",
+      "ant-design-vue/lib/form/Form",
       "underscore",
       "@vueuse/core",
       "vuex",
@@ -27,12 +26,12 @@ export default defineConfig({
   },
   css: {
     preprocessorOptions: {
-      javascriptEnabled: true,
       less: {
         modifyVars: {
           "primary-color": "#1353c1",
           "link-color": "#1453c1",
         },
+        javascriptEnabled: true,
       },
     },
   },

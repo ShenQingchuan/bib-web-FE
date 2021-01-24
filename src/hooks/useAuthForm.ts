@@ -8,7 +8,7 @@ import { ValidationRule } from "ant-design-vue/lib/form/Form";
 import { Form, message } from "ant-design-vue";
 import * as _ from "underscore";
 import fusions from "../fusions";
-import { useRouter } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 import { tokenStorageRef } from "../utils/user-token-validation";
 import router from "../router";
 
@@ -20,6 +20,9 @@ export enum LoginRegisterFormError {
   PASSWORD_FORMAT_INVALID = "密码格式不正确！",
   PASSWORD_NOTSAME = "两次密码输入不一致！",
   FORM_VALIDATE_FAILED = "表单有字段填写错误！",
+  LOGIN_REQUEST_FAILED = "登录请求失败！",
+  REGISTER_REQUEST_FAILED = "注册请求失败！",
+  VCODE_FORMAT_INVALID = "验证码应为 6 位数字！",
 }
 /** 表单类型 */
 export enum LoginFormType {
@@ -34,12 +37,17 @@ export interface LoginFormData {
 }
 
 export function useLoginForm() {
+  const route = useRoute();
+
   // @States:
   const loginForm = reactive({
-    userName: "",
-    userEmail: "",
+    userName: route.query.userName || "",
+    userEmail: route.query.userEmail || "",
     password: "",
-    formType: LoginFormType.NAME_FORM,
+    formType:
+      route.query.type === "email"
+        ? LoginFormType.EMAIL_FORM
+        : LoginFormType.NAME_FORM,
     rememberMe: false,
   });
   const loginFormTRef = ref<InstanceType<typeof Form> | null>(null);
@@ -149,7 +157,7 @@ export function useLoginForm() {
           }
         })
         .catch(() => {
-          message.error(LoginRegisterFormError.FORM_VALIDATE_FAILED, 1);
+          message.error(LoginRegisterFormError.LOGIN_REQUEST_FAILED, 1);
         });
     },
     2000,
@@ -256,7 +264,7 @@ export function useRegisterForm() {
           }
         })
         .catch(() => {
-          message.error(LoginRegisterFormError.FORM_VALIDATE_FAILED, 1);
+          message.error(LoginRegisterFormError.REGISTER_REQUEST_FAILED, 1);
         });
     },
     2000,

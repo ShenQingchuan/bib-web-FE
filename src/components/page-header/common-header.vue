@@ -146,14 +146,15 @@ export default {
 .component-page-header__container {
   width: 100%;
   height: 69px;
-  box-shadow: 0 5px 5px rgba(210, 210, 210, 0.15);
+  border-bottom: 1px solid #dee0e3;
+  z-index: 2;
   background-color: #fff;
 
   .component-page-header__inner {
     padding-left: 16px;
     padding-right: 16px;
-    margin-left: auto;
-    margin-right: auto;
+    margin: 0 auto;
+    width: 96%;
     height: 100%;
 
     &-logo {
@@ -195,6 +196,8 @@ export default {
       }
     }
     &-user-actions {
+      margin-left: auto;
+
       &-item {
         cursor: pointer;
         font-size: 17px;

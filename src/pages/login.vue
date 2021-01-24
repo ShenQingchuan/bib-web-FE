@@ -66,7 +66,7 @@
     <template #footer>
       <div class="flex-row vc page-login__footer-actions">
         <a
-          href="/password-reset"
+          href="/password-retrieve"
           class="page-login-register__footer-actions-item"
           >找回密码</a
         >
@@ -98,7 +98,7 @@
 import {
   MailOutlined,
   LockOutlined,
-  UserOutlined
+  UserOutlined,
 } from "@ant-design/icons-vue";
 import { useLoginForm, LoginFormType } from "../hooks/useAuthForm";
 import CenterCardLayout from "../components/layouts/center-card-layout.vue";
@@ -109,14 +109,14 @@ export default {
     CenterCardLayout,
     LockOutlined,
     MailOutlined,
-    UserOutlined
+    UserOutlined,
   },
   setup() {
     return {
       ...useLoginForm(),
-      LoginFormType
+      LoginFormType,
     };
-  }
+  },
 };
 </script>
 

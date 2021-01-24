@@ -66,13 +66,13 @@ import {
   reactive,
   ref
 } from "vue";
-import useCanvasOnDraw from "../hooks/useCanvasOnDraw";
+import useCanvasOnDraw from "../../hooks/useCanvasOnDraw";
 import useRandomImage, {
   calculate,
   createRandomRange,
   square
-} from "../hooks/useRandomImage";
-import useMouseEvent from "../hooks/useMouseEvent";
+} from "../../hooks/useRandomImage";
+import useMouseEvent from "../../hooks/useMouseEvent";
 import {
   ReloadOutlined,
   CheckOutlined,

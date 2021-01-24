@@ -798,10 +798,10 @@ errno@^0.1.1:
   dependencies:
     prr "~1.0.1"
 
-esbuild@^0.8.26:
-  version "0.8.32"
-  resolved "https://registry.npmjs.org/esbuild/-/esbuild-0.8.32.tgz#d3d679ea417925f7afaab37555e52070df317355"
-  integrity sha512-5IzQapMW/wFy5oxziHCJzawk26K3xeyrIAQPnPN3c0Q84hqRw6IfGDGfGWOdJNw5tAx77yvwqZ4r1QMpo6emJA==
+esbuild@^0.8.34:
+  version "0.8.34"
+  resolved "https://registry.npmjs.org/esbuild/-/esbuild-0.8.34.tgz#16b4ac58f74c821d2c5a8c2f0585ca96a38ab4e6"
+  integrity sha512-tnr0V1ooakYr1aRLXQLzCn2GVG1kBTW3FWpRyC+NgrR3ntsouVpJOlTOV0BS4YLATx3/c+x3h/uBq9lWJlUAtQ==
 
 escalade@^3.1.1:
   version "3.1.1"
@@ -2051,12 +2051,12 @@ v8-compile-cache@^2.0.3:
   resolved "https://registry.npmjs.org/v8-compile-cache/-/v8-compile-cache-2.2.0.tgz#9471efa3ef9128d2f7c6a7ca39c4dd6b5055b132"
   integrity sha512-gTpR5XQNKFwOd4clxfnhaqvfqMpqEwr4tOtCyz4MtYZX2JYhfr1JvBFKdS+7K/9rfpZR3VLX+YWBbKoxCgS43Q==
 
-vite@^2.0.0-beta.12:
-  version "2.0.0-beta.30"
-  resolved "https://registry.npmjs.org/vite/-/vite-2.0.0-beta.30.tgz#d0c1056d1fb05c489614360f92363eebec41a6b4"
-  integrity sha512-wOeO64J3k4jGjCOkH/6RUcIyT/HOTaDZSiXE75aWYqV9hI7Q6uEeSXbAFtb9bG82RGLEWdsqtCvx5t7gaeqtsw==
+vite@^2.0.0-beta45:
+  version "2.0.0-beta.45"
+  resolved "https://registry.npmjs.org/vite/-/vite-2.0.0-beta.45.tgz#84ce956d8c30065337d155cefc80401f79a51be8"
+  integrity sha512-iBfsFrDQ/tVU0p+Z7iecl/6dShqrNaKCA3bm5mz/AAIQUtXS/HQfiKXkKpRo66Z6lKLHS09J2/pKZZVmMs+FSg==
   dependencies:
-    esbuild "^0.8.26"
+    esbuild "^0.8.34"
     postcss "^8.2.1"
     resolve "^1.19.0"
     rollup "^2.35.1"

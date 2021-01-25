@@ -1,6 +1,6 @@
 <template>
   <a-menu class="component-user-action__avatar-overlay-menu">
-    <a-menu-item @click="$router.push('/user-center')">
+    <a-menu-item @click="$router.push(`/user/${userName}`)">
       <UserOutlined />
       个人中心
     </a-menu-item>
@@ -25,8 +25,9 @@ import {
   UserOutlined,
   SettingOutlined,
   LogoutOutlined,
-  ReadOutlined
+  ReadOutlined,
 } from "@ant-design/icons-vue";
+import { usePayloadFromToken } from "../../utils/user-token-validation";
 import { runLogout } from "../../hooks/useAuthForm";
 
 export default {
@@ -35,13 +36,16 @@ export default {
     UserOutlined,
     SettingOutlined,
     LogoutOutlined,
-    ReadOutlined
+    ReadOutlined,
   },
   setup() {
+    const { userName } = usePayloadFromToken();
+
     return {
-      runLogout
+      userName,
+      runLogout,
     };
-  }
+  },
 };
 </script>
 

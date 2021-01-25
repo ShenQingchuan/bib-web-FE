@@ -19,6 +19,11 @@ export function isBibUserTokenValid() {
 export function usePayloadFromToken() {
   if (tokenStorageRef.value && isBibUserTokenValid()) {
     const { exp, uid, sub } = decode(tokenStorageRef.value) as BibTokenPayload;
-    return { exp: exp * 1000, uid, sub };
-  }
+    return { expiredAt: exp * 1000, userId: uid, userName: sub };
+  } else
+    return {} as {
+      expiredAt: number;
+      userId: number;
+      userName: string;
+    };
 }

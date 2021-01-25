@@ -61,6 +61,12 @@ const routes: Array<RouteRecordRaw> = [
     () => import("./pages/password-retrieve.vue"),
     "找回密码"
   ),
+  createRoute(
+    "/user/:userName",
+    () => import("./pages/user-center.vue"),
+    "个人中心"
+  ),
+
   createRoute("/not-found", () => import("./pages/not-found.vue"), "404"),
   { path: "/:pathMatch(.*)*", redirect: "/not-found" },
 ];

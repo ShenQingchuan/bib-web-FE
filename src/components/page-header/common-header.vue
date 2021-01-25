@@ -3,16 +3,13 @@
     <div
       class="flex-row anis-center component-page-header__inner"
       :class="{
-        'jyct-btwn': !userLogined
+        'jyct-btwn': !userLogined,
       }"
     >
       <!-- Header Logo -->
       <div class="flex-row anis-center component-page-header__inner-logo">
         <a href="/">
-          <img
-            src="/assets/img/Icon-png-logo.png"
-            alt="header-logo"
-            height="48"
+          <img src="/assets/img/Icon-png-logo.png" alt="header-logo" height="48"
         /></a>
       </div>
       <!-- 搜索框 -->
@@ -31,7 +28,7 @@
           <li
             class="component-page-header__inner-nav-menu-item"
             :class="{
-              __active: item.href === $route.path
+              __active: item.href === $route.path,
             }"
           >
             <a :href="item.href">{{ item.name }}</a>
@@ -77,7 +74,7 @@
         <a-popover :title="userName">
           <a-avatar
             class="component-page-header__inner-user-actions-avatar"
-            src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"
+            src="/assets/svg/user-avatar__default.jpg"
           ></a-avatar>
           <template #content>
             <user-action-avatar-overlay />
@@ -103,7 +100,7 @@
 import {
   SearchOutlined,
   ClockCircleOutlined,
-  BellOutlined
+  BellOutlined,
 } from "@ant-design/icons-vue";
 import { isBibUserTokenValid } from "../../utils/user-token-validation";
 import { usePayloadFromToken } from "../../utils/user-token-validation";
@@ -119,26 +116,26 @@ export default {
     userActionAvatarOverlay,
     SearchOutlined,
     ClockCircleOutlined,
-    BellOutlined
+    BellOutlined,
   },
   props: {
-    consice: Boolean
+    consice: Boolean,
   },
   setup() {
     const userLogined = isBibUserTokenValid();
-    const tokenPayload = usePayloadFromToken();
+    const { userName } = usePayloadFromToken();
 
     return {
       navs: [
         { name: "工作台", href: "/dashboard" },
         { name: "发现", href: "/expolore" },
         { name: "反馈", href: "/feedback" },
-        { name: "开源", href: "/opensource" }
+        { name: "开源", href: "/opensource" },
       ],
-      userName: tokenPayload ? tokenPayload.sub : "",
-      userLogined
+      userName,
+      userLogined,
     };
-  }
+  },
 };
 </script>
 

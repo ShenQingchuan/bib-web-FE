@@ -2,8 +2,8 @@ import { createApp } from "vue";
 import App from "./App.vue";
 import router from "./router";
 import store from "./store";
-import "./less/global.less";
 import "ant-design-vue/dist/antd.less";
+import "./less/global.less";
 
 import {
   Space,
@@ -22,6 +22,8 @@ import {
   Radio,
   Switch,
   Layout,
+  Row,
+  Col,
 } from "ant-design-vue";
 
 createApp(App)
@@ -42,6 +44,8 @@ createApp(App)
   .use(Form)
   .use(Tooltip)
   .use(Radio)
+  .use(Row)
+  .use(Col)
   .use(Switch)
   .use(Layout)
   .mount("#app");

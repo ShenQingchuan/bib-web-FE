@@ -1,8 +1,10 @@
 import { computed, reactive, ref } from "vue";
 import {
   EMAIL_REGEXP,
+  MOBILE_PHONE_REGEXP,
   PASSWORD_REGEXP,
   USERNAME_REGEXP,
+  VCODE_REGEXP,
 } from "../utils/commonly-used-regexp";
 import { ValidationRule } from "ant-design-vue/lib/form/Form";
 import { Form, message } from "ant-design-vue";
@@ -18,6 +20,8 @@ export enum LoginRegisterFormError {
   USEREMAIL_NOTFOUND = "该邮箱未注册！",
   USERNAME_FORMAT_INVALID = "用户名格式不正确！",
   PASSWORD_FORMAT_INVALID = "密码格式不正确！",
+  PHONE_FORMAT_INVALID = "手机号码格式不正确！",
+  PHONE_VERIFY_FORMAT_INVALID = "短信验证码格式不正确！",
   PASSWORD_NOTSAME = "两次密码输入不一致！",
   FORM_VALIDATE_FAILED = "表单有字段填写错误！",
   LOGIN_REQUEST_FAILED = "登录请求失败！",
@@ -35,6 +39,13 @@ export interface LoginFormData {
   password: string;
   formType: LoginFormType;
 }
+
+const authFormMessageKey = "auth";
+const $content = (content: string) => ({
+  content,
+  key: authFormMessageKey,
+  duration: 1,
+});
 
 export function useLoginForm() {
   const route = useRoute();
@@ -143,7 +154,9 @@ export function useLoginForm() {
         ?.validate()
         .then(async (validateResult) => {
           if (!validateResult) {
-            message.error(LoginRegisterFormError.FORM_VALIDATE_FAILED, 1);
+            message.error(
+              $content(LoginRegisterFormError.FORM_VALIDATE_FAILED)
+            );
             return;
           }
           const res = await fusions.post(
@@ -151,13 +164,13 @@ export function useLoginForm() {
             _.omit(loginForm, ["userEmail"])
           );
           if (res.data.isResponseOk) {
-            message.success("登录成功！");
+            message.success($content("登录成功！"));
             tokenStorageRef.value = res.data.data.token;
             router.push("/dashboard");
           }
         })
         .catch(() => {
-          message.error(LoginRegisterFormError.LOGIN_REQUEST_FAILED, 1);
+          message.error($content(LoginRegisterFormError.LOGIN_REQUEST_FAILED));
         });
     },
     2000,
@@ -181,9 +194,14 @@ export function useRegisterForm() {
   const registerForm = reactive({
     userName: "",
     userEmail: "",
+    userPhone: "",
+    phoneVerify: "",
     password: "",
     confirmPassword: "",
   });
+  const isSendSmsCodeBtnDisabled = ref(false);
+  const sendSmsCodeAgainPendingSeconds = ref(0);
+  const sendSmsCodeCount = ref(0);
   const registerFormTRef = ref<InstanceType<typeof Form> | null>(null);
   const registerFormRules: Record<string, ValidationRule[]> = {
     userName: [
@@ -203,6 +221,28 @@ export function useRegisterForm() {
           if (!EMAIL_REGEXP.test(value)) {
             return Promise.reject(
               LoginRegisterFormError.USEREMAIL_FORMAT_INVALID
+            );
+          }
+          return Promise.resolve();
+        },
+      },
+    ],
+    userPhone: [
+      {
+        validator: (rule, value) => {
+          if (!MOBILE_PHONE_REGEXP.test(value)) {
+            return Promise.reject(LoginRegisterFormError.PHONE_FORMAT_INVALID);
+          }
+          return Promise.resolve();
+        },
+      },
+    ],
+    phoneVerify: [
+      {
+        validator: (rule, value) => {
+          if (!VCODE_REGEXP.test(value)) {
+            return Promise.reject(
+              LoginRegisterFormError.PHONE_VERIFY_FORMAT_INVALID
             );
           }
           return Promise.resolve();
@@ -250,7 +290,9 @@ export function useRegisterForm() {
         ?.validate()
         .then(async (validateResult) => {
           if (!validateResult) {
-            message.error(LoginRegisterFormError.FORM_VALIDATE_FAILED, 1);
+            message.error(
+              $content(LoginRegisterFormError.FORM_VALIDATE_FAILED)
+            );
             return;
           }
 
@@ -259,24 +301,53 @@ export function useRegisterForm() {
             _.omit(registerForm, ["confirmPassword"])
           );
           if (res.data.isResponseOk) {
-            message.success("注册成功！");
+            message.success($content("注册成功！"));
             router.push("/login");
           }
         })
         .catch(() => {
-          message.error(LoginRegisterFormError.REGISTER_REQUEST_FAILED, 1);
+          message.error(
+            $content(LoginRegisterFormError.REGISTER_REQUEST_FAILED)
+          );
         });
     },
     2000,
     true
   );
+  const sendSmsCode = async () => {
+    if (!MOBILE_PHONE_REGEXP.test(registerForm.userPhone)) {
+      message.warn("您输入的手机号码有误，请检查后再试！");
+      return;
+    }
+
+    const smsSendRes = await fusions.post("/auth/sendSmsCode", {
+      userPhone: registerForm.userPhone,
+    });
+    if (smsSendRes.data.isResponseOk) {
+      message.success($content(smsSendRes.data.message));
+      isSendSmsCodeBtnDisabled.value = true; // 刚发送，禁用按钮避免重复发送
+      sendSmsCodeCount.value++;
+      sendSmsCodeAgainPendingSeconds.value = 60 * sendSmsCodeCount.value;
+      const pending = setInterval(() => {
+        if (sendSmsCodeAgainPendingSeconds.value > 0) {
+          sendSmsCodeAgainPendingSeconds.value--;
+        } else if (sendSmsCodeAgainPendingSeconds.value === 0) {
+          isSendSmsCodeBtnDisabled.value = true; // 结束倒计时
+          clearInterval(pending);
+        }
+      }, 1000); // 一秒一次
+    }
+  };
 
   return {
     registerForm,
     registerFormTRef,
     registerFormRules,
+    isSendSmsCodeBtnDisabled,
+    sendSmsCodeAgainPendingSeconds,
     handleSubmitRegisterForm,
     submitable,
+    sendSmsCode,
   };
 }
 

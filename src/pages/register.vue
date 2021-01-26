@@ -26,6 +26,37 @@
             <template #prefix><MailOutlined /></template
           ></a-input>
         </a-form-item>
+        <!-- 手机号码 -->
+        <a-form-item name="userPhone" hasFeedback>
+          <a-input
+            v-model:value="registerForm.userPhone"
+            placeholder="请输入手机号码（仅支持中国大陆）"
+          >
+            <template #prefix><PhoneOutlined /></template>
+          </a-input>
+        </a-form-item>
+        <!-- 短信验证码 -->
+        <a-form-item name="phoneVerify">
+          <div class="flex-row anis-center">
+            <a-input
+              v-model:value="registerForm.phoneVerify"
+              placeholder="请输入短信验证码"
+            >
+              <template #prefix><KeyOutlined /></template
+            ></a-input>
+            <a-button
+              class="m-l-8"
+              :disabled="isSendSmsCodeBtnDisabled"
+              @click="sendSmsCode"
+            >
+              {{
+                !isSendSmsCodeBtnDisabled
+                  ? "获取验证码"
+                  : `请等待 ${sendSmsCodeAgainPendingSeconds} 秒`
+              }}
+            </a-button>
+          </div>
+        </a-form-item>
         <!-- 密码 -->
         <a-form-item name="password" hasFeedback>
           <a-input
@@ -41,8 +72,9 @@
             v-model:value="registerForm.confirmPassword"
             placeholder="请再次输入密码"
             type="password"
-            ><template #prefix><LockOutlined /></template
-          ></a-input>
+          >
+            <template #prefix><ReloadOutlined /></template>
+          </a-input>
         </a-form-item>
         <!-- 提交：注册 -->
         <a-form-item>
@@ -75,7 +107,10 @@
 import {
   MailOutlined,
   LockOutlined,
-  UserOutlined
+  UserOutlined,
+  PhoneOutlined,
+  ReloadOutlined,
+  KeyOutlined,
 } from "@ant-design/icons-vue";
 import CenterCardLayout from "../components/layouts/center-card-layout.vue";
 import { useRegisterForm } from "../hooks/useAuthForm";
@@ -86,13 +121,16 @@ export default {
     CenterCardLayout,
     MailOutlined,
     LockOutlined,
-    UserOutlined
+    UserOutlined,
+    PhoneOutlined,
+    ReloadOutlined,
+    KeyOutlined,
   },
   setup() {
     return {
-      ...useRegisterForm()
+      ...useRegisterForm(),
     };
-  }
+  },
 };
 </script>
 
@@ -100,7 +138,7 @@ export default {
 @import url("../less/color.less");
 
 .page-register__form {
-  min-width: 300px;
+  min-width: 360px;
 }
 .page-register__agreement-tips {
   margin-bottom: 24px;

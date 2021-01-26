@@ -74,7 +74,7 @@
         <a-popover :title="userName">
           <a-avatar
             class="component-page-header__inner-user-actions-avatar"
-            src="/assets/svg/user-avatar__default.jpg"
+            src="/assets/svg/user-avatar__default.svg"
           ></a-avatar>
           <template #content>
             <user-action-avatar-overlay />

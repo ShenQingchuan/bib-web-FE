@@ -1,6 +1,6 @@
 <template>
-  <div class="flex-col vc page-login-register__out-wrapper">
-    <div class="flex-col vc page-login-register__container">
+  <div class="flex-col vc center-card-layout__out-wrapper">
+    <div class="flex-col vc center-card-layout__container">
       <img
         src="/assets/img/Icon-png-logo-raw.png"
         alt="login page logo"
@@ -12,7 +12,7 @@
           alt="login page title"
           height="38"
         />
-        <div class="page-login-register__subtitle">
+        <div class="center-card-layout__subtitle">
           开源的云端知识库
         </div>
       </template>
@@ -32,20 +32,20 @@ import { defineComponent } from "vue";
 export default defineComponent({
   name: "CenterCardLayout",
   props: {
-    noTitle: Boolean
-  }
+    noTitle: Boolean,
+  },
 });
 </script>
 
 <style lang="less" scoped>
 @import url("../../less/color.less");
 
-.page-login-register__out-wrapper {
+.center-card-layout__out-wrapper {
   background-color: @N50;
   min-height: 100vh;
 
-  .page-login-register__container {
-    width: 400px;
+  .center-card-layout__container {
+    width: 500px;
     background: @N00;
     box-shadow: 0 5px 10px @N50;
     padding: 40px 8px 16px;
@@ -61,7 +61,7 @@ export default defineComponent({
       margin: 0 0 4px 0;
     }
 
-    .page-login-register__subtitle {
+    .center-card-layout__subtitle {
       font-weight: 300;
       font-size: 20px;
       margin-bottom: 20px;

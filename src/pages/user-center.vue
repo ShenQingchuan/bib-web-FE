@@ -7,7 +7,7 @@
       <a-card class="basic-info-card flex-col anis-center">
         <a-avatar
           class="user-avatar"
-          :src="userDetails.avatarURL || '/assets/svg/user-avatar__default.jpg'"
+          :src="userDetails.avatarURL || '/assets/svg/user-avatar__default.svg'"
         ></a-avatar>
         <h3 class="text-center m-tb-16">{{ userName }}</h3>
         <div

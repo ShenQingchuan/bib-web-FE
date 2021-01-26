@@ -124,7 +124,7 @@ export default {
 @import url("../less/color.less");
 
 .page-login__form {
-  min-width: 300px;
+  min-width: 360px;
 }
 .page-login__footer-actions {
   &-item:nth-child(1) {

@@ -1,5 +1,6 @@
 @import "./flex.less";
 @import "./utilities.less";
+@import "./color.less";
 
 * {
   margin: 0;
@@ -15,4 +16,9 @@ a:visited {
 // 缩小 ant-design-vue Popover 内边距
 .ant-popover-inner-content {
   padding: 0;
+}
+
+::selection {
+  color: @N900;
+  background: #d2ddf0;
 }

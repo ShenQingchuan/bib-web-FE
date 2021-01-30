@@ -3,6 +3,7 @@ import App from "./App.vue";
 import router from "./router";
 import store from "./store";
 import "ant-design-vue/dist/antd.less";
+import "codemirror/lib/codemirror.css";
 import "./less/global.less";
 
 import {

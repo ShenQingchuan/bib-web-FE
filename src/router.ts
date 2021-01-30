@@ -66,6 +66,11 @@ const routes: Array<RouteRecordRaw> = [
     () => import("./pages/user-center.vue"),
     "个人中心"
   ),
+  createRoute(
+    "/editor-playground",
+    () => import("./pages/editor-playground.vue"),
+    "编辑器预览"
+  ),
 
   createRoute("/not-found", () => import("./pages/not-found.vue"), "404"),
   { path: "/:pathMatch(.*)*", redirect: "/not-found" },

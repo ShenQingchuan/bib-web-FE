@@ -53,6 +53,31 @@ function arrowHandler(
   };
 }
 
+const MIMEMap: Record<string, string> = {
+  c: "text/x-csrc",
+  cpp: "text/x-c++src",
+  "c++": "text/x-c++src",
+  csharp: "text/x-csharp",
+  "c#": "text/x-csharp",
+  java: "text/x-java",
+  scala: "text/x-scala",
+  javascript: "text/x-javascript",
+  js: "text/x-javascript",
+  objc: "text/x-objectivec",
+  objectivec: "text/x-objectivec",
+  php: "application/x-httpd-php",
+  python: "text/x-python",
+  go: "text/x-go",
+  swift: "text/x-swift",
+  lua: "text/x-lua",
+  sass: "text/x-sass",
+  rust: "text/x-rustsrc",
+  jsx: "text/jsx",
+  tsx: "text/typescript-jsx",
+  dart: "dart",
+};
+const MIMEReflect = (lang?: string) => (lang ? MIMEMap[lang] || "" : "");
+
 export const arrowHandlersInCodeBlock = keymap({
   ArrowLeft: arrowHandler("left"),
   ArrowRight: arrowHandler("right"),
@@ -82,7 +107,7 @@ export default class CodeBlockView {
       value: this.node.textContent,
       lineNumbers: true,
       extraKeys: this.codeMirrorKeymap(),
-      mode: this.lang || "plaintext",
+      mode: MIMEReflect(this.lang),
       scrollbarStyle: "null",
       viewportMargin: Infinity,
     });

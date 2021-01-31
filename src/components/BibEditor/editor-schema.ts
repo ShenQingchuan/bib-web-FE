@@ -82,11 +82,6 @@ export const nodes: {
     code: true,
     defining: true,
     attrs: { lang: { default: "" } },
-    parseDOM: [
-      {
-        tag: "div.CodeMirror",
-      },
-    ],
     toDOM() {
       return ["code_block", 0];
     },

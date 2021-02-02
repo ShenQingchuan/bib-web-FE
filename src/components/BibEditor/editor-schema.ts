@@ -5,6 +5,10 @@ const pDOM = ["p", 0],
   hrDOM = ["hr"],
   brDOM = ["br"],
   emDOM = ["em", 0],
+  delDOM = ["del", 0],
+  supDOM = ["sup", 0],
+  subDOM = ["sub", 0],
+  uDOM = ["u", 0],
   strongDOM = ["strong", 0],
   codeDOM = ["code", 0],
   olDOM = ["ol", 0],
@@ -208,6 +212,34 @@ export const marks: {
     parseDOM: [{ tag: "i" }, { tag: "em" }, { style: "font-style=italic" }],
     toDOM() {
       return emDOM;
+    },
+  },
+
+  // :: MarkSpec An delete mark. Rendered as an `<del>` element.
+  u: {
+    parseDOM: [{ tag: "u" }],
+    toDOM() {
+      return uDOM;
+    },
+  },
+  del: {
+    parseDOM: [{ tag: "del" }],
+    toDOM() {
+      return delDOM;
+    },
+  },
+  // :: MarkSpec An superscript mark. Rendered as an `<sup>` element.
+  sup: {
+    parseDOM: [{ tag: "sup" }],
+    toDOM() {
+      return supDOM;
+    },
+  },
+  // :: MarkSpec An subscript mark. Rendered as an `<sub>` element.
+  sub: {
+    parseDOM: [{ tag: "sub" }],
+    toDOM() {
+      return subDOM;
     },
   },
 

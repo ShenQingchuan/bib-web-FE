@@ -1,26 +1,22 @@
 import { EditorState } from "prosemirror-state";
 import { EditorView } from "prosemirror-view";
-import { Node, Schema } from "prosemirror-model";
+import { Node, Schema, Mark } from "prosemirror-model";
 import { buildKeymap } from "prosemirror-example-setup";
-import {
-  buildInputRules,
-  buildPasteRules,
-} from "../components/BibEditor/input-rules";
+import { buildInputRules, buildPasteRules } from "../input-rules";
 import { keymap } from "prosemirror-keymap";
-import { baseKeymap } from "prosemirror-commands";
+import { baseKeymap, toggleMark } from "prosemirror-commands";
 import { dropCursor } from "prosemirror-dropcursor";
 import { gapCursor } from "prosemirror-gapcursor";
 import { history } from "prosemirror-history";
-import CodeBlockView, {
-  arrowHandlersInCodeBlock,
-} from "../components/BibEditor/code-block-view";
-import placeholder from "../components/BibEditor/placeholder";
+import CodeBlockView, { arrowHandlersInCodeBlock } from "../code-block-view";
+import placeholder from "../placeholder";
 import {
   BibEditorOptions,
   EditorComposable,
-} from "../components/BibEditor/typings";
-import { EditorSchema } from "../components/BibEditor/editor-schema";
-import { onUnmounted } from "vue";
+  EditorToggleCategories,
+} from "../typings";
+import { EditorSchema } from "../editor-schema";
+import { onUnmounted, shallowRef, ref } from "vue";
 
 const sampleInitDocJSON = {
   type: "doc",
@@ -42,10 +38,11 @@ function createInitDoc(schema: Schema, initContent: string) {
 }
 
 export function useEditor(options: BibEditorOptions) {
-  let editorView = {} as EditorView;
+  let editorView = shallowRef({} as EditorView);
+  const updateHooks = ref<(() => void)[]>([]);
 
   const initEditor = (el: any) => {
-    editorView = new EditorView(el as HTMLDivElement, {
+    editorView.value = new EditorView(el as HTMLDivElement, {
       state: EditorState.create({
         doc: createInitDoc(EditorSchema, options.initContent),
         plugins: [
@@ -60,6 +57,11 @@ export function useEditor(options: BibEditorOptions) {
           placeholder(options.placeholder || "写点什么吧 ..."),
         ],
       }),
+      dispatchTransaction(tr) {
+        const newState = editorView.value.state.apply(tr);
+        editorView.value.updateState(newState);
+        updateHooks.value.forEach((fn) => fn());
+      },
       nodeViews: {
         code_block(node, view, getPos) {
           return new CodeBlockView(node, view, getPos);
@@ -67,25 +69,36 @@ export function useEditor(options: BibEditorOptions) {
       },
     });
   };
-
   onUnmounted(() => {
-    editorView.destroy();
+    editorView.value.destroy();
   });
 
   const toJSON = () => {
-    return editorView.state.doc.toJSON();
+    return editorView.value.state.doc.toJSON();
   };
   const focus = () => {
-    editorView.focus();
+    editorView.value.focus();
+  };
+  const toggle = (markName: EditorToggleCategories) => {
+    !editorView.value.hasFocus() && editorView.value.focus();
+    toggleMark(EditorSchema.marks[markName])(
+      editorView.value.state,
+      editorView.value.dispatch
+    );
+  };
+  const onEditorDispatched = (fn: () => void) => {
+    updateHooks.value.push(fn);
   };
 
   const editorCompose: EditorComposable = {
+    view: editorView,
     toJSON,
     focus,
+    toggle,
+    onEditorDispatched,
   };
 
   return {
-    editorView,
     initEditor,
     editorCompose,
   };

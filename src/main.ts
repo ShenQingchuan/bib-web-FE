@@ -65,4 +65,5 @@ createApp(App)
   .use(Col)
   .use(Switch)
   .use(Layout)
+  .use(Divider)
   .mount("#app");

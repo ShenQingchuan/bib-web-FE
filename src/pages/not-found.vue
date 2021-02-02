@@ -3,9 +3,7 @@
     <common-header consice />
     <div class="page-not-found__container">
       <h3 class="page-not-found__title">抱歉，页面无法访问</h3>
-      <p class="page-not-found__error-content">
-        页面链接可能已失效或被删除…
-      </p>
+      <p class="page-not-found__error-content">页面链接可能已失效或被删除…</p>
     </div>
   </div>
 </template>

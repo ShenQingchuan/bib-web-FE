@@ -15,7 +15,10 @@ import CodeBlockView, {
   arrowHandlersInCodeBlock,
 } from "../components/BibEditor/code-block-view";
 import placeholder from "../components/BibEditor/placeholder";
-import { BibEditorOptions } from "../components/BibEditor/typings";
+import {
+  BibEditorOptions,
+  EditorComposable,
+} from "../components/BibEditor/typings";
 import { EditorSchema } from "../components/BibEditor/editor-schema";
 import { onUnmounted } from "vue";
 
@@ -41,7 +44,7 @@ function createInitDoc(schema: Schema, initContent: string) {
 export function useEditor(options: BibEditorOptions) {
   let editorView = {} as EditorView;
 
-  const initEditorRef = (el: any) => {
+  const initEditor = (el: any) => {
     editorView = new EditorView(el as HTMLDivElement, {
       state: EditorState.create({
         doc: createInitDoc(EditorSchema, options.initContent),
@@ -54,7 +57,7 @@ export function useEditor(options: BibEditorOptions) {
           dropCursor(),
           gapCursor(),
           arrowHandlersInCodeBlock,
-          placeholder("写点什么吧 ..."),
+          placeholder(options.placeholder || "写点什么吧 ..."),
         ],
       }),
       nodeViews: {
@@ -69,13 +72,21 @@ export function useEditor(options: BibEditorOptions) {
     editorView.destroy();
   });
 
-  const docToJSON = () => {
+  const toJSON = () => {
     return editorView.state.doc.toJSON();
+  };
+  const focus = () => {
+    editorView.focus();
+  };
+
+  const editorCompose: EditorComposable = {
+    toJSON,
+    focus,
   };
 
   return {
     editorView,
-    initEditorRef,
-    docToJSON,
+    initEditor,
+    editorCompose,
   };
 }

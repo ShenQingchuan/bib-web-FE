@@ -2,14 +2,18 @@
   <div class="flex-row anis-center p-10">
     <a-button @click="logDocJSON">输出文档</a-button>
   </div>
-  <bib-editor ref="bibEditorRef" class="demo" :view="editorView" :init-editor-ref="initEditorRef" />
+  <bib-editor
+    ref="bibEditorRef"
+    class="demo"
+    :init-editor-ref="initEditor"
+    :editor-compose="editorCompose"
+  />
 </template>
 
 <script lang="ts">
 import { defineComponent, ref } from "vue";
-import type { BibEditorOptions } from "../components/BibEditor/typings";
-import BibEditor from "../components/BibEditor/bib-editor.vue";
 import { useEditor } from "../hooks/useEditor";
+import BibEditor from "../components/BibEditor/bib-editor.vue";
 
 export default defineComponent({
   components: {
@@ -18,18 +22,17 @@ export default defineComponent({
   setup() {
     // @States:
     const bibEditorRef = ref<any>(null);
-    const options: BibEditorOptions = {
+    const { editorCompose, initEditor } = useEditor({
       initContent: "",
-    };
-    const { editorView, initEditorRef, docToJSON } = useEditor(options);
+    });
     const logDocJSON = () => {
-      console.log(docToJSON());
+      console.log(editorCompose.toJSON());
     }
 
     return {
       bibEditorRef,
-      editorView,
-      initEditorRef,
+      initEditor,
+      editorCompose,
       logDocJSON
     }
   }

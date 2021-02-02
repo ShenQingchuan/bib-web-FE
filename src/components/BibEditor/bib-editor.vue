@@ -1,13 +1,13 @@
 <template>
-  <div class="bib-editor" :ref="initEditorRef"></div>
+  <div class="bib-editor" :ref="initEditorRef" @click="editorCompose.focus()"></div>
 </template>
 
 <script setup lang="ts">
 import { defineProps } from "vue";
-import { EditorView } from "prosemirror-view";
+import type { EditorComposable } from "./typings";
 
 defineProps<{
-  view: EditorView,
+  editorCompose: EditorComposable;
   initEditorRef: (el: any) => void
 }>();
 </script>

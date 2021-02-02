@@ -230,6 +230,7 @@ export const marks: {
   },
   // :: MarkSpec An superscript mark. Rendered as an `<sup>` element.
   sup: {
+    excludes: "sub",
     parseDOM: [{ tag: "sup" }],
     toDOM() {
       return supDOM;
@@ -237,6 +238,7 @@ export const marks: {
   },
   // :: MarkSpec An subscript mark. Rendered as an `<sub>` element.
   sub: {
+    excludes: "sup",
     parseDOM: [{ tag: "sub" }],
     toDOM() {
       return subDOM;

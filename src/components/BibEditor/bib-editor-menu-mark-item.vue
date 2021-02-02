@@ -45,8 +45,9 @@ const toggleFn = () => {
   // 但有了 inclusive 关闭该 Mark 后会仍然显示处于该 Mark 中，但输入后续内容不会再带
   // 所以这里的逻辑是：若之前是 true，click 了一定切为 false 保证按钮高亮正确性
   toggleTo.value = isActive.value ? "off" : "on";
-  editorCompose?.toggle(props.mark);  
+  editorCompose?.toggle(props.mark);
   if (isActive.value && toggleTo.value === 'off') {
+    // 按钮 active 亮着，toggleTo 又确认为要关闭
     isActive.value = false;
   }
 }

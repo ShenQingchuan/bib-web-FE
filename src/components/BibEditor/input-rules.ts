@@ -232,7 +232,7 @@ export function buildInputRules(schema: Schema) {
   if ((type = schema.marks.code))
     rules.push(markInputRule(/(?:`)([^`]+)(?:`)$/, type));
   if ((type = schema.marks.em))
-    rules.push(markInputRule(/(?:\*)([^`]+)(?:\*)/g, type));
+    rules.push(markInputRule(/(?:\_)([^`]+)(?:\_)/g, type));
   if ((type = schema.marks.strong))
     rules.push(markInputRule(/(?:\*\*|__)([^*_]+)(?:\*\*|__)$/, type));
 

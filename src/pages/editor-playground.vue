@@ -1,16 +1,39 @@
 <template>
-  <bib-editor class="demo" :options="options" />
+  <div class="flex-row anis-center p-10">
+    <a-button @click="logDocJSON">输出文档</a-button>
+  </div>
+  <bib-editor ref="bibEditorRef" class="demo" :view="editorView" :init-editor-ref="initEditorRef" />
 </template>
 
-<script setup lang="ts">
+<script lang="ts">
+import { defineComponent, ref } from "vue";
 import type { BibEditorOptions } from "../components/BibEditor/typings";
-import BibEditor from "../components/BibEditor/index.vue";
+import BibEditor from "../components/BibEditor/bib-editor.vue";
+import { useEditor } from "../hooks/useEditor";
 
-// @States:
-const sampleContent = `<h3>你好，ProseMirror</h3><p>这就是可编辑的文本，你可以将光标放入然后开始打字。</p><p>若要应用样式，你可以先选中一段文字，然后从菜单中进行相关操作。基本的 schema 支持 <em>斜体</em>，<strong>加粗</strong>，<a href="https://baidu.com">链接</a>，<code>代码字体</code> 等等 ...</p><h2>这是一个 H2 标题</h2><p>无序列表测试：</p><ul><li><p>今天天气好</p></li><li><p>吃肉🥩</p></li><li><p>🍲️火锅大王</p></li></ul><p>有序列表测试：</p><ol><li><p>很好啊</p></li><li><p>没问题</p></li></ol><blockquote><h2>Blockquote</h2><p>引用测试，这是一条别人说过的话 blablabla …&nbsp;</p></blockquote><p>插入一张图片：</p><p><img src="/assets/img/Icon-png-logo-raw.png" contenteditable="false" draggable="true"></p><p></p>`;
-const options: BibEditorOptions = {
-  initContent: sampleContent,
-};
+export default defineComponent({
+  components: {
+    BibEditor
+  },
+  setup() {
+    // @States:
+    const bibEditorRef = ref<any>(null);
+    const options: BibEditorOptions = {
+      initContent: "",
+    };
+    const { editorView, initEditorRef, docToJSON } = useEditor(options);
+    const logDocJSON = () => {
+      console.log(docToJSON());
+    }
+
+    return {
+      bibEditorRef,
+      editorView,
+      initEditorRef,
+      logDocJSON
+    }
+  }
+});
 </script>
 
 <style lang="less" scoped></style>

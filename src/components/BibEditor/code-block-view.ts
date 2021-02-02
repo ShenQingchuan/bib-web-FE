@@ -66,6 +66,7 @@ const MIMEMap: Record<string, string> = {
   objc: "text/x-objectivec",
   objectivec: "text/x-objectivec",
   php: "application/x-httpd-php",
+  py: "text/x-python",
   python: "text/x-python",
   go: "text/x-go",
   swift: "text/x-swift",
@@ -176,7 +177,7 @@ export default class CodeBlockView {
       Left: () => this.maybeEscape("char", -1),
       Down: () => this.maybeEscape("line", 1),
       Right: () => this.maybeEscape("char", 1),
-      "Ctrl-Enter": () => {
+      [`${mod}-Enter`]: () => {
         if (exitCode(view.state, view.dispatch)) view.focus();
       },
       [`${mod}-Z`]: () => undo(view.state, view.dispatch),

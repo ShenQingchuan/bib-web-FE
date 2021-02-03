@@ -69,7 +69,7 @@
 .loopFontWeight(@fontWeightPoints);
 
 // 字体大小 font-size
-@fontSizePoints: 11, 12, 14, 16, 18, 20, 24, 26, 32;
+@fontSizePoints: 11, 12, 14, 16, 18, 20, 24, 26, 28, 32;
 .loopFontSize(@data, @i: 1) when(@i =< length(@data)) {
   @item: extract(@data, @i);
   .fs-@{item} {
@@ -98,4 +98,11 @@
 }
 .text-right {
   text-align: right;
+}
+
+.inline {
+  display: inline;
+}
+.inline-block {
+  display: inline-block;
 }

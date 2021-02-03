@@ -1,5 +1,5 @@
 import { EditorState, Transaction } from "prosemirror-state";
-import { Schema } from "prosemirror-model";
+import { Schema, NodeType } from "prosemirror-model";
 import { EditorView } from "prosemirror-view";
 import { Ref } from "vue";
 
@@ -23,7 +23,7 @@ export type EditorToggleCategories =
 
 export interface DispatchHook {
   (tr: Transaction, meta?: Record<string, any>): void;
-  meta?: Record<string, any>;
+  hookMeta?: Record<string, any>;
 }
 export interface EditorComposable {
   view: Ref<EditorView>;
@@ -31,6 +31,8 @@ export interface EditorComposable {
     [key: string]: any;
   };
   focus: () => void;
-  toggle: (markName: EditorToggleCategories) => void;
+  toggleHeading: (attrs: { level: number }) => void;
+  setBlockType: (nodeType: NodeType, attrs?: any) => void;
+  toggleMark: (markName: EditorToggleCategories) => void;
   onEditorDispatched: (fn: DispatchHook, meta?: Record<string, any>) => void;
 }

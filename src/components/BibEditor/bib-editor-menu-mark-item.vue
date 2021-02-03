@@ -17,6 +17,7 @@
 <script setup lang="ts">
 import { inject, defineProps, ref, onMounted, watch } from "vue";
 import type { EditorComposable, EditorToggleCategories } from "./typings";
+import { trKeyMark } from './hooks/useEditor'
 import * as us from "underscore";
 
 const props = defineProps<{
@@ -28,12 +29,10 @@ const editorCompose = inject<EditorComposable>("editorCompose");
 const toggleTo = ref<"on" | "off">("on");
 const needUpdate = ref(false);
 
-const trKey = Symbol(`tr-mark-${props.mark}`);
-
 onMounted(() => {
   editorCompose?.onEditorDispatched((tr, meta) => {
-    if (meta?.trKey === trKey && (meta?.needUpdate.value || tr.selectionSet)) {
-      console.log('[ catched ]');
+    if (meta?.needUpdate.value || tr.selectionSet) {
+      console.log('mark-hook');
       const { $from, $to, empty } = editorCompose.view.value.state.selection;
       const storedMarks =
         editorCompose.view.value.state.storedMarks
@@ -44,14 +43,13 @@ onMounted(() => {
       isActive.value = us.uniq(concated).map(m => m.type.name).includes(props.mark);
     }
   }, {
-    trKey,
     needUpdate
   })
 });
 const toggleFn = () => {
   toggleTo.value = isActive.value ? "off" : "on";
   needUpdate.value = true;
-  editorCompose?.toggle(props.mark);
+  editorCompose?.toggleMark(props.mark);
   needUpdate.value = false;
   // magic: 由于必须设置 inclusive 属性为 true 保证 Mark 状态下输入连续性
   // 但有了 inclusive 关闭该 Mark 后会仍然显示处于该 Mark 中，但输入后续内容不会再带

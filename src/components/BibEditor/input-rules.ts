@@ -225,7 +225,7 @@ export function buildInputRules(schema: Schema) {
   if ((type = schema.nodes.ordered_list)) rules.push(orderedListRule(type));
   if ((type = schema.nodes.bullet_list)) rules.push(bulletListRule(type));
   if ((type = schema.nodes.code_block)) rules.push(codeBlockRule(type));
-  if ((type = schema.nodes.heading)) rules.push(headingRule(type, 6));
+  if ((type = schema.nodes.heading)) rules.push(headingRule(type, 5));
   if ((type = schema.nodes.horizontal_rule)) rules.push(horizontalRule(type));
 
   // mark rules:

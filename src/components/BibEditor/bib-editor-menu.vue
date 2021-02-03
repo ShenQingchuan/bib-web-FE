@@ -1,5 +1,6 @@
 <template>
   <div class="flex-row anis-center p-10">
+    <bib-menu-header-item />
     <bib-menu-mark-item v-for="item in marksGroup" :key="item.mark" :mark="item.mark">
       <Icon :component="item.icon" />
     </bib-menu-mark-item>
@@ -14,6 +15,7 @@ import CodeMarkIcon from "./mark-icons/code-mark-icon.vue";
 import SuperScriptIcon from "./mark-icons/superscript-mark-icon.vue";
 import SubScriptIcon from "./mark-icons/subscript-mark-icon.vue";
 import BibMenuMarkItem from "./bib-editor-menu-mark-item.vue";
+import BibMenuHeaderItem from "./bib-editor-menu-heading-item.vue";
 import type { EditorToggleCategories, EditorComposable } from "./typings";
 
 const createMarkMenuItem = (mark: EditorToggleCategories, icon: any) => ({ mark, icon });

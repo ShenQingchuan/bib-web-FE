@@ -21,6 +21,10 @@ export type EditorToggleCategories =
   | "sup"
   | "u";
 
+export interface DispatchHook {
+  (tr: Transaction, meta?: Record<string, any>): void;
+  meta?: Record<string, any>;
+}
 export interface EditorComposable {
   view: Ref<EditorView>;
   toJSON: () => {
@@ -28,5 +32,5 @@ export interface EditorComposable {
   };
   focus: () => void;
   toggle: (markName: EditorToggleCategories) => void;
-  onEditorDispatched: (fn: () => void) => void;
+  onEditorDispatched: (fn: DispatchHook, meta?: Record<string, any>) => void;
 }

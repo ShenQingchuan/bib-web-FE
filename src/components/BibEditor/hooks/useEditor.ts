@@ -12,6 +12,7 @@ import CodeBlockView, { arrowHandlersInCodeBlock } from "../code-block-view";
 import placeholder from "../placeholder";
 import {
   BibEditorOptions,
+  DispatchHook,
   EditorComposable,
   EditorToggleCategories,
 } from "../typings";
@@ -39,7 +40,7 @@ function createInitDoc(schema: Schema, initContent: string) {
 
 export function useEditor(options: BibEditorOptions) {
   let editorView = shallowRef({} as EditorView);
-  const updateHooks = ref<(() => void)[]>([]);
+  const updateHooks = ref<DispatchHook[]>([]);
 
   const initEditor = (el: any) => {
     editorView.value = new EditorView(el as HTMLDivElement, {
@@ -60,7 +61,9 @@ export function useEditor(options: BibEditorOptions) {
       dispatchTransaction(tr) {
         const newState = editorView.value.state.apply(tr);
         editorView.value.updateState(newState);
-        updateHooks.value.forEach((fn) => fn());
+        updateHooks.value.forEach((hook) => {
+          hook(tr, hook.meta);
+        });
       },
       nodeViews: {
         code_block(node, view, getPos) {
@@ -86,7 +89,8 @@ export function useEditor(options: BibEditorOptions) {
       editorView.value.dispatch
     );
   };
-  const onEditorDispatched = (fn: () => void) => {
+  const onEditorDispatched = (fn: DispatchHook, meta?: Record<string, any>) => {
+    fn.meta = meta;
     updateHooks.value.push(fn);
   };
 

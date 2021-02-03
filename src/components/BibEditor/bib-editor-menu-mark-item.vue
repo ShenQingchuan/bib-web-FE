@@ -32,19 +32,16 @@ const trKey = Symbol(`tr-mark-${props.mark}`);
 
 onMounted(() => {
   editorCompose?.onEditorDispatched((tr, meta) => {
-    if (meta?.trKey === trKey && meta?.needUpdate.value) {
-      const { $from, $to } = editorCompose.view.value.state.selection;
+    if (meta?.trKey === trKey && (meta?.needUpdate.value || tr.selectionSet)) {
+      console.log('[ catched ]');
+      const { $from, $to, empty } = editorCompose.view.value.state.selection;
       const storedMarks =
         editorCompose.view.value.state.storedMarks
         || tr.storedMarks
         || [];
-      isActive.value = us.uniq(
-        $from.marks()
-          .concat($to.marks())
-          .concat(storedMarks)
-      )
-        .map(m => m.type.name)
-        .includes(props.mark);
+      let concated = storedMarks.concat($from.marks());
+      if (!empty) concated = concated.concat($to.marks());
+      isActive.value = us.uniq(concated).map(m => m.type.name).includes(props.mark);
     }
   }, {
     trKey,

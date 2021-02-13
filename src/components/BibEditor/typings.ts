@@ -1,7 +1,7 @@
-import { EditorState, Transaction } from "prosemirror-state";
-import { Schema, NodeType } from "prosemirror-model";
-import { EditorView } from "prosemirror-view";
-import { Ref } from "vue";
+import { EditorState, Transaction } from 'prosemirror-state';
+import { Node, Schema, NodeType } from 'prosemirror-model';
+import { EditorView } from 'prosemirror-view';
+import { Ref } from 'vue';
 
 export interface BibEditorOptions {
   initContent: string;
@@ -13,13 +13,13 @@ export type EditorToggleMethodReturns = (
   dispatch?: ((tr: Transaction<Schema<string, string>>) => void) | undefined
 ) => boolean;
 export type EditorToggleCategories =
-  | "strong"
-  | "em"
-  | "code"
-  | "del"
-  | "sub"
-  | "sup"
-  | "u";
+  | 'strong'
+  | 'em'
+  | 'code'
+  | 'del'
+  | 'sub'
+  | 'sup'
+  | 'u';
 
 export interface DispatchHook {
   (tr: Transaction, meta?: Record<string, any>): void;
@@ -32,7 +32,9 @@ export interface EditorComposable {
   };
   focus: () => void;
   toggleHeading: (attrs: { level: number }) => void;
+  toggleAlign: (direction: string) => void;
   setBlockType: (nodeType: NodeType, attrs?: any) => void;
   toggleMark: (markName: EditorToggleCategories) => void;
   onEditorDispatched: (fn: DispatchHook, meta?: Record<string, any>) => void;
+  applyForNodesAtCursor: (fn: (node: Node, pos: number) => void) => void;
 }

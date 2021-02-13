@@ -1,11 +1,7 @@
 <template>
   <div class="verify-code-wrap m-t-20">
     <div class="verify-canvas-container">
-      <canvas
-        :width="containerSize.width"
-        :height="containerSize.height"
-        ref="container"
-      />
+      <canvas :width="containerSize.width" :height="containerSize.height" ref="container" />
       <canvas
         :width="containerSize.width"
         :height="containerSize.height"
@@ -13,17 +9,15 @@
         class="verify-slide-block"
       />
       <a-button class="verify-refresh" shape="circle" @click="handleRefresh">
-        <template #icon><ReloadOutlined /></template>
+        <template #icon>
+          <ReloadOutlined />
+        </template>
       </a-button>
       <transition name="slide">
-        <div class="verify-time" v-show="verifySuccess">
-          验证成功~本次验证共计{{ verifyUse }}秒
-        </div>
+        <div class="verify-time" v-show="verifySuccess">验证成功~本次验证共计{{ verifyUse }}秒</div>
       </transition>
       <transition name="fade">
-        <div v-if="!verifyImageLoaded" class="verify-loading-image">
-          图片加载中...请稍等
-        </div>
+        <div v-if="!verifyImageLoaded" class="verify-loading-image">图片加载中...请稍等</div>
       </transition>
     </div>
     <div
@@ -36,10 +30,7 @@
         }
       ]"
     >
-      <div
-        class="touch-verify-slide-bar"
-        :style="{ width: verifyProgressWidth }"
-      >
+      <div class="touch-verify-slide-bar" :style="{ width: verifyProgressWidth }">
         <div
           class="touch-verify-slide-block"
           :style="{ left: blockLeftValue }"
@@ -66,13 +57,13 @@ import {
   reactive,
   ref
 } from "vue";
-import useCanvasOnDraw from "../../hooks/useCanvasOnDraw";
+import useCanvasOnDraw from "../../composable/useCanvasOnDraw";
 import useRandomImage, {
   calculate,
   createRandomRange,
   square
-} from "../../hooks/useRandomImage";
-import useMouseEvent from "../../hooks/useMouseEvent";
+} from "../../composable/useRandomImage";
+import useMouseEvent from "../../composable/useMouseEvent";
 import {
   ReloadOutlined,
   CheckOutlined,

@@ -6,11 +6,7 @@
 
         <!-- 步骤1：填写要找回账号的邮箱地址 -->
         <template v-if="step === 0">
-          <a-input
-            type="email"
-            v-model:value="targetUserEmail"
-            placeholder="请输入要找回账号的邮箱地址"
-          >
+          <a-input type="email" v-model:value="targetUserEmail" placeholder="请输入要找回账号的邮箱地址">
             <template #prefix>
               <MailOutlined />
             </template>
@@ -31,10 +27,7 @@
             @submit.prevent
           >
             <a-form-item name="vcode" hasFeedback>
-              <a-input
-                v-model:value="retrieveForm.vcode"
-                placeholder="请输入验证码"
-              >
+              <a-input v-model:value="retrieveForm.vcode" placeholder="请输入验证码">
                 <template #prefix>
                   <KeyOutlined />
                 </template>
@@ -83,9 +76,7 @@
           type="primary"
           block
           @click="onNextStep[step]"
-        >
-          {{ step < 2 ? "下一步" : "立即登录" }}
-        </a-button>
+        >{{ step < 2 ? "下一步" : "立即登录" }}</a-button>
       </div>
     </template>
   </center-card-layout>
@@ -111,7 +102,7 @@ import {
 import fusions from "../fusions";
 import { message, Form } from "ant-design-vue";
 import { ValidationRule } from "ant-design-vue/lib/form/Form";
-import { LoginRegisterFormError } from "../hooks/useAuthForm";
+import { LoginRegisterFormError } from "../composable/useAuthForm";
 
 const messageKey = "passwordRetrieve";
 const router = useRouter();
@@ -222,8 +213,8 @@ const onNextStep = [
     router
       .push(
         `/login?type=email&` +
-          `userEmail=${targetUserEmail.value}&` +
-          `userName=${targetUserName.value}`
+        `userEmail=${targetUserEmail.value}&` +
+        `userName=${targetUserName.value}`
       )
       .then(() => message.destroy());
   },

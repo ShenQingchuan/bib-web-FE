@@ -1,5 +1,6 @@
 <template>
   <bib-editor-menu :editor-compose="editorCompose" />
+  <a-button class="m-lr-10" @click="logDocJSON">输出 Doc JSON</a-button>
   <bib-editor
     ref="bibEditorRef"
     class="demo"
@@ -9,9 +10,9 @@
 </template>
 <script setup lang="ts">
 import { ref } from "vue";
-import { useEditor } from "../components/BibEditor/hooks/useEditor";
+import { useEditor } from "../components/BibEditor/composable/useEditor";
 import BibEditor from "../components/BibEditor/bib-editor.vue";
-import BibEditorMenu from "../components/BibEditor/bib-editor-menu.vue";
+import BibEditorMenu from "../components/BibEditor/menu/bib-editor-menu.vue";
 
 // @States:
 const bibEditorRef = ref<any>(null);

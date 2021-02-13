@@ -5,8 +5,8 @@ import {
   smartQuotes,
   emDash,
   ellipsis,
-  InputRule,
-} from "prosemirror-inputrules";
+  InputRule
+} from 'prosemirror-inputrules';
 import {
   Schema,
   NodeType,
@@ -14,9 +14,9 @@ import {
   Mark,
   MarkType,
   Slice,
-  Fragment,
-} from "prosemirror-model";
-import { EditorState, Plugin } from "prosemirror-state";
+  Fragment
+} from 'prosemirror-model';
+import { EditorState, Plugin } from 'prosemirror-state';
 
 function nodeInputRule(
   regexp: RegExp,
@@ -80,7 +80,7 @@ export function codeBlockRule(nodeType: NodeType) {
 // the number of `#` signs.
 export function headingRule(nodeType: NodeType, maxLevel: number) {
   return textblockTypeInputRule(
-    new RegExp("^(#{1," + maxLevel + "})\\s$"),
+    new RegExp('^(#{1,' + maxLevel + '})\\s$'),
     nodeType,
     (match) => ({ level: match[1].length })
   );
@@ -99,8 +99,8 @@ function getMarksBetween(start: number, end: number, state: EditorState) {
       ...node.marks.map((mark) => ({
         start: pos,
         end: pos + node.nodeSize,
-        mark,
-      })),
+        mark
+      }))
     ];
   });
 
@@ -165,7 +165,7 @@ export function markPasteRule(regexp: RegExp, type: MarkType, getAttrs?: any) {
         let pos = 0;
         let match;
 
-        const isLink = !!marks.filter((x) => x.type.name === "link")[0];
+        const isLink = !!marks.filter((x) => x.type.name === 'link')[0];
 
         // eslint-disable-next-line
         while (!isLink && (match = regexp.exec(text!)) !== null) {
@@ -208,8 +208,8 @@ export function markPasteRule(regexp: RegExp, type: MarkType, getAttrs?: any) {
   return new Plugin({
     props: {
       transformPasted: (slice) =>
-        new Slice(handler(slice.content), slice.openStart, slice.openEnd),
-    },
+        new Slice(handler(slice.content), slice.openStart, slice.openEnd)
+    }
   });
 }
 
@@ -226,7 +226,7 @@ export function buildInputRules(schema: Schema) {
   if ((type = schema.nodes.bullet_list)) rules.push(bulletListRule(type));
   if ((type = schema.nodes.code_block)) rules.push(codeBlockRule(type));
   if ((type = schema.nodes.heading)) rules.push(headingRule(type, 5));
-  if ((type = schema.nodes.horizontal_rule)) rules.push(horizontalRule(type));
+  if ((type = schema.nodes.horizontal_line)) rules.push(horizontalRule(type));
 
   // mark rules:
   if ((type = schema.marks.code))

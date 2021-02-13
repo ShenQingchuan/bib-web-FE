@@ -66,6 +66,11 @@ defineProps<{
     }
     li {
       margin-left: 23px;
+      list-style-position: inside;
+
+      p {
+        display: inline-block;
+      }
     }
   }
   .CodeMirror {

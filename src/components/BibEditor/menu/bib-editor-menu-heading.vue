@@ -3,9 +3,9 @@
     <a-dropdown>
       <a
         class="flex-row anis-center bib-editor-menu-item__display-level-label m-r-10"
-        @click="e => e.preventDefault()"
+        @click="(e) => e.preventDefault()"
       >
-        <div class="text m-r-10">{{ displayLevel }}</div>
+        <div class="text m-r-10">{{ displayText }}</div>
         <CaretDownOutlined></CaretDownOutlined>
       </a>
       <template #overlay>
@@ -15,7 +15,9 @@
             :key="level"
             class="m-tb-6"
             :class="[
-              level === 'PLAIN' ? 'fs-12' : `fs-${DisplayLevelEnum[level].fs} fw-700`
+              level === 'PLAIN'
+                ? 'fs-12'
+                : `fs-${DisplayLevelEnum[level].fs} fw-700`
             ]"
             @click="toggleHeaderLevel(DisplayLevelEnum[level])"
           >
@@ -28,20 +30,14 @@
 </template>
 
 <script setup lang="ts">
-import { defineProps, inject, onMounted, ref } from "vue";
+import { computed, inject, onMounted, ref } from "vue";
 import { CaretDownOutlined } from "@ant-design/icons-vue";
-import { EditorSchema } from "./editor-schema";
-import type { EditorComposable } from "./typings";
-import { trKeyHeading } from './hooks/useEditor'
-
-defineProps<{
-}>();
+import { EditorSchema } from "../editor-schema";
+import type { EditorComposable } from "../typings";
+import { trKeyHeading } from '../composable/useEditor'
 
 type DisplayLevelEnumItem = { label: string, fs?: number, attrs?: { level: number } };
 const DisplayLevelEnum: Record<string, DisplayLevelEnumItem> = {
-
-
-
   PLAIN: { label: "正文", },
   H1: { label: "标题 1", fs: 28, attrs: { level: 1 } },
   H2: { label: "标题 2", fs: 24, attrs: { level: 2 } },
@@ -51,14 +47,31 @@ const DisplayLevelEnum: Record<string, DisplayLevelEnumItem> = {
 }
 
 // @States:
-const displayLevel = ref(DisplayLevelEnum.PLAIN.label);
+const displayLevel = ref(0);
+const displayText = computed(() => {
+  return (!displayLevel.value
+    ? DisplayLevelEnum.PLAIN.label
+    : DisplayLevelEnum[`H${displayLevel.value}`].label);
+});
 const editorCompose = inject<EditorComposable>("editorCompose");
 
+// @LifeCycles:
 onMounted(() => {
   editorCompose?.onEditorDispatched((tr) => {
     if (tr.getMeta('trKey') === trKeyHeading) {
-      console.log('heading hook');
+      displayLevel.value = tr.getMeta("level");
+      return;
     }
+
+    editorCompose.applyForNodesAtCursor(currentNode => {
+      // 仅随时监测 block 级别的 heading 状态
+      if (currentNode && currentNode.type !== EditorSchema.nodes.text) {
+        const level = currentNode.attrs.level || 0;
+        if (displayLevel.value !== level) {
+          displayLevel.value = level;
+        }
+      }
+    })
   })
 });
 
@@ -66,15 +79,16 @@ onMounted(() => {
 const toggleHeaderLevel = (it: DisplayLevelEnumItem) => {
   if (!it.fs && !it.attrs) { // 切换为正文
     editorCompose?.setBlockType(EditorSchema.nodes.paragraph);
-    displayLevel.value = DisplayLevelEnum.PLAIN.label;
+    displayLevel.value = 0;
   } else {
     editorCompose?.toggleHeading(it.attrs!);
+    displayLevel.value = it.attrs!.level;
   }
 }
 </script>
 
 <style lang="less" scoped>
-@import "../../less/color.less";
+@import '../../../less/color.less';
 .bib-editor-menu-item {
   &__display-level-label {
     &,

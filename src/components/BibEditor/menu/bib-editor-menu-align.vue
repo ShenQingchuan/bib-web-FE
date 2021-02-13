@@ -1,0 +1,73 @@
+<template>
+  <div class="bib-editor-menu-item__wrapper flex-row anis-center m-lr-10">
+    <a-button
+      v-for="option in alignOptions"
+      :key="option.direction"
+      class="bib-editor-menu-item__align-btn"
+      :class="{
+        active: option.direction === activeAlign
+      }"
+      type="link"
+      @click="toggleAlignFn(option.direction)"
+    >
+      <template #icon>
+        <component :is="option.icon"></component>
+      </template>
+    </a-button>
+  </div>
+</template>
+
+<script setup lang="ts">
+import { inject, onMounted, ref } from "vue";
+import { AlignLeftOutlined, AlignCenterOutlined, AlignRightOutlined } from "@ant-design/icons-vue";
+import type { EditorComposable } from "../typings";
+
+const alignOptions = [
+  { direction: "left", icon: AlignLeftOutlined },
+  { direction: "center", icon: AlignCenterOutlined },
+  { direction: "right", icon: AlignRightOutlined }
+]
+
+// @States: 
+const editorCompose = inject<EditorComposable>("editorCompose");
+const activeAlign = ref<"none" | "left" | "center" | "right">("none");
+
+// @LifeCycles: 
+onMounted(() => {
+  editorCompose?.onEditorDispatched(() => {
+    editorCompose.applyForNodesAtCursor((currentNode) => {
+      if (currentNode && currentNode.attrs.textAlign) {
+        activeAlign.value = currentNode.attrs.textAlign;
+        return;
+      }
+      if (activeAlign.value !== "none") {
+        activeAlign.value = "none";
+      }
+    });
+  });
+})
+
+// @Methods: 
+const toggleAlignFn = (direction: string) => {
+  editorCompose?.toggleAlign(direction);
+}
+</script>
+
+<style lang="less" scoped>
+@import "../../../less/color.less";
+.bib-editor-menu-item {
+  &__align-btn {
+    &,
+    &:hover {
+      border: none;
+      color: @N600;
+    }
+
+    &:hover,
+    &.active {
+      background-color: @N200;
+      border-radius: 6px;
+    }
+  }
+}
+</style>

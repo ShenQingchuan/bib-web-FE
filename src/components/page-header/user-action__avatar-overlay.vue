@@ -1,21 +1,17 @@
 <template>
   <a-menu class="component-user-action__avatar-overlay-menu">
     <a-menu-item @click="$router.push(`/user/${userName}`)">
-      <UserOutlined />
-      个人中心
+      <UserOutlined />个人中心
     </a-menu-item>
     <a-menu-item @click="$router.push('/settings')">
-      <SettingOutlined />
-      帐户设置
+      <SettingOutlined />帐户设置
     </a-menu-item>
     <a-menu-item @click="$router.push('/help')">
-      <ReadOutlined />
-      帮助文档
+      <ReadOutlined />帮助文档
     </a-menu-item>
     <a-divider class="component-user-action__avatar-overlay-menu__divider" />
     <a-menu-item @click="runLogout">
-      <LogoutOutlined />
-      退出登录
+      <LogoutOutlined />退出登录
     </a-menu-item>
   </a-menu>
 </template>
@@ -28,7 +24,7 @@ import {
   ReadOutlined,
 } from "@ant-design/icons-vue";
 import { usePayloadFromToken } from "../../utils/user-token-validation";
-import { runLogout } from "../../hooks/useAuthForm";
+import { runLogout } from "../../composable/useAuthForm";
 
 export default {
   name: "user-action__avatar-overlay",

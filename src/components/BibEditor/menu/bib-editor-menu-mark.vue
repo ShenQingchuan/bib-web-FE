@@ -15,10 +15,10 @@
 </template>
 
 <script setup lang="ts">
-import { inject, defineProps, ref, onMounted, watch } from "vue";
-import type { EditorComposable, EditorToggleCategories } from "./typings";
-import { trKeyMark } from './hooks/useEditor'
+import { inject, defineProps, ref, onMounted } from "vue";
+import type { EditorComposable, EditorToggleCategories } from "../typings";
 import * as us from "underscore";
+import { EditorSchema } from "../editor-schema";
 
 const props = defineProps<{
   mark: EditorToggleCategories;
@@ -28,11 +28,21 @@ const isActive = ref(false);
 const editorCompose = inject<EditorComposable>("editorCompose");
 const toggleTo = ref<"on" | "off">("on");
 const needUpdate = ref(false);
+const excludes = EditorSchema.marks[props.mark].spec.excludes;
 
+// @LifeCycles: 
 onMounted(() => {
   editorCompose?.onEditorDispatched((tr, meta) => {
+    if (excludes) {
+      const storedMarksNames = tr.storedMarks?.map(m => m.type.name);
+      for (let ex of excludes.split(" ")) {
+        if (storedMarksNames?.includes(ex)) {
+          isActive.value = false;
+          return;
+        }
+      }
+    }
     if (meta?.needUpdate.value || tr.selectionSet) {
-      console.log('mark-hook');
       const { $from, $to, empty } = editorCompose.view.value.state.selection;
       const storedMarks =
         editorCompose.view.value.state.storedMarks
@@ -62,7 +72,7 @@ const toggleFn = () => {
 </script>
 
 <style lang="less" scoped>
-@import "../../less/color.less";
+@import "../../../less/color.less";
 .bib-editor-menu-item {
   &__wrapper {
     &:hover,

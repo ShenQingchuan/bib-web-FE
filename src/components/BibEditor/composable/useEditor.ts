@@ -1,4 +1,4 @@
-import { EditorState, TextSelection, Transaction } from 'prosemirror-state';
+import { EditorState, Transaction } from 'prosemirror-state';
 import { EditorView } from 'prosemirror-view';
 import { Node, NodeType, Schema } from 'prosemirror-model';
 import { buildKeymap } from 'prosemirror-example-setup';
@@ -8,7 +8,9 @@ import { baseKeymap, setBlockType, toggleMark } from 'prosemirror-commands';
 import { dropCursor } from 'prosemirror-dropcursor';
 import { gapCursor } from 'prosemirror-gapcursor';
 import { history } from 'prosemirror-history';
-import CodeBlockView, { arrowHandlersInCodeBlock } from '../code-block-view';
+import CodeBlockView, {
+  arrowHandlersInCodeBlock
+} from '../node-views/code-block-view';
 import placeholder from '../placeholder';
 import {
   BibEditorOptions,
@@ -16,9 +18,15 @@ import {
   EditorComposable,
   EditorToggleCategories
 } from '../typings';
-import { EditorSchema } from '../editor-schema';
+import { EditorSchema, listTypeNames } from '../editor-schema';
 import { onUnmounted, shallowRef, ref } from 'vue';
 import * as pmutils from 'prosemirror-utils';
+import {
+  liftListItem,
+  sinkListItem,
+  wrapInList
+} from 'prosemirror-schema-list';
+import ListItemView from '../node-views/list-item-view';
 
 const sampleInitDocJSON = {
   type: 'doc',
@@ -39,7 +47,13 @@ function createInitDoc(schema: Schema, initContent: string) {
   }
 }
 
-const predicateParentOption = ['list_item'];
+function isList(node: Node, schema: Schema) {
+  return (
+    node.type === schema.nodes.bullet_list ||
+    node.type === schema.nodes.ordered_list ||
+    node.type === schema.nodes.task_list
+  );
+}
 
 function useDispatchWithMeta(
   view: EditorView,
@@ -56,6 +70,7 @@ function useDispatchWithMeta(
 export const trKeyMark = 'tr-mark';
 export const trKeyHeading = 'tr-heading';
 export const trKeyAlign = 'tr-align';
+export const trKeyList = 'tr-list';
 
 export function useEditor(options: BibEditorOptions) {
   let editorView = shallowRef({} as EditorView);
@@ -68,7 +83,10 @@ export function useEditor(options: BibEditorOptions) {
         doc: createInitDoc(EditorSchema, options.initContent),
         plugins: [
           history(),
-          keymap(buildKeymap(EditorSchema)),
+          keymap({
+            ...buildKeymap(EditorSchema),
+            Tab: sinkListItem(EditorSchema.nodes.list_item)
+          }),
           buildInputRules(EditorSchema),
           ...buildPasteRules(EditorSchema),
           keymap(baseKeymap),
@@ -92,6 +110,9 @@ export function useEditor(options: BibEditorOptions) {
       nodeViews: {
         code_block(node, view, getPos) {
           return new CodeBlockView(node, view, getPos);
+        },
+        list_item(node, view, getPos) {
+          return new ListItemView(node, view, getPos);
         }
       }
     });
@@ -137,7 +158,7 @@ export function useEditor(options: BibEditorOptions) {
         })
     );
   };
-  /** 切换文字对齐方向 */
+  /** 切换 文字对齐方向 */
   const toggleAlign = (direction: string) => {
     focus();
     const trKey = trKeyAlign;
@@ -161,10 +182,13 @@ export function useEditor(options: BibEditorOptions) {
       const selection = editorView.value.state.selection;
       const { from, to } = selection;
       const parent = pmutils.findParentNode((node) =>
-        predicateParentOption.includes(node.type.name)
+        ['list_item'].includes(node.type.name)
       )(selection);
       if (parent) {
-        const newAttrs = { ...parent.node.attrs, textAlign: direction };
+        const newAttrs = {
+          ...parent.node.attrs,
+          textAlign: direction
+        };
         tr.setNodeMarkup(parent.pos, null as any, newAttrs);
       }
       tr.doc.nodesBetween(from, to, (node, pos) => {
@@ -178,14 +202,43 @@ export function useEditor(options: BibEditorOptions) {
     tr.setMeta('trKey', trKey);
     editorView.value.dispatch(tr);
   };
+  /** 切换 列表类型 */
+  const toggleList = (listType: NodeType, itemType: NodeType) => {
+    const { state, dispatch } = editorView.value;
+    const { schema, selection } = state;
+    const { $from, $to } = selection;
+    const range = $from.blockRange($to);
 
-  /** 设置块类型 */
-  const _setBlockType = (nodeType: NodeType, attrs?: any) => {
-    !editorView.value.hasFocus() && editorView.value.focus();
-    setBlockType(nodeType, attrs)(
-      editorView.value.state,
-      editorView.value.dispatch
+    if (!range) {
+      return false;
+    }
+
+    const parentList = pmutils.findParentNode((node) => isList(node, schema))(
+      selection
     );
+
+    if (range.depth >= 1 && parentList && range.depth - parentList.depth <= 1) {
+      if (parentList.node.type === listType) {
+        return liftListItem(itemType)(state, dispatch);
+      }
+
+      if (
+        isList(parentList.node, schema) &&
+        listType.validContent(parentList.node.content)
+      ) {
+        const { tr } = state;
+        tr.setNodeMarkup(parentList.pos, listType);
+        tr.setMeta('trKey', trKeyList);
+
+        if (dispatch) {
+          dispatch(tr);
+        }
+
+        return false;
+      }
+    }
+
+    return wrapInList(listType)(state, dispatch);
   };
 
   /** 注册 Dispatch 回调钩子 */
@@ -196,8 +249,10 @@ export function useEditor(options: BibEditorOptions) {
 
   /** 获取当前光标处的 node */
   const applyForNodesAtCursor = (fn: (node: Node, pos: number) => void) => {
-    const { from, to } = editorView.value.state.selection;
-    editorView.value.state.doc.nodesBetween(from, to, fn);
+    const { from, to, empty } = editorView.value.state.selection;
+    if (empty) {
+      editorView.value.state.doc.nodesBetween(from, to, fn);
+    }
   };
 
   const editorCompose: EditorComposable = {
@@ -205,7 +260,7 @@ export function useEditor(options: BibEditorOptions) {
     toggleHeading,
     toggleMark: _toggleMark,
     toggleAlign,
-    setBlockType: _setBlockType,
+    toggleList,
     toJSON,
     focus,
     onEditorDispatched,

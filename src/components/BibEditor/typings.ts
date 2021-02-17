@@ -33,7 +33,7 @@ export interface EditorComposable {
   focus: () => void;
   toggleHeading: (attrs: { level: number }) => void;
   toggleAlign: (direction: string) => void;
-  setBlockType: (nodeType: NodeType, attrs?: any) => void;
+  toggleList: (listType: NodeType, itemType: NodeType) => void;
   toggleMark: (markName: EditorToggleCategories) => void;
   onEditorDispatched: (fn: DispatchHook, meta?: Record<string, any>) => void;
   applyForNodesAtCursor: (fn: (node: Node, pos: number) => void) => void;

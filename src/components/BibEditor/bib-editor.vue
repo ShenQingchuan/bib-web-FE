@@ -1,5 +1,9 @@
 <template>
-  <div class="bib-editor" :ref="initEditorRef" @click="editorCompose.focus()"></div>
+  <div
+    class="bib-editor"
+    :ref="initEditorRef"
+    @click="editorCompose.focus()"
+  ></div>
 </template>
 
 <script setup lang="ts">
@@ -37,6 +41,7 @@ defineProps<{
     }
 
     code {
+      margin: 0 0.4em;
       padding: 0.2em 0.4em;
       font-size: 85%;
       background-color: var(--color-markdown-code-bg);
@@ -63,13 +68,34 @@ defineProps<{
 
     ul {
       list-style-type: disc;
+
+      &[data-type='task-list'] {
+        list-style: none;
+
+        li[data-type='task-item'] {
+          margin-left: 24px;
+
+          input[type='checkbox'] {
+            margin-right: 5px;
+          }
+        }
+      }
+
+      // 嵌套 bullet list 的点形状
+      ul {
+        list-style: circle;
+        ul {
+          list-style: square;
+        }
+      }
     }
     li {
-      margin-left: 23px;
+      margin-left: 24px;
       list-style-position: inside;
 
       p {
-        display: inline-block;
+        display: inline;
+        margin-left: 5px;
       }
     }
   }

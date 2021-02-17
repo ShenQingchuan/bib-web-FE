@@ -64,6 +64,10 @@ export function bulletListRule(nodeType: NodeType) {
   return wrappingInputRule(/^\s*([-+*])\s$/, nodeType);
 }
 
+export function taskListRule(nodeType: NodeType) {
+  return wrappingInputRule(/^\s*([-+*]\[\])\s$/, nodeType);
+}
+
 // : (NodeType) → InputRule
 // Given a code block node type, returns an input rule that turns a
 // textblock starting with three backticks into a code block.
@@ -224,6 +228,7 @@ export function buildInputRules(schema: Schema) {
   if ((type = schema.nodes.blockquote)) rules.push(blockQuoteRule(type));
   if ((type = schema.nodes.ordered_list)) rules.push(orderedListRule(type));
   if ((type = schema.nodes.bullet_list)) rules.push(bulletListRule(type));
+  if ((type = schema.nodes.task_list)) rules.push(taskListRule(type));
   if ((type = schema.nodes.code_block)) rules.push(codeBlockRule(type));
   if ((type = schema.nodes.heading)) rules.push(headingRule(type, 5));
   if ((type = schema.nodes.horizontal_line)) rules.push(horizontalRule(type));

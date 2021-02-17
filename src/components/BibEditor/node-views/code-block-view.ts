@@ -9,7 +9,7 @@ import {
   TextSelection,
   Transaction,
 } from "prosemirror-state";
-import { EditorSchema } from "./editor-schema";
+import { EditorSchema } from "../editor-schema";
 import { keymap } from "prosemirror-keymap";
 
 function computeChange(oldVal: any, newVal: any) {

@@ -32,6 +32,7 @@
 <script setup lang="ts">
 import { computed, inject, onMounted, ref } from "vue";
 import { CaretDownOutlined } from "@ant-design/icons-vue";
+import { setBlockType } from 'prosemirror-commands';
 import { EditorSchema } from "../editor-schema";
 import type { EditorComposable } from "../typings";
 import { trKeyHeading } from '../composable/useEditor'
@@ -78,7 +79,10 @@ onMounted(() => {
 // @Methods:
 const toggleHeaderLevel = (it: DisplayLevelEnumItem) => {
   if (!it.fs && !it.attrs) { // 切换为正文
-    editorCompose?.setBlockType(EditorSchema.nodes.paragraph);
+    setBlockType(EditorSchema.nodes.paragraph)(
+      editorCompose!.view.value.state,
+      editorCompose!.view.value.dispatch
+    );
     displayLevel.value = 0;
   } else {
     editorCompose?.toggleHeading(it.attrs!);

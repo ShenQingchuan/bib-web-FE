@@ -1,7 +1,6 @@
 import { Schema, Node } from 'prosemirror-model';
 
-const pDOM = ['p', 0],
-  blockquoteDOM = ['blockquote', 0],
+const blockquoteDOM = ['blockquote', 0],
   hrDOM = ['hr'],
   brDOM = ['br'],
   emDOM = ['em', 0],
@@ -11,9 +10,7 @@ const pDOM = ['p', 0],
   uDOM = ['u', 0],
   strongDOM = ['strong', 0],
   codeDOM = ['code', 0],
-  olDOM = ['ol', 0],
-  ulDOM = ['ul', 0],
-  liDOM = ['li', 0];
+  olDOM = ['ol', 0];
 
 const extends_textBlockAttrs = (others: Record<string, any> = {}) => ({
   textAlign: { default: '' },
@@ -31,6 +28,8 @@ const stylesOfTextBlock = (node: Node, append?: (node: Node) => string) => {
   }
   return style;
 };
+
+export const listTypeNames = ['ordered_list', 'bullet_list', 'task_list'];
 
 // :: Object
 // [Specs](#model.NodeSpec) for the nodes defined in this schema.
@@ -186,14 +185,39 @@ export const nodes: {
       return ['ul', 0];
     }
   },
+  task_list: {
+    group: 'block',
+    content: 'list_item+',
+    parseDOM: [
+      {
+        tag: 'ul[data-type="task-list"]',
+        priority: 51
+      }
+    ],
+    toDOM() {
+      return ['ul', { 'data-type': 'task-list' }, 0];
+    }
+  },
   list_item: {
-    attrs: extends_textBlockAttrs(),
+    attrs: extends_textBlockAttrs({ checked: { default: false } }),
     group: 'block',
     content: 'paragraph block*',
-    parseDOM: [{ tag: 'li' }],
-    toDOM(node: Node) {
-      const style = stylesOfTextBlock(node);
-      return ['li', { style }, 0];
+    parseDOM: [
+      {
+        tag: 'li'
+      },
+      {
+        tag: 'li[data-type="task-item"]',
+        priority: 51,
+        getAttrs() {
+          return {
+            isTaskItem: true
+          };
+        }
+      }
+    ],
+    toDOM() {
+      return ['list_item', 0];
     },
     defining: true
   }

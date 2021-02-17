@@ -74,9 +74,15 @@ defineProps<{
 
         li[data-type='task-item'] {
           margin-left: 24px;
+          position: relative;
+          padding-left: 14px;
 
           input[type='checkbox'] {
             margin-right: 5px;
+            position: absolute;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
           }
         }
       }

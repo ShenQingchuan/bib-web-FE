@@ -30,6 +30,7 @@ defineProps<{
     line-height: 1.74;
     font-size: 15px;
     letter-spacing: 0.008em;
+    color: #000;
 
     &:focus {
       outline: none;
@@ -78,11 +79,16 @@ defineProps<{
           padding-left: 14px;
 
           input[type='checkbox'] {
-            margin-right: 5px;
+            width: 18px;
+            height: 18px;
             position: absolute;
             left: 0;
             top: 50%;
             transform: translateY(-50%);
+          }
+
+          p.task-content {
+            margin-left: 14px;
           }
         }
       }

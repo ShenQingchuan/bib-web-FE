@@ -23,6 +23,8 @@ import 'codemirror/mode/css/css.js';
 import 'codemirror/mode/sass/sass.js';
 import 'codemirror/mode/rust/rust.js';
 
+import 'vue3-colorpicker/bundle.css';
+
 import {
   Space,
   Input,

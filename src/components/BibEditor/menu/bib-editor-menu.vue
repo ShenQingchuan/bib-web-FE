@@ -1,6 +1,7 @@
 <template>
   <div class="flex-row anis-center p-10">
     <bib-menu-header />
+    <bib-menu-text-color />
     <bib-menu-mark
       v-for="item in marksGroup"
       :key="item.mark"
@@ -24,6 +25,7 @@ import BibMenuMark from "./bib-editor-menu-mark.vue";
 import BibMenuHeader from "./bib-editor-menu-heading.vue";
 import BibMenuAlign from "./bib-editor-menu-align.vue";
 import BibMenuList from './bib-editor-menu-list.vue';
+import BibMenuTextColor from './bib-editor-menu-text-color.vue';
 import type { EditorToggleCategories, EditorComposable } from "../typings";
 
 const createMarkMenuItem = (mark: EditorToggleCategories, icon: any) => ({ mark, icon });

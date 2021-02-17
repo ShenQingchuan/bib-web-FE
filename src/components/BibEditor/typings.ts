@@ -27,14 +27,16 @@ export interface DispatchHook {
 }
 export interface EditorComposable {
   view: Ref<EditorView>;
+  options: BibEditorOptions;
   toJSON: () => {
     [key: string]: any;
   };
   focus: () => void;
   toggleHeading: (attrs: { level: number }) => void;
   toggleAlign: (direction: string) => void;
-  toggleList: (listType: NodeType, itemType: NodeType) => void;
+  toggleList: (listType: NodeType, itemTyp?: NodeType) => void;
   toggleMark: (markName: EditorToggleCategories) => void;
+  toggleTextColor: (color: string) => void;
   onEditorDispatched: (fn: DispatchHook, meta?: Record<string, any>) => void;
   applyForNodesAtCursor: (fn: (node: Node, pos: number) => void) => void;
 }

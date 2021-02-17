@@ -1,5 +1,5 @@
 <template>
-  <div class="bib-editor-menu-item__wrapper p-t-4 m-lr-10">
+  <div class="bib-editor-menu-item__wrapper p-t-2 m-l-10">
     <a-dropdown>
       <a
         class="flex-row anis-center bib-editor-menu-item__display-level-label m-r-10"

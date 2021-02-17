@@ -4,7 +4,12 @@ import { Node, NodeType, Schema } from 'prosemirror-model';
 import { buildKeymap } from 'prosemirror-example-setup';
 import { buildInputRules, buildPasteRules } from '../input-rules';
 import { keymap } from 'prosemirror-keymap';
-import { baseKeymap, setBlockType, toggleMark } from 'prosemirror-commands';
+import {
+  baseKeymap,
+  selectAll,
+  setBlockType,
+  toggleMark as _tm
+} from 'prosemirror-commands';
 import { dropCursor } from 'prosemirror-dropcursor';
 import { gapCursor } from 'prosemirror-gapcursor';
 import { history } from 'prosemirror-history';
@@ -71,6 +76,7 @@ export const trKeyMark = 'tr-mark';
 export const trKeyHeading = 'tr-heading';
 export const trKeyAlign = 'tr-align';
 export const trKeyList = 'tr-list';
+export const trKeyTextColor = 'tr-textColor';
 
 export function useEditor(options: BibEditorOptions) {
   let editorView = shallowRef({} as EditorView);
@@ -130,14 +136,16 @@ export function useEditor(options: BibEditorOptions) {
 
   /** 聚焦该编辑器 */
   const focus = () => {
-    !editorView.value.hasFocus() && editorView.value.focus();
+    !editorView.value.hasFocus() &&
+      editorView.value.state.selection.empty &&
+      editorView.value.focus();
   };
 
   /** 切换 mark */
-  const _toggleMark = (markName: EditorToggleCategories) => {
+  const toggleMark = (markName: EditorToggleCategories) => {
     focus();
     const trKey = trKeyMark;
-    toggleMark(EditorSchema.marks[markName])(editorView.value.state, (tr) =>
+    _tm(EditorSchema.marks[markName])(editorView.value.state, (tr) =>
       useDispatchWithMeta(editorView.value, tr, {
         trKey,
         mark: markName
@@ -203,14 +211,17 @@ export function useEditor(options: BibEditorOptions) {
     editorView.value.dispatch(tr);
   };
   /** 切换 列表类型 */
-  const toggleList = (listType: NodeType, itemType: NodeType) => {
+  const toggleList = (listType: NodeType, itemType?: NodeType) => {
     const { state, dispatch } = editorView.value;
     const { schema, selection } = state;
     const { $from, $to } = selection;
     const range = $from.blockRange($to);
-
     if (!range) {
       return false;
+    }
+
+    if (!itemType) {
+      itemType = EditorSchema.nodes.list_item;
     }
 
     const parentList = pmutils.findParentNode((node) => isList(node, schema))(
@@ -240,6 +251,27 @@ export function useEditor(options: BibEditorOptions) {
 
     return wrapInList(listType)(state, dispatch);
   };
+  /** 切换 文字颜色 */
+  const toggleTextColor = (color: string) => {
+    const { state, dispatch } = editorView.value;
+    const { selection, tr } = state;
+    const { from, to, empty } = selection;
+
+    const colorMark = EditorSchema.marks.colored.create({
+      color
+    });
+    // 是选区状态
+    if (!empty) {
+      tr.addMark(from, to, colorMark);
+    }
+    // 是光标状态
+    else {
+      tr.addStoredMark(colorMark);
+    }
+
+    tr.setMeta('trKey', trKeyTextColor);
+    dispatch(tr);
+  };
 
   /** 注册 Dispatch 回调钩子 */
   const onEditorDispatched = (fn: DispatchHook, meta?: Record<string, any>) => {
@@ -257,10 +289,12 @@ export function useEditor(options: BibEditorOptions) {
 
   const editorCompose: EditorComposable = {
     view: editorView,
+    options,
     toggleHeading,
-    toggleMark: _toggleMark,
     toggleAlign,
     toggleList,
+    toggleMark,
+    toggleTextColor,
     toJSON,
     focus,
     onEditorDispatched,

@@ -72,6 +72,7 @@ onMounted(() => {
 // @Methods:
 const toggleListType = (listType: NodeType) => {
   editorCompose?.toggleList(listType);
+  editorCompose?.focus();
 }
 </script>
 

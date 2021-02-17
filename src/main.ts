@@ -23,6 +23,7 @@ import 'codemirror/mode/css/css.js';
 import 'codemirror/mode/sass/sass.js';
 import 'codemirror/mode/rust/rust.js';
 
+import colorPicker from 'vue3-colorpicker';
 import 'vue3-colorpicker/bundle.css';
 
 import {
@@ -69,4 +70,6 @@ createApp(App)
   .use(Switch)
   .use(Layout)
   .use(Divider)
+  // for vue3-colorpicker
+  .use(colorPicker)
   .mount('#app');

@@ -1,6 +1,6 @@
 import { EditorState, Transaction } from 'prosemirror-state';
 import { EditorView } from 'prosemirror-view';
-import { Node, NodeType, Schema } from 'prosemirror-model';
+import { Node, NodeType, MarkType, Schema } from 'prosemirror-model';
 import { buildKeymap } from 'prosemirror-example-setup';
 import { buildInputRules, buildPasteRules } from '../input-rules';
 import { keymap } from 'prosemirror-keymap';
@@ -77,6 +77,7 @@ export const trKeyHeading = 'tr-heading';
 export const trKeyAlign = 'tr-align';
 export const trKeyList = 'tr-list';
 export const trKeyTextColor = 'tr-textColor';
+export const trKeyTextBgColor = 'tr-textBgColor';
 
 export function useEditor(options: BibEditorOptions) {
   let editorView = shallowRef({} as EditorView);
@@ -144,10 +145,9 @@ export function useEditor(options: BibEditorOptions) {
   /** 切换 mark */
   const toggleMark = (markName: EditorToggleCategories) => {
     focus();
-    const trKey = trKeyMark;
     _tm(EditorSchema.marks[markName])(editorView.value.state, (tr) =>
       useDispatchWithMeta(editorView.value, tr, {
-        trKey,
+        trKey: trKeyMark,
         mark: markName
       })
     );
@@ -155,13 +155,12 @@ export function useEditor(options: BibEditorOptions) {
   /** 切换 标题级别 */
   const toggleHeading = (attrs: { level: number }) => {
     focus();
-    const trKey = trKeyHeading;
     const { level } = attrs;
     setBlockType(EditorSchema.nodes.heading, attrs)(
       editorView.value.state,
       (tr) =>
         useDispatchWithMeta(editorView.value, tr, {
-          trKey,
+          trKey: trKeyHeading,
           level
         })
     );
@@ -169,7 +168,6 @@ export function useEditor(options: BibEditorOptions) {
   /** 切换 文字对齐方向 */
   const toggleAlign = (direction: string) => {
     focus();
-    const trKey = trKeyAlign;
     const { selection, tr } = editorView.value.state;
     // 选区是范围状态
     if (!selection.empty) {
@@ -207,7 +205,7 @@ export function useEditor(options: BibEditorOptions) {
       });
     }
 
-    tr.setMeta('trKey', trKey);
+    tr.setMeta('trKey', trKeyAlign);
     editorView.value.dispatch(tr);
   };
   /** 切换 列表类型 */
@@ -251,27 +249,38 @@ export function useEditor(options: BibEditorOptions) {
 
     return wrapInList(listType)(state, dispatch);
   };
-  /** 切换 文字颜色 */
-  const toggleTextColor = (color: string) => {
-    const { state, dispatch } = editorView.value;
-    const { selection, tr } = state;
-    const { from, to, empty } = selection;
+  const createToggleColorCommand = (mark: MarkType, trKey: string) => {
+    return (color: string) => {
+      const { state, dispatch } = editorView.value;
+      const { selection, tr } = state;
+      const { from, to, empty } = selection;
 
-    const colorMark = EditorSchema.marks.colored.create({
-      color
-    });
-    // 是选区状态
-    if (!empty) {
-      tr.addMark(from, to, colorMark);
-    }
-    // 是光标状态
-    else {
-      tr.addStoredMark(colorMark);
-    }
+      const colorMark = mark.create({
+        color
+      });
+      // 是选区状态
+      if (!empty) {
+        tr.addMark(from, to, colorMark);
+      }
+      // 是光标状态
+      else {
+        tr.addStoredMark(colorMark);
+      }
 
-    tr.setMeta('trKey', trKeyTextColor);
-    dispatch(tr);
+      tr.setMeta('trKey', trKey);
+      dispatch(tr);
+    };
   };
+  /** 切换 文字颜色 */
+  const toggleTextColor = createToggleColorCommand(
+    EditorSchema.marks.colored,
+    trKeyTextColor
+  );
+  /** 切换 文字背景高亮颜色 */
+  const toggleTextBgColor = createToggleColorCommand(
+    EditorSchema.marks.hightlighted,
+    trKeyTextColor
+  );
 
   /** 注册 Dispatch 回调钩子 */
   const onEditorDispatched = (fn: DispatchHook, meta?: Record<string, any>) => {
@@ -295,6 +304,7 @@ export function useEditor(options: BibEditorOptions) {
     toggleList,
     toggleMark,
     toggleTextColor,
+    toggleTextBgColor,
     toJSON,
     focus,
     onEditorDispatched,

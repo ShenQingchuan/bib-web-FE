@@ -276,6 +276,29 @@ export const marks: {
       return ['span', { style }, 0];
     }
   },
+  hightlighted: {
+    attrs: { color: { default: '' } },
+    group: 'inline',
+    content: 'text*',
+    parseDOM: [
+      {
+        tag: 'span',
+        style: 'background-color',
+        getAttrs(el: HTMLElement) {
+          return {
+            color: el.style.backgroundColor
+          };
+        }
+      }
+    ],
+    toDOM(node: Node) {
+      let style = '';
+      if (node.attrs.color) {
+        style += `background-color: ${node.attrs.color};`;
+      }
+      return ['span', { style }, 0];
+    }
+  },
 
   // :: MarkSpec An emphasis mark. Rendered as an `<em>` element.
   // Has parse rules that also match `<i>` and `font-style: italic`.

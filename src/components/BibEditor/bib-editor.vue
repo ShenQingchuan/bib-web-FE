@@ -41,6 +41,10 @@ defineProps<{
       padding: 0;
     }
 
+    .ProseMirror-selectednode {
+      outline: none;
+    }
+
     code {
       margin: 0 0.4em;
       padding: 0.2em 0.4em;

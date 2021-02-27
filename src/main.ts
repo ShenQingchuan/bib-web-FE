@@ -44,7 +44,8 @@ import {
   Switch,
   Layout,
   Row,
-  Col
+  Col,
+  ConfigProvider
 } from 'ant-design-vue';
 
 createApp(App)
@@ -70,6 +71,7 @@ createApp(App)
   .use(Switch)
   .use(Layout)
   .use(Divider)
+  .use(ConfigProvider)
   // for vue3-colorpicker
   .use(colorPicker)
   .mount('#app');

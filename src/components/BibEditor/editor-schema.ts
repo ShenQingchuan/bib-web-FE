@@ -1,4 +1,4 @@
-import { Schema, Node } from 'prosemirror-model';
+import { Schema, Node, Mark } from 'prosemirror-model';
 
 const blockquoteDOM = ['blockquote', 0],
   hrDOM = ['hr'],
@@ -227,29 +227,31 @@ export const nodes: {
 export const marks: {
   [key: string]: any;
 } = {
-  // :: MarkSpec A link. Has `href` and `title` attributes. `title`
+  // :: MarkSpec A link. Has `href` and `label` attributes. `label`
   // defaults to the empty string. Rendered and parsed as an `<a>`
   // element.
   link: {
     attrs: {
       href: {},
-      title: { default: null }
+      text: {}
     },
     inclusive: false,
     parseDOM: [
       {
         tag: 'a[href]',
-        getAttrs(dom: any) {
+        getAttrs(dom: HTMLElement) {
+          const href = dom.getAttribute('href');
+          const text = dom.textContent;
           return {
-            href: dom.getAttribute('href'),
-            title: dom.getAttribute('title')
+            href,
+            text
           };
         }
       }
     ],
-    toDOM(node: Node) {
-      let { href, title } = node.attrs;
-      return ['a', { href, title }, 0];
+    toDOM(mark: Mark) {
+      let { href } = mark.attrs;
+      return ['a', { href }, 0];
     }
   },
 
@@ -268,10 +270,10 @@ export const marks: {
         }
       }
     ],
-    toDOM(node: Node) {
+    toDOM(mark: Mark) {
       let style = '';
-      if (node.attrs.color) {
-        style += `color: ${node.attrs.color};`;
+      if (mark.attrs.color) {
+        style += `color: ${mark.attrs.color};`;
       }
       return ['span', { style }, 0];
     }
@@ -291,10 +293,10 @@ export const marks: {
         }
       }
     ],
-    toDOM(node: Node) {
+    toDOM(mark: Mark) {
       let style = '';
-      if (node.attrs.color) {
-        style += `background-color: ${node.attrs.color};`;
+      if (mark.attrs.color) {
+        style += `background-color: ${mark.attrs.color};`;
       }
       return ['span', { style }, 0];
     }

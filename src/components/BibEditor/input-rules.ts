@@ -10,13 +10,13 @@ import {
 import {
   Schema,
   NodeType,
-  Node,
-  Mark,
   MarkType,
   Slice,
-  Fragment
+  Fragment,
+  Node
 } from 'prosemirror-model';
-import { EditorState, Plugin } from 'prosemirror-state';
+import { EditorState, Plugin, PluginKey } from 'prosemirror-state';
+import { URL_REGEX } from '../../utils/commonly-used-regexp';
 
 function nodeInputRule(
   regexp: RegExp,
@@ -159,31 +159,46 @@ export function markInputRule(
   );
 }
 
-export function markPasteRule(regexp: RegExp, type: MarkType, getAttrs?: any) {
+export function markPasteRule(
+  regexp: RegExp,
+  type: MarkType,
+  getAttrs?: (match: any) => any
+): Plugin {
   const handler = (fragment: Fragment, parent?: any) => {
     const nodes: Node[] = [];
 
     fragment.forEach((child) => {
-      if (child.isText) {
-        const { text, marks } = child;
+      if (child.isText && child.text) {
+        const { text } = child;
         let pos = 0;
         let match;
 
-        const isLink = !!marks.filter((x) => x.type.name === 'link')[0];
-
         // eslint-disable-next-line
-        while (!isLink && (match = regexp.exec(text!)) !== null) {
-          if (parent?.type.allowsMarkType(type) && match[1]) {
-            const start = match.index;
-            const end = start + match[0].length;
-            const textStart = start + match[0].indexOf(match[1]);
-            const textEnd = textStart + match[1].length;
+        while ((match = regexp.exec(text)) !== null) {
+          const outerIndex = Math.max(match.length - 2, 0),
+            innerIndex = Math.max(match.length - 1, 0),
+            outerMatch = match[outerIndex],
+            innerMatch = match[innerIndex];
+
+          if (parent.type.allowsMarkType(type)) {
+            const start = match.index,
+              matchStart = start + match[0].indexOf(outerMatch),
+              matchEnd = matchStart + outerMatch.length;
+            let textStart, textEnd;
+            if (!innerMatch) {
+              textStart = matchStart;
+              textEnd = matchEnd;
+            } else {
+              textStart = matchStart + outerMatch.lastIndexOf(innerMatch);
+              textEnd = textStart + innerMatch.length;
+            }
+
             const attrs =
               getAttrs instanceof Function ? getAttrs(match) : getAttrs;
 
             // adding text before markdown to nodes
-            if (start > 0) {
-              nodes.push(child.cut(pos, start));
+            if (matchStart > 0) {
+              nodes.push(child.cut(pos, matchStart));
             }
 
             // adding the markdown part to nodes
@@ -193,12 +208,12 @@ export function markPasteRule(regexp: RegExp, type: MarkType, getAttrs?: any) {
                 .mark(type.create(attrs).addToSet(child.marks))
             );
 
-            pos = end;
+            pos = matchEnd;
           }
         }
 
         // adding rest of text to nodes
-        if (pos < text!.length) {
+        if (pos < text.length) {
           nodes.push(child.cut(pos));
         }
       } else {
@@ -210,9 +225,15 @@ export function markPasteRule(regexp: RegExp, type: MarkType, getAttrs?: any) {
   };
 
   return new Plugin({
+    key: new PluginKey('markPasteRule'),
     props: {
-      transformPasted: (slice) =>
-        new Slice(handler(slice.content), slice.openStart, slice.openEnd)
+      transformPasted: (slice) => {
+        return new Slice(
+          handler(slice.content),
+          slice.openStart,
+          slice.openEnd
+        );
+      }
     }
   });
 }
@@ -252,6 +273,14 @@ export function buildPasteRules(schema: Schema) {
     rules.push(markPasteRule(/(?:`)([^`]+)(?:`)/g, type));
   if ((type = schema.marks.strong))
     rules.push(markPasteRule(/(?:\*\*|__)([^*_]+)(?:\*\*|__)/g, type));
+  if ((type = schema.marks.link)) {
+    rules.push(
+      markPasteRule(URL_REGEX, type, (match: string[]) => ({
+        href: match[0],
+        text: match[0]
+      }))
+    );
+  }
 
   return rules;
 }

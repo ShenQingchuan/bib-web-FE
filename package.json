@@ -9,6 +9,7 @@
   "dependencies": {
     "@types/prosemirror-schema-basic": "^1.0.2",
     "@types/prosemirror-schema-list": "^1.0.2",
+    "@vitejs/plugin-vue-jsx": "^1.1.0",
     "@vueuse/core": "^4.0.8",
     "ant-design-vue": "^2.0.0-rc.8",
     "axios": "^0.21.1",

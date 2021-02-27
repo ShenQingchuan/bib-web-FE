@@ -30,7 +30,7 @@ const toggleTo = ref<"on" | "off">("on");
 const needUpdate = ref(false);
 const excludes = EditorSchema.marks[props.mark].spec.excludes;
 
-// @LifeCycles: 
+// @LifeCycles:
 onMounted(() => {
   editorCompose?.onEditorDispatched((tr, meta) => {
     if (excludes) {
@@ -42,7 +42,7 @@ onMounted(() => {
         }
       }
     }
-    if (meta?.needUpdate.value || tr.selectionSet) {
+    if (meta?.needUpdate?.value || tr.selectionSet) {
       const { $from, $to, empty } = editorCompose.view.value.state.selection;
       const storedMarks =
         editorCompose.view.value.state.storedMarks
@@ -53,7 +53,7 @@ onMounted(() => {
       isActive.value = us.uniq(concated).map(m => m.type.name).includes(props.mark);
     }
   }, {
-    needUpdate
+    $needUpdate: needUpdate
   })
 });
 const toggleFn = () => {
@@ -72,7 +72,7 @@ const toggleFn = () => {
 </script>
 
 <style lang="less" scoped>
-@import "../../../less/color.less";
+@import '../../../less/color.less';
 .bib-editor-menu-item {
   &__wrapper {
     &:hover,

@@ -6,7 +6,6 @@ import { buildInputRules, buildPasteRules } from '../input-rules';
 import { keymap } from 'prosemirror-keymap';
 import {
   baseKeymap,
-  selectAll,
   setBlockType,
   toggleMark as _tm
 } from 'prosemirror-commands';
@@ -16,14 +15,15 @@ import { history } from 'prosemirror-history';
 import CodeBlockView, {
   arrowHandlersInCodeBlock
 } from '../node-views/code-block-view';
-import placeholder from '../placeholder';
+import placeholder from '../plugins/placeholder';
+import handleLinkClick from '../plugins/handle-link-click';
 import {
   BibEditorOptions,
   DispatchHook,
   EditorComposable,
   EditorToggleCategories
 } from '../typings';
-import { EditorSchema, listTypeNames } from '../editor-schema';
+import { EditorSchema } from '../editor-schema';
 import { onUnmounted, shallowRef, ref } from 'vue';
 import * as pmutils from 'prosemirror-utils';
 import {
@@ -60,16 +60,18 @@ function isList(node: Node, schema: Schema) {
   );
 }
 
-function useDispatchWithMeta(
+export function useViewDispatch(
   view: EditorView,
   tr: Transaction,
-  meta?: { [key: string]: any }
+  meta?: { [key: string]: any },
+  callback?: (tr: Transaction) => void
 ) {
   if (meta) {
     for (let key in meta) {
       key && tr.setMeta(key, meta[key]);
     }
   }
+  callback && callback(tr);
   return view.dispatch(tr);
 }
 export const trKeyMark = 'tr-mark';
@@ -78,6 +80,7 @@ export const trKeyAlign = 'tr-align';
 export const trKeyList = 'tr-list';
 export const trKeyTextColor = 'tr-textColor';
 export const trKeyTextBgColor = 'tr-textBgColor';
+export const trKeyLinkChange = 'tr-linkChange';
 
 export function useEditor(options: BibEditorOptions) {
   let editorView = shallowRef({} as EditorView);
@@ -100,7 +103,8 @@ export function useEditor(options: BibEditorOptions) {
           dropCursor(),
           gapCursor(),
           arrowHandlersInCodeBlock,
-          placeholder(options.placeholder || '写点什么吧 ...')
+          placeholder(options.placeholder || '写点什么吧 ...'),
+          handleLinkClick
         ]
       }),
       dispatchTransaction(tr) {
@@ -108,7 +112,7 @@ export function useEditor(options: BibEditorOptions) {
           const newState = editorView.value.state.apply(tr);
           editorView.value.updateState(newState);
         } catch (err) {
-          console.log(err);
+          console.log('[BibEditor ProseMirror Error]: ', err);
         }
         updateHooks.value.forEach((hook) => {
           hook(tr, hook.hookMeta);
@@ -146,7 +150,7 @@ export function useEditor(options: BibEditorOptions) {
   const toggleMark = (markName: EditorToggleCategories) => {
     focus();
     _tm(EditorSchema.marks[markName])(editorView.value.state, (tr) =>
-      useDispatchWithMeta(editorView.value, tr, {
+      useViewDispatch(editorView.value, tr, {
         trKey: trKeyMark,
         mark: markName
       })
@@ -159,7 +163,7 @@ export function useEditor(options: BibEditorOptions) {
     setBlockType(EditorSchema.nodes.heading, attrs)(
       editorView.value.state,
       (tr) =>
-        useDispatchWithMeta(editorView.value, tr, {
+        useViewDispatch(editorView.value, tr, {
           trKey: trKeyHeading,
           level
         })
@@ -249,13 +253,13 @@ export function useEditor(options: BibEditorOptions) {
 
     return wrapInList(listType)(state, dispatch);
   };
-  const createToggleColorCommand = (mark: MarkType, trKey: string) => {
+  const createToggleColorCommand = (markType: MarkType, trKey: string) => {
     return (color: string) => {
       const { state, dispatch } = editorView.value;
       const { selection, tr } = state;
       const { from, to, empty } = selection;
 
-      const colorMark = mark.create({
+      const colorMark = markType.create({
         color
       });
       // 是选区状态

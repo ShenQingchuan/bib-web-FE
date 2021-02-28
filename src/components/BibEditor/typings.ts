@@ -39,6 +39,7 @@ export interface EditorComposable {
   toggleTextColor: (color: string) => void;
   toggleTextBgColor: (color: string) => void;
   toggleQuoteBlock: () => void;
+  addHorizontalRuleLine: () => void;
   onEditorDispatched: (fn: DispatchHook, meta?: Record<string, any>) => void;
   applyForNodesAtCursor: (fn: (node: Node, pos: number) => void) => void;
 }

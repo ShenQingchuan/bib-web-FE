@@ -1,9 +1,5 @@
 <template>
-  <div
-    class="bib-editor"
-    :ref="initEditorRef"
-    @click="editorCompose.focus()"
-  ></div>
+  <div class="bib-editor" :ref="initEditorRef" @click="editorCompose.focus()"></div>
 </template>
 
 <script setup lang="ts">
@@ -17,6 +13,8 @@ defineProps<{
 </script>
 
 <style lang="less">
+@import "../../less/color.less";
+
 .bib-editor {
   &.demo {
     margin: 40px auto;
@@ -39,6 +37,7 @@ defineProps<{
     * {
       margin: 0;
       padding: 0;
+      box-sizing: border-box;
     }
 
     .ProseMirror-selectednode {
@@ -74,45 +73,58 @@ defineProps<{
     ul {
       list-style-type: disc;
 
-      &[data-type='task-list'] {
+      &[data-type="task-list"] {
         list-style: none;
 
-        li[data-type='task-item'] {
+        li[data-type="task-item"] {
           margin-left: 24px;
           position: relative;
           padding-left: 14px;
 
-          input[type='checkbox'] {
-            width: 18px;
-            height: 18px;
+          input[type="checkbox"] {
+            width: 14px;
+            height: 14px;
             position: absolute;
-            left: 0;
+            left: -4px;
             top: 50%;
             transform: translateY(-50%);
           }
 
-          p.task-content {
-            margin-left: 14px;
+          div.task-content {
+            margin-left: 8px;
+            p {
+              margin-left: 0;
+            }
           }
         }
       }
 
       // 嵌套 bullet list 的点形状
       ul {
-        list-style: circle;
+        list-style-type: circle;
         ul {
-          list-style: square;
+          list-style-type: square;
         }
       }
     }
     li {
-      margin-left: 24px;
+      margin-left: 20px;
       list-style-position: inside;
 
       p {
         display: inline;
-        margin-left: 5px;
+        margin-left: 0;
       }
+    }
+    ol li p {
+      margin-left: 4px;
+    }
+
+    hr {
+      margin: 1.2rem 0;
+      background-color: #e8e8e8;
+      border: 1px solid transparent;
+      cursor: text;
     }
   }
   .CodeMirror {

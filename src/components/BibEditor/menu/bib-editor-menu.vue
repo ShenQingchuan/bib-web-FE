@@ -10,6 +10,7 @@
     <bib-menu-list />
     <bib-menu-link />
     <bib-menu-quote />
+    <bib-menu-hr />
   </div>
 </template>
 
@@ -28,6 +29,7 @@ import BibMenuTextColor from './bib-editor-menu-text-color.vue';
 import BibMenuTextBgColor from "./bib-editor-menu-textbg-color.vue";
 import BibMenuLink from "./bib-editor-menu-link.vue";
 import BibMenuQuote from "./bib-editor-menu-quote.vue";
+import BibMenuHr from "./bib-editor-menu-hr.vue";
 import type { EditorToggleCategories, EditorComposable } from "../typings";
 
 const createMarkMenuItem = (mark: EditorToggleCategories, icon: any) => ({ mark, icon });

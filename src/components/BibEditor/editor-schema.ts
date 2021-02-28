@@ -1,7 +1,6 @@
 import { Schema, Node, Mark } from 'prosemirror-model';
 
 const blockquoteDOM = ['blockquote', 0],
-  hrDOM = ['hr'],
   brDOM = ['br'],
   emDOM = ['em', 0],
   delDOM = ['del', 0],
@@ -21,7 +20,7 @@ const stylesOfTextBlock = (node: Node, append?: (node: Node) => string) => {
   if (node.attrs.textAlign) {
     style += `text-align:${node.attrs.textAlign};`;
   }
-  // ... more styles in prediction
+  // ... more styles
 
   if (append) {
     style = style + append(node);
@@ -71,7 +70,7 @@ export const nodes: {
     group: 'block',
     parseDOM: [{ tag: 'hr' }],
     toDOM() {
-      return hrDOM;
+      return ['hr', { contenteditable: 'false' }];
     }
   },
 
@@ -187,7 +186,7 @@ export const nodes: {
   },
   task_list: {
     group: 'block',
-    content: 'list_item+',
+    content: 'task_item+',
     parseDOM: [
       {
         tag: 'ul[data-type="task-list"]',
@@ -199,27 +198,39 @@ export const nodes: {
     }
   },
   list_item: {
-    attrs: extends_textBlockAttrs({ checked: { default: false } }),
-    group: 'block',
+    attrs: extends_textBlockAttrs(),
+    group: 'block list_item',
     content: 'paragraph block*',
+    defining: true,
     parseDOM: [
       {
         tag: 'li'
-      },
+      }
+    ],
+    toDOM(node: Node) {
+      const style = stylesOfTextBlock(node);
+      return ['li', { style }, 0];
+    }
+  },
+  task_item: {
+    attrs: extends_textBlockAttrs({ checked: { default: false } }),
+    group: 'block list_item',
+    content: 'paragraph block*',
+    defining: true,
+    parseDOM: [
       {
-        tag: 'li[data-type="task-item"]',
+        tag: 'li[data-type="task-item"][data-checked]',
         priority: 51,
-        getAttrs() {
+        getAttrs(dom: HTMLElement) {
           return {
-            isTaskItem: true
+            checked: dom.getAttribute('data-checked') === 'true'
           };
         }
       }
     ],
     toDOM() {
-      return ['list_item', 0];
-    },
-    defining: true
+      return ['task_item', 0];
+    }
   }
 };
 

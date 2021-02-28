@@ -77,7 +77,7 @@ const toggleListType = (listType: NodeType) => {
 </script>
 
 <style lang="less" scoped>
-@import '../../../less/color.less';
+@import "../../../less/color.less";
 .bib-editor-menu-item {
   &__list-btn {
     &,

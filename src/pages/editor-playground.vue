@@ -1,9 +1,7 @@
 <template>
   <bib-editor-menu :editor-compose="editorCompose" />
   <a-button class="m-lr-10" @click="logDocJSON">输出 Doc JSON</a-button>
-  <a-button class="m-lr-10" @click="logSelectionNodesBetween"
-    >输出 Selection Nodes Between</a-button
-  >
+  <a-button class="m-lr-10" @click="logSelectionNodesBetween">输出 Selection Nodes Between</a-button>
   <bib-editor
     ref="bibEditorRef"
     class="demo"

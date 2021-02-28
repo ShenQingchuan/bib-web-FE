@@ -36,6 +36,8 @@ import { setBlockType } from 'prosemirror-commands';
 import { EditorSchema } from "../editor-schema";
 import type { EditorComposable } from "../typings";
 import { trKeyHeading } from '../composable/useEditor'
+import { findParentNode } from "prosemirror-utils";
+import { head } from "underscore";
 
 type DisplayLevelEnumItem = { label: string, fs?: number, attrs?: { level: number } };
 const DisplayLevelEnum: Record<string, DisplayLevelEnumItem> = {
@@ -64,15 +66,13 @@ onMounted(() => {
       return;
     }
 
-    editorCompose.applyForNodesAtCursor(currentNode => {
-      // 仅随时监测 block 级别的 heading 状态
-      if (currentNode && currentNode.type !== EditorSchema.nodes.text) {
-        const level = currentNode.attrs.level || 0;
-        if (displayLevel.value !== level) {
-          displayLevel.value = level;
-        }
-      }
-    })
+    const { selection } = editorCompose.view.value.state;
+    const heading = findParentNode(node => node.type === EditorSchema.nodes.heading)(selection);
+    if (heading) {
+      displayLevel.value = heading.node.attrs.level;
+    } else {
+      displayLevel.value = 0;
+    }
   })
 });
 
@@ -92,7 +92,7 @@ const toggleHeaderLevel = (it: DisplayLevelEnumItem) => {
 </script>
 
 <style lang="less" scoped>
-@import '../../../less/color.less';
+@import "../../../less/color.less";
 .bib-editor-menu-item {
   &__display-level-label {
     &,

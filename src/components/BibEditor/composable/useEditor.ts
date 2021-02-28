@@ -1,9 +1,8 @@
 import { EditorState, Transaction } from 'prosemirror-state';
 import { EditorView } from 'prosemirror-view';
 import { Node, NodeType, MarkType, Schema } from 'prosemirror-model';
-import { buildKeymap } from 'prosemirror-example-setup';
+import { addBibKeymap } from '../helpers/buildKeymap';
 import { buildInputRules, buildPasteRules } from '../input-rules';
-import { keymap } from 'prosemirror-keymap';
 import {
   baseKeymap,
   lift,
@@ -28,12 +27,9 @@ import {
 import { EditorSchema } from '../editor-schema';
 import { onUnmounted, shallowRef, ref } from 'vue';
 import * as pmutils from 'prosemirror-utils';
-import {
-  liftListItem,
-  sinkListItem,
-  wrapInList
-} from 'prosemirror-schema-list';
-import ListItemView from '../node-views/list-item-view';
+import { liftListItem, wrapInList } from 'prosemirror-schema-list';
+import TaskItemView from '../node-views/task-item-view';
+import { keymap } from 'prosemirror-keymap';
 
 const sampleInitDocJSON = {
   type: 'doc',
@@ -84,6 +80,7 @@ export const trKeyTextColor = 'tr-textColor';
 export const trKeyTextBgColor = 'tr-textBgColor';
 export const trKeyLinkChange = 'tr-linkChange';
 export const trKeyQuote = 'tr-quote';
+export const trKeyHr = 'tr-hr';
 
 export function useEditor(options: BibEditorOptions) {
   let editorView = shallowRef({} as EditorView);
@@ -96,12 +93,9 @@ export function useEditor(options: BibEditorOptions) {
         doc: createInitDoc(EditorSchema, options.initContent),
         plugins: [
           history(),
-          keymap({
-            ...buildKeymap(EditorSchema),
-            Tab: sinkListItem(EditorSchema.nodes.list_item)
-          }),
           buildInputRules(EditorSchema),
           ...buildPasteRules(EditorSchema),
+          addBibKeymap(EditorSchema),
           keymap(baseKeymap),
           dropCursor(),
           gapCursor(),
@@ -125,8 +119,8 @@ export function useEditor(options: BibEditorOptions) {
         code_block(node, view, getPos) {
           return new CodeBlockView(node, view, getPos);
         },
-        list_item(node, view, getPos) {
-          return new ListItemView(node, view, getPos);
+        task_item(node, view, getPos) {
+          return new TaskItemView(node, view, getPos);
         }
       }
     });
@@ -142,13 +136,10 @@ export function useEditor(options: BibEditorOptions) {
     return editorView.value.state.doc.toJSON();
   };
 
-  /** 聚焦该编辑器 */
+  /** 强制聚焦该编辑器 */
   const focus = () => {
-    !editorView.value.hasFocus() &&
-      editorView.value.state.selection.empty &&
-      editorView.value.focus();
+    editorView.value.focus();
   };
-
   /** 切换 mark */
   const toggleMark = (markName: EditorToggleCategories) => {
     focus();
@@ -303,6 +294,17 @@ export function useEditor(options: BibEditorOptions) {
       })
     );
   };
+  /** 添加 分割线 */
+  const addHorizontalRuleLine = () => {
+    const { state, dispatch } = editorView.value;
+    const { tr } = state;
+    tr.replaceSelectionWith(
+      EditorSchema.nodes.horizontal_line.create()
+    ).scrollIntoView();
+    tr.setMeta('trKey', trKeyHr);
+    dispatch(tr);
+    editorView.value.focus();
+  };
 
   /** 注册 Dispatch 回调钩子 */
   const onEditorDispatched = (fn: DispatchHook, meta?: Record<string, any>) => {
@@ -328,6 +330,7 @@ export function useEditor(options: BibEditorOptions) {
     toggleTextColor,
     toggleTextBgColor,
     toggleQuoteBlock,
+    addHorizontalRuleLine,
     toJSON,
     focus,
     onEditorDispatched,

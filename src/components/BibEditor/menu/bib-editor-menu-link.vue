@@ -55,21 +55,19 @@ const toggleLinkMark = () => {
       icon: createVNode(ExclamationCircleOutlined),
       content: '这段文字将被恢复成普通文本格式。',
       onOk: () => {
-        updateLink(view, from, currentTextNode.textContent, []);
+        updateLink(view, currentTextNode.textContent, [], false, from);
       }
     })
     return;
   }
 
-  if (selectionEmpty) {
-    const currentTextNode = doc.nodeAt(from)!;
-    showUpdateLinkModal(view, from, currentTextNode);
-  }
+  const currentTextNode = doc.nodeAt(from)!;
+  showUpdateLinkModal(view, from, currentTextNode);
 }
 </script>
 
 <style lang="less" scoped>
-@import '../../../less/color.less';
+@import "../../../less/color.less";
 .bib-editor-menu-item {
   &__link-btn {
     &,

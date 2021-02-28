@@ -13,17 +13,18 @@ const {
 
 export function updateLink(
   view: EditorView,
-  pos: number,
   text: string,
   marks: Mark[],
-  stored?: boolean
+  stored: boolean,
+  pos: number,
+  end?: number
 ) {
   const { doc, tr } = view.state;
   if (!stored) {
     const resolvedPos = doc.resolve(pos);
     tr.replaceWith(
       resolvedPos.start(),
-      resolvedPos.end(),
+      end || resolvedPos.end(),
       EditorSchema.text(text, marks)
     );
   } else {
@@ -89,7 +90,6 @@ export function showUpdateLinkModal(
     onOk: () => {
       updateLink(
         view,
-        pos,
         text.value,
         linkMarkType
           .create({
@@ -97,7 +97,8 @@ export function showUpdateLinkModal(
             text: text.value
           })
           .addToSet(currentTextNode?.marks || []),
-        currentTextNode === null
+        currentTextNode === null,
+        pos
       );
     }
   });

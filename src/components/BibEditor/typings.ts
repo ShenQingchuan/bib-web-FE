@@ -38,6 +38,7 @@ export interface EditorComposable {
   toggleMark: (markName: EditorToggleCategories) => void;
   toggleTextColor: (color: string) => void;
   toggleTextBgColor: (color: string) => void;
+  toggleQuoteBlock: () => void;
   onEditorDispatched: (fn: DispatchHook, meta?: Record<string, any>) => void;
   applyForNodesAtCursor: (fn: (node: Node, pos: number) => void) => void;
 }

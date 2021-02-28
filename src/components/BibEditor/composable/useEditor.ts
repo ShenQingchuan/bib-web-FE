@@ -6,8 +6,10 @@ import { buildInputRules, buildPasteRules } from '../input-rules';
 import { keymap } from 'prosemirror-keymap';
 import {
   baseKeymap,
+  lift,
   setBlockType,
-  toggleMark as _tm
+  toggleMark as _tm,
+  wrapIn
 } from 'prosemirror-commands';
 import { dropCursor } from 'prosemirror-dropcursor';
 import { gapCursor } from 'prosemirror-gapcursor';
@@ -81,6 +83,7 @@ export const trKeyList = 'tr-list';
 export const trKeyTextColor = 'tr-textColor';
 export const trKeyTextBgColor = 'tr-textBgColor';
 export const trKeyLinkChange = 'tr-linkChange';
+export const trKeyQuote = 'tr-quote';
 
 export function useEditor(options: BibEditorOptions) {
   let editorView = shallowRef({} as EditorView);
@@ -285,6 +288,21 @@ export function useEditor(options: BibEditorOptions) {
     EditorSchema.marks.hightlighted,
     trKeyTextColor
   );
+  /** 切换 文字引用块 */
+  const toggleQuoteBlock = () => {
+    focus();
+    const { selection, tr } = editorView.value.state;
+    const parentHasQuote = pmutils.findParentNode((node) => {
+      console.log(node.type.name);
+      return ['blockquote'].includes(node.type.name);
+    })(selection);
+    let command = parentHasQuote ? lift : wrapIn(EditorSchema.nodes.blockquote);
+    command(editorView.value.state, (tr) =>
+      useViewDispatch(editorView.value, tr, {
+        trKey: trKeyQuote
+      })
+    );
+  };
 
   /** 注册 Dispatch 回调钩子 */
   const onEditorDispatched = (fn: DispatchHook, meta?: Record<string, any>) => {
@@ -309,6 +327,7 @@ export function useEditor(options: BibEditorOptions) {
     toggleMark,
     toggleTextColor,
     toggleTextBgColor,
+    toggleQuoteBlock,
     toJSON,
     focus,
     onEditorDispatched,

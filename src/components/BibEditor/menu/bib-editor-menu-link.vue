@@ -1,14 +1,14 @@
 <template>
   <div class="bib-editor-menu-item__wrapper flex-row anis-center p-lr-2">
     <a-button
-      type="link"
       class="bib-editor-menu-item__link-btn p-lr-4"
+      type="link"
       :class="{
         active: isActive
       }"
       @click="toggleLinkMark"
     >
-      <LinkOutlined />
+      <LinkOutlined></LinkOutlined>
     </a-button>
   </div>
 </template>
@@ -17,10 +17,10 @@
 import { ref, inject, onMounted, createVNode } from 'vue';
 import { ExclamationCircleOutlined } from '@ant-design/icons-vue';
 import { LinkOutlined } from "@ant-design/icons-vue";
-import type { EditorComposable } from "../typings";
 import { EditorSchema } from '../editor-schema';
 import { showUpdateLinkModal, updateLink } from '../plugins/handle-link-click';
 import { Modal } from 'ant-design-vue';
+import type { EditorComposable } from "../typings";
 
 // @States:
 const isActive = ref(false);
@@ -46,7 +46,7 @@ onMounted(() => {
 // @Methods:
 const toggleLinkMark = () => {
   const view = editorCompose!.view.value;
-  const { doc, tr, selection: { from, to, empty: selectionEmpty } } = view.state;
+  const { doc, selection: { from } } = view.state;
 
   if (isActive.value) {
     const currentTextNode = doc.nodeAt(from)!;

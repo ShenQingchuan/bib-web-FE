@@ -1,8 +1,8 @@
-import { isBibUserTokenValid } from "./utils/user-token-validation";
-import { message } from "ant-design-vue";
-import { createRouter, createWebHistory, RouteRecordRaw } from "vue-router";
-import { Component } from "vue";
-const DEFAULT_ROUTE_TITILE = "Bib · 打造你的云上知识库";
+import { isBibUserTokenValid } from './utils/user-token-validation';
+import { message } from 'ant-design-vue';
+import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router';
+import { Component } from 'vue';
+const DEFAULT_ROUTE_TITILE = 'Bib · 打造你的云上知识库';
 const $title = (title: string) => `${title} | ${DEFAULT_ROUTE_TITILE}`;
 
 /**
@@ -16,7 +16,7 @@ const $title = (title: string) => `${title} | ${DEFAULT_ROUTE_TITILE}`;
 const createRoute = (
   path: string,
   component: () => Promise<Component>,
-  title: string = "Bib",
+  title: string = 'Bib',
   meta: Record<string | number | symbol, any> = {},
   children?: RouteRecordRaw[]
 ): RouteRecordRaw => {
@@ -26,59 +26,59 @@ const createRoute = (
     children,
     meta: {
       title: $title(title),
-      ...meta,
-    },
+      ...meta
+    }
   };
 };
 
 const routes: Array<RouteRecordRaw> = [
-  createRoute("/", () => import("./pages/landing.vue"), "欢迎"),
+  createRoute('/', () => import('./pages/landing.vue'), '欢迎'),
   createRoute(
-    "/dashboard",
-    () => import("./pages/dashboard/layout.vue"),
-    "工作台",
+    '/dashboard',
+    () => import('./pages/dashboard/layout.vue'),
+    '工作台',
     {
-      requiredAuth: true,
+      requiredAuth: true
     },
     [
-      createRoute("", () => import("./pages/dashboard/index.vue"), "工作台"),
+      createRoute('', () => import('./pages/dashboard/index.vue'), '工作台'),
       createRoute(
-        "collections",
-        () => import("./pages/dashboard/collections.vue"),
-        "收藏"
+        'collections',
+        () => import('./pages/dashboard/collections.vue'),
+        '收藏'
       ),
       createRoute(
-        "recycles",
-        () => import("./pages/dashboard/recycles.vue"),
-        "回收站"
-      ),
+        'recycles',
+        () => import('./pages/dashboard/recycles.vue'),
+        '回收站'
+      )
     ]
   ),
-  createRoute("/login", () => import("./pages/login.vue"), "登录"),
-  createRoute("/register", () => import("./pages/register.vue"), "注册"),
+  createRoute('/login', () => import('./pages/login.vue'), '登录'),
+  createRoute('/register', () => import('./pages/register.vue'), '注册'),
   createRoute(
-    "/password-retrieve",
-    () => import("./pages/password-retrieve.vue"),
-    "找回密码"
+    '/password-retrieve',
+    () => import('./pages/password-retrieve.vue'),
+    '找回密码'
   ),
   createRoute(
-    "/user/:userName",
-    () => import("./pages/user-center.vue"),
-    "个人中心"
+    '/user/:userName',
+    () => import('./pages/user-center.vue'),
+    '个人中心'
   ),
   createRoute(
-    "/editor-playground",
-    () => import("./pages/editor-playground.vue"),
-    "编辑器预览"
+    '/editor-playground',
+    () => import('./pages/editor-playground.vue'),
+    '编辑器预览'
   ),
 
-  createRoute("/not-found", () => import("./pages/not-found.vue"), "404"),
-  { path: "/:pathMatch(.*)*", redirect: "/not-found" },
+  createRoute('/not-found', () => import('./pages/not-found.vue'), '404'),
+  { path: '/:pathMatch(.*)*', redirect: '/not-found' }
 ];
 
 const router = createRouter({
-  history: createWebHistory(process.env.BASE_URL),
-  routes,
+  history: createWebHistory(),
+  routes
 });
 router.beforeEach(async (to, from, next) => {
   console.log(
@@ -88,17 +88,17 @@ router.beforeEach(async (to, from, next) => {
   document.title = to.meta?.title || DEFAULT_ROUTE_TITILE;
   // 首页 / 若已登录重定向至工作台
   const logined = isBibUserTokenValid();
-  if (to.path === "/" && logined) {
-    next("/dashboard");
+  if (to.path === '/' && logined) {
+    next('/dashboard');
   }
-  if (to.path === "/login" && logined) {
-    message.warn("您已经登录，若要重新登录请退出当前帐号！");
-    next("/dashboard");
+  if (to.path === '/login' && logined) {
+    message.warn('您已经登录，若要重新登录请退出当前帐号！');
+    next('/dashboard');
   }
   // 若未登录则重定向至登录页
   if (to.meta.requiredAuth && !logined) {
-    message.warning("请您先登录后再操作！", 2);
-    next("/login");
+    message.warning('请您先登录后再操作！', 2);
+    next('/login');
   } else next();
 });
 

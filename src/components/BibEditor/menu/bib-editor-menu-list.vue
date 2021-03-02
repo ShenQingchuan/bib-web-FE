@@ -1,17 +1,17 @@
 <template>
   <div class="bib-editor-menu-item__wrapper m-lr-10">
     <a-button
-      v-for="item in listMenuItems"
-      :key="item.name"
+      v-for="e in listMenuEnums"
+      :key="e.name"
       class="bib-editor-menu-item__list-btn"
       :class="{
-        active: activeList === item.name
+        active: activeList === e.name
       }"
       type="link"
-      @click="toggleListType(item.nodeType)"
+      @click="toggleListType(e.listType, e.itemType)"
     >
       <template #icon>
-        <component :is="item.icon"></component>
+        <component :is="e.icon"></component>
       </template>
     </a-button>
   </div>
@@ -31,13 +31,13 @@ import type { EditorComposable } from "../typings";
 
 // @States:
 const editorCompose = inject<EditorComposable>("editorCompose");
-const { bullet_list, ordered_list, task_list } = EditorSchema.nodes;
-const listMenuItems = [
-  { name: 'ordered', icon: OrderedListOutlined, nodeType: ordered_list },
-  { name: 'bullet', icon: UnorderedListOutlined, nodeType: bullet_list },
-  { name: 'task', icon: CheckSquareOutlined, nodeType: task_list }
+const { bullet_list, ordered_list, task_list, list_item, task_item } = EditorSchema.nodes;
+const listMenuEnums = [
+  { name: 'ordered_list', icon: OrderedListOutlined, listType: ordered_list, itemType: list_item },
+  { name: 'bullet_list', icon: UnorderedListOutlined, listType: bullet_list, itemType: list_item },
+  { name: 'task_list', icon: CheckSquareOutlined, listType: task_list, itemType: task_item }
 ];
-const activeList = ref<"none" | "ordered" | "bullet" | "task">("none");
+const activeList = ref("none");
 
 // @LifeCycles:
 onMounted(() => {
@@ -47,20 +47,7 @@ onMounted(() => {
         editorCompose.view.value.state.selection
       )
       if (listTypeNames.includes(currentNode.type.name)) {
-        switch (currentNode.type.name) {
-          case "ordered_list": {
-            activeList.value = "ordered";
-            return;
-          }
-          case "bullet_list": {
-            activeList.value = "bullet";
-            return;
-          }
-          case "task_list": {
-            activeList.value = "task";
-            return;
-          }
-        }
+        activeList.value = currentNode.type.name;
       }
       if (!hasListTypeParent && activeList.value !== 'none') {
         activeList.value = "none";
@@ -70,9 +57,10 @@ onMounted(() => {
 })
 
 // @Methods:
-const toggleListType = (listType: NodeType) => {
-  editorCompose?.toggleList(listType);
+const toggleListType = (listType: NodeType, itemType: NodeType) => {
+  editorCompose?.toggleList(listType, itemType);
   editorCompose?.focus();
+  activeList.value = listType.name;
 }
 </script>
 

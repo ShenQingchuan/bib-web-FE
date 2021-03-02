@@ -45,7 +45,7 @@ import {
   Layout,
   Row,
   Col,
-  ConfigProvider
+  ConfigProvider,
 } from 'ant-design-vue';
 
 createApp(App)

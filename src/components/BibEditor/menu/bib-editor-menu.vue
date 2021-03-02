@@ -1,5 +1,5 @@
 <template>
-  <div class="flex-row anis-center p-10">
+  <div class="bib-menu flex-row anis-center p-10">
     <bib-menu-header />
     <bib-menu-text-color />
     <bib-menu-text-bg-color />
@@ -48,3 +48,10 @@ const props = defineProps<{
 }>();
 provide("editorCompose", props.editorCompose);
 </script>
+
+<style lang="less">
+.bib-menu {
+  white-space: nowrap;
+  overflow: auto;
+}
+</style>

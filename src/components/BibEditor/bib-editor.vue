@@ -73,25 +73,23 @@ defineProps<{
     ul {
       list-style-type: disc;
 
+      li {
+        margin-left: 24px;
+      }
       &[data-type="task-list"] {
         list-style: none;
 
         li[data-type="task-item"] {
-          margin-left: 24px;
-          position: relative;
-          padding-left: 14px;
-
+          margin-left: 18px;
           input[type="checkbox"] {
             width: 14px;
             height: 14px;
-            position: absolute;
-            left: -4px;
-            top: 50%;
-            transform: translateY(-50%);
+            display: inline-block;
           }
 
           div.task-content {
             margin-left: 8px;
+            display: inline-block;
             p {
               margin-left: 0;
             }
@@ -108,7 +106,6 @@ defineProps<{
       }
     }
     li {
-      margin-left: 20px;
       list-style-position: inside;
 
       p {
@@ -116,8 +113,12 @@ defineProps<{
         margin-left: 0;
       }
     }
-    ol li p {
-      margin-left: 4px;
+
+    ol li {
+      margin-left: 20px;
+      p {
+        margin-left: 4px;
+      }
     }
 
     hr {

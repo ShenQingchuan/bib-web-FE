@@ -34,7 +34,7 @@ export interface EditorComposable {
   focus: () => void;
   toggleHeading: (attrs: { level: number }) => void;
   toggleAlign: (direction: string) => void;
-  toggleList: (listType: NodeType, itemTyp?: NodeType) => void;
+  toggleList: (listType: NodeType, itemTyp: NodeType) => void;
   toggleMark: (markName: EditorToggleCategories) => void;
   toggleTextColor: (color: string) => void;
   toggleTextBgColor: (color: string) => void;

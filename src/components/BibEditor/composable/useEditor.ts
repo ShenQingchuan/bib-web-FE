@@ -5,6 +5,7 @@ import { addBibKeymap } from '../helpers/buildKeymap';
 import { buildInputRules, buildPasteRules } from '../input-rules';
 import {
   baseKeymap,
+  chainCommands,
   lift,
   setBlockType,
   toggleMark as _tm,
@@ -24,12 +25,14 @@ import {
   EditorComposable,
   EditorToggleCategories
 } from '../typings';
-import { EditorSchema } from '../editor-schema';
+import { EditorSchema, listTypeNames } from '../editor-schema';
 import { onUnmounted, shallowRef, ref } from 'vue';
 import * as pmutils from 'prosemirror-utils';
 import { liftListItem, wrapInList } from 'prosemirror-schema-list';
 import TaskItemView from '../node-views/task-item-view';
 import { keymap } from 'prosemirror-keymap';
+import { chain } from 'underscore';
+import clearNodes from '../commands/clearNodes';
 
 const sampleInitDocJSON = {
   type: 'doc',
@@ -207,45 +210,43 @@ export function useEditor(options: BibEditorOptions) {
     editorView.value.dispatch(tr);
   };
   /** 切换 列表类型 */
-  const toggleList = (listType: NodeType, itemType?: NodeType) => {
-    const { state, dispatch } = editorView.value;
-    const { schema, selection } = state;
+  const toggleList = (listType: NodeType, itemType: NodeType) => {
+    let { state, dispatch } = editorView.value;
+    const { schema, selection, tr } = state;
     const { $from, $to } = selection;
     const range = $from.blockRange($to);
     if (!range) {
-      return false;
+      return;
     }
-
-    if (!itemType) {
-      itemType = EditorSchema.nodes.list_item;
-    }
-
     const parentList = pmutils.findParentNode((node) => isList(node, schema))(
       selection
     );
-
     if (range.depth >= 1 && parentList && range.depth - parentList.depth <= 1) {
+      // turn-off this kind of list when it's already active
       if (parentList.node.type === listType) {
-        return liftListItem(itemType)(state, dispatch);
+        liftListItem(itemType)(state, dispatch);
+        return;
       }
 
-      if (
-        isList(parentList.node, schema) &&
-        listType.validContent(parentList.node.content)
-      ) {
-        const { tr } = state;
-        tr.setNodeMarkup(parentList.pos, listType);
-        tr.setMeta('trKey', trKeyList);
-
-        if (dispatch) {
-          dispatch(tr);
+      // if editor can switch list type between the two
+      // ( ol <-> ul )
+      if (isList(parentList.node, schema) && dispatch) {
+        if (listType.validContent(parentList.node.content)) {
+          tr.setNodeMarkup(parentList.pos, listType);
+          tr.setMeta('trKey', trKeyList);
+          return dispatch(tr);
+        } else {
+          clearNodes()(state, dispatch);
+          // state has changed, so it needs an update
+          state = editorView.value.state;
+          wrapInList(listType)(state, dispatch);
+          return;
         }
-
-        return false;
       }
     }
 
-    return wrapInList(listType)(state, dispatch);
+    // just wrap in list
+    wrapInList(listType)(state, dispatch);
   };
   const createToggleColorCommand = (markType: MarkType, trKey: string) => {
     return (color: string) => {

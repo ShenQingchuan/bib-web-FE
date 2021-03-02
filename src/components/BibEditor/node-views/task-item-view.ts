@@ -53,6 +53,7 @@ export default class TaskItemView implements NodeView {
     }
 
     this.checkbox!.dataset.checked = updatedNode.attrs.checked;
+    this.dom.style.textAlign = updatedNode.attrs.textAlign;
     return true;
   }
 

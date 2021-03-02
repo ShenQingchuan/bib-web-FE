@@ -199,7 +199,7 @@ export const nodes: {
   },
   list_item: {
     attrs: extends_textBlockAttrs(),
-    group: 'block list_item',
+    group: 'block',
     content: 'paragraph block*',
     defining: true,
     parseDOM: [
@@ -214,7 +214,7 @@ export const nodes: {
   },
   task_item: {
     attrs: extends_textBlockAttrs({ checked: { default: false } }),
-    group: 'block list_item',
+    group: 'block',
     content: 'paragraph block*',
     defining: true,
     parseDOM: [

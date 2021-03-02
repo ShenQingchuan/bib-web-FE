@@ -5,6 +5,9 @@ import store from './store';
 import 'ant-design-vue/dist/antd.less';
 import 'prosemirror-view/style/prosemirror.css';
 import 'codemirror/lib/codemirror.css';
+import 'prosemirror-gapcursor/style/gapcursor.css';
+
+// project scoped
 import './less/global.less';
 
 // CodeMirror Language Modes
@@ -45,7 +48,7 @@ import {
   Layout,
   Row,
   Col,
-  ConfigProvider,
+  ConfigProvider
 } from 'ant-design-vue';
 
 createApp(App)

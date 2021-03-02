@@ -23,7 +23,8 @@ import {
   BibEditorOptions,
   DispatchHook,
   EditorComposable,
-  EditorToggleCategories
+  EditorToggleCategories,
+  InsertImageType
 } from '../typings';
 import { EditorSchema, listTypeNames } from '../editor-schema';
 import { onUnmounted, shallowRef, ref } from 'vue';
@@ -84,6 +85,7 @@ export const trKeyTextBgColor = 'tr-textBgColor';
 export const trKeyLinkChange = 'tr-linkChange';
 export const trKeyQuote = 'tr-quote';
 export const trKeyHr = 'tr-hr';
+export const trKeyInsertImage = 'tr-insertImage';
 
 export function useEditor(options: BibEditorOptions) {
   let editorView = shallowRef({} as EditorView);
@@ -295,8 +297,8 @@ export function useEditor(options: BibEditorOptions) {
       })
     );
   };
-  /** 添加 分割线 */
-  const addHorizontalRuleLine = () => {
+  /** 插入 分割线 */
+  const insertHorizontalRuleLine = () => {
     const { state, dispatch } = editorView.value;
     const { tr } = state;
     tr.replaceSelectionWith(
@@ -306,6 +308,20 @@ export function useEditor(options: BibEditorOptions) {
     dispatch(tr);
     editorView.value.focus();
   };
+  /** 插入 图片 */
+  const insertImage = (insertType: InsertImageType) => {
+    focus();
+    const { state, dispatch } = editorView.value;
+    const { tr, selection } = state;
+    if (insertType === 'local') {
+      const inputer: HTMLInputElement | null = document.querySelector(
+        '.bib-editor__local-image-inputer'
+      );
+      inputer?.click();
+      // 呼出文件上传窗口，后续由 input 的 @change 事件接管
+    } else {
+    }
+  };
 
   /** 注册 Dispatch 回调钩子 */
   const onEditorDispatched = (fn: DispatchHook, meta?: Record<string, any>) => {
@@ -313,7 +329,7 @@ export function useEditor(options: BibEditorOptions) {
     updateHooks.value.push(fn);
   };
 
-  /** 获取当前光标处的 node */
+  /** 将 fn 回调函数应用于当前光标处的所有 node */
   const applyForNodesAtCursor = (fn: (node: Node, pos: number) => void) => {
     const { from, to, empty } = editorView.value.state.selection;
     if (empty) {
@@ -331,7 +347,8 @@ export function useEditor(options: BibEditorOptions) {
     toggleTextColor,
     toggleTextBgColor,
     toggleQuoteBlock,
-    addHorizontalRuleLine,
+    insertHorizontalRuleLine,
+    insertImage,
     toJSON,
     focus,
     onEditorDispatched,

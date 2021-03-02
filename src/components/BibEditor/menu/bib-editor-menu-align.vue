@@ -21,6 +21,7 @@
 import { inject, onMounted, ref } from "vue";
 import { AlignLeftOutlined, AlignCenterOutlined, AlignRightOutlined } from "@ant-design/icons-vue";
 import type { EditorComposable } from "../typings";
+import { findParentNode } from "prosemirror-utils";
 
 const alignOptions = [
   { direction: "left", icon: AlignLeftOutlined },
@@ -35,15 +36,15 @@ const activeAlign = ref<"none" | "left" | "center" | "right">("none");
 // @LifeCycles: 
 onMounted(() => {
   editorCompose?.onEditorDispatched(() => {
-    editorCompose.applyForNodesAtCursor((currentNode) => {
-      if (currentNode && currentNode.attrs.textAlign) {
-        activeAlign.value = currentNode.attrs.textAlign;
-        return;
-      }
+    const { selection } = editorCompose.view.value.state;
+    const parentHasAlign = findParentNode(node => !!node.attrs.textAlign)(selection);
+    if (parentHasAlign) {
+      activeAlign.value = parentHasAlign.node.attrs.textAlign;
+    } else {
       if (activeAlign.value !== "none") {
         activeAlign.value = "none";
       }
-    });
+    }
   });
 })
 

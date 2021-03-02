@@ -12,7 +12,6 @@ function pathResolve(dir: string) {
  */
 export default defineConfig({
   plugins: [vue(), vueJsx()],
-  alias: {},
   optimizeDeps: {
     include: [
       '@ant-design/icons-vue',
@@ -22,7 +21,8 @@ export default defineConfig({
       '@vueuse/core',
       'vuex',
       'vue-router',
-      'jsonwebtoken'
+      'jsonwebtoken',
+      'cos-nodejs-sdk-v5'
     ]
   },
   css: {

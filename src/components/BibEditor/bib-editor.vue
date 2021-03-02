@@ -16,9 +16,6 @@ defineProps<{
 @import "../../less/color.less";
 
 .bib-editor {
-  &.demo {
-    margin: 40px auto;
-  }
   width: 80vw;
   min-height: 100vh;
 

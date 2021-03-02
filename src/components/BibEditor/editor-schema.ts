@@ -122,8 +122,8 @@ export const nodes: {
     inline: true,
     attrs: {
       src: {},
-      alt: { default: null },
-      title: { default: null }
+      alt: { default: undefined },
+      title: { default: undefined }
     },
     group: 'inline',
     draggable: true,

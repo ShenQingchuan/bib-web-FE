@@ -1,6 +1,6 @@
 <template>
-  <bib-editor-menu :editor-compose="editorCompose" />
-  <div class="flex-row anis-center p-lr-6">
+  <bib-editor-menu :editor-compose="editorCompose" fixed />
+  <div class="flex-row anis-center p-lr-6 demo-utils">
     <a-button class="m-lr-10" @click="logDocJSON">输出 Doc JSON</a-button>
     <a-button class="m-lr-10" @click="logSelectionNodesBetween">输出 Selection Nodes Between</a-button>
   </div>
@@ -37,4 +37,19 @@ const logSelectionNodesBetween = () => {
 };
 </script>
 
-<style lang="less" scoped></style>
+<style lang="less" scoped>
+.demo {
+  width: 874px;
+  border: 1px solid #e8e8e8;
+  box-shadow: 0 2px 8px #73737314;
+  padding: 60px;
+
+  // for view-port vertical length extending:
+  margin: 140px auto 60px auto;
+}
+.demo-utils {
+  position: fixed;
+  top: 70px;
+  z-index: 99;
+}
+</style>

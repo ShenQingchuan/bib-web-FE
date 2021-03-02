@@ -41,7 +41,7 @@ const toggleQuoteNode = () => {
 }
 </script>
 
-<style lang="less">
+<style lang="less" scoped>
 @import "../../../less/color.less";
 
 .bib-editor-menu-item {

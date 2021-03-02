@@ -31,48 +31,58 @@ const createRoute = (
   };
 };
 
+const dynamicViewsModules = import.meta.glob('./pages/**/*.{vue,tsx}');
+
 const routes: Array<RouteRecordRaw> = [
-  createRoute('/', () => import('./pages/landing.vue'), '欢迎'),
+  createRoute('/', dynamicViewsModules['./pages/landing.vue'], '欢迎'),
   createRoute(
     '/dashboard',
-    () => import('./pages/dashboard/layout.vue'),
+    dynamicViewsModules['./pages/dashboard/layout.vue'],
     '工作台',
     {
       requiredAuth: true
     },
     [
-      createRoute('', () => import('./pages/dashboard/index.vue'), '工作台'),
+      createRoute(
+        '',
+        dynamicViewsModules['./pages/dashboard/index.vue'],
+        '工作台'
+      ),
       createRoute(
         'collections',
-        () => import('./pages/dashboard/collections.vue'),
+        dynamicViewsModules['./pages/dashboard/collections.vue'],
         '收藏'
       ),
       createRoute(
         'recycles',
-        () => import('./pages/dashboard/recycles.vue'),
+        dynamicViewsModules['./pages/dashboard/recycles.vue'],
         '回收站'
       )
     ]
   ),
-  createRoute('/login', () => import('./pages/login.vue'), '登录'),
-  createRoute('/register', () => import('./pages/register.vue'), '注册'),
+  createRoute('/login', dynamicViewsModules['./pages/login.vue'], '登录'),
+  createRoute('/register', dynamicViewsModules['./pages/register.vue'], '注册'),
   createRoute(
     '/password-retrieve',
-    () => import('./pages/password-retrieve.vue'),
+    dynamicViewsModules['./pages/password-retrieve.vue'],
     '找回密码'
   ),
   createRoute(
     '/user/:userName',
-    () => import('./pages/user-center.vue'),
+    dynamicViewsModules['./pages/user-center.vue'],
     '个人中心'
   ),
   createRoute(
     '/editor-playground',
-    () => import('./pages/editor-playground.vue'),
+    dynamicViewsModules['./pages/editor-playground.vue'],
     '编辑器预览'
   ),
 
-  createRoute('/not-found', () => import('./pages/not-found.vue'), '404'),
+  createRoute(
+    '/not-found',
+    dynamicViewsModules['./pages/not-found.vue'],
+    '404'
+  ),
   { path: '/:pathMatch(.*)*', redirect: '/not-found' }
 ];
 

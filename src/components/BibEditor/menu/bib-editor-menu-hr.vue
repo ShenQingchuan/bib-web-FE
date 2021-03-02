@@ -1,6 +1,6 @@
 <template>
   <div class="bib-editor-menu-item__wrapper flex-row anis-center p-lr-2">
-    <a-button class="bib-editor-menu-item__hr-btn p-lr-4" type="link" @click="addHrLine">
+    <a-button class="bib-editor-menu-item__hr-btn p-lr-4" type="link" @click="insertHrLine">
       <MinusOutlined />
     </a-button>
   </div>
@@ -18,12 +18,12 @@ import { EditorSchema } from '../editor-schema';
 const editorCompose = inject<EditorComposable>("editorCompose");
 
 // @Methods:
-const addHrLine = () => {
-  editorCompose?.addHorizontalRuleLine();
+const insertHrLine = () => {
+  editorCompose?.insertHorizontalRuleLine();
 }
 </script>
 
-<style lang='less'>
+<style lang="less" scoped>
 @import "../../../less/color.less";
 
 .bib-editor-menu-item {

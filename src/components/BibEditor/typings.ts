@@ -39,7 +39,10 @@ export interface EditorComposable {
   toggleTextColor: (color: string) => void;
   toggleTextBgColor: (color: string) => void;
   toggleQuoteBlock: () => void;
-  addHorizontalRuleLine: () => void;
+  insertHorizontalRuleLine: () => void;
+  insertImage: (insertType: InsertImageType) => void;
   onEditorDispatched: (fn: DispatchHook, meta?: Record<string, any>) => void;
   applyForNodesAtCursor: (fn: (node: Node, pos: number) => void) => void;
 }
+
+export type InsertImageType = 'local' | 'online';

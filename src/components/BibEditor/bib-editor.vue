@@ -1,5 +1,5 @@
 <template>
-  <div class="bib-editor" :ref="initEditorRef" @click="editorCompose.focus()"></div>
+  <div class="bib-editor" :ref="initEditorRef"></div>
 </template>
 
 <script setup lang="ts">

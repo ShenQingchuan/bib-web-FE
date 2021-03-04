@@ -27,8 +27,22 @@ const stylesOfTextBlock = (node: Node, append?: (node: Node) => string) => {
   }
   return style;
 };
-
 export const listTypeNames = ['ordered_list', 'bullet_list', 'task_list'];
+
+const extendsTextBlockStyleAttrs = (
+  computeOther?: (_dom: HTMLElement) => Record<string, any>
+) => (dom: HTMLElement) => {
+  let textBlockStylesAttrs: Record<string, any> = {};
+  if (!!dom.style.textAlign) {
+    textBlockStylesAttrs.textAlign = dom.style.textAlign;
+  }
+
+  const otherAttrs = computeOther ? computeOther(dom) : {};
+  return {
+    ...otherAttrs,
+    ...textBlockStylesAttrs
+  };
+};
 
 // :: Object
 // [Specs](#model.NodeSpec) for the nodes defined in this schema.
@@ -46,9 +60,10 @@ export const nodes: {
     attrs: extends_textBlockAttrs(),
     content: 'inline*',
     group: 'block',
-    parseDOM: [{ tag: 'p' }],
+    parseDOM: [{ tag: 'p', getAttrs: extendsTextBlockStyleAttrs() }],
     toDOM(node: Node) {
       const style = stylesOfTextBlock(node);
+      console.log('[ toDOM: style ]', style);
       return ['p', { style }, 0];
     }
   },
@@ -83,12 +98,30 @@ export const nodes: {
     group: 'block',
     defining: true,
     parseDOM: [
-      { tag: 'h1', attrs: { level: 1 } },
-      { tag: 'h2', attrs: { level: 2 } },
-      { tag: 'h3', attrs: { level: 3 } },
-      { tag: 'h4', attrs: { level: 4 } },
-      { tag: 'h5', attrs: { level: 5 } },
-      { tag: 'h6', attrs: { level: 6 } }
+      {
+        tag: 'h1',
+        getAttrs: extendsTextBlockStyleAttrs(() => ({ level: 1 }))
+      },
+      {
+        tag: 'h2',
+        getAttrs: extendsTextBlockStyleAttrs(() => ({ level: 2 }))
+      },
+      {
+        tag: 'h3',
+        getAttrs: extendsTextBlockStyleAttrs(() => ({ level: 3 }))
+      },
+      {
+        tag: 'h4',
+        getAttrs: extendsTextBlockStyleAttrs(() => ({ level: 4 }))
+      },
+      {
+        tag: 'h5',
+        getAttrs: extendsTextBlockStyleAttrs(() => ({ level: 5 }))
+      },
+      {
+        tag: 'h6',
+        getAttrs: extendsTextBlockStyleAttrs(() => ({ level: 6 }))
+      }
     ],
     toDOM(node: Node) {
       const style = stylesOfTextBlock(node);
@@ -204,7 +237,8 @@ export const nodes: {
     defining: true,
     parseDOM: [
       {
-        tag: 'li'
+        tag: 'li',
+        getAttrs: extendsTextBlockStyleAttrs
       }
     ],
     toDOM(node: Node) {
@@ -221,11 +255,11 @@ export const nodes: {
       {
         tag: 'li[data-type="task-item"][data-checked]',
         priority: 51,
-        getAttrs(dom: HTMLElement) {
+        getAttrs: extendsTextBlockStyleAttrs((dom) => {
           return {
             checked: dom.getAttribute('data-checked') === 'true'
           };
-        }
+        })
       }
     ],
     toDOM() {

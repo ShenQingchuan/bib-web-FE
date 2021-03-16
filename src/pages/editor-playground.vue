@@ -43,7 +43,6 @@ const logSelectionNodesBetween = () => {
   width: 874px;
   border: 1px solid #e8e8e8;
   box-shadow: 0 2px 8px #73737314;
-  padding: 60px;
 
   // for view-port vertical length extending:
   margin: 140px auto 60px auto;

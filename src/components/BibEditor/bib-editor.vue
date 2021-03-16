@@ -17,15 +17,15 @@ defineProps<{
 
 .bib-editor {
   width: 80vw;
-  min-height: 100vh;
 
   .ProseMirror {
     width: 100%;
-    height: 100%;
+    min-height: 100vh;
     line-height: 1.74;
     font-size: 15px;
     letter-spacing: 0.008em;
     color: #000;
+    padding: 60px;
 
     &:focus {
       outline: none;

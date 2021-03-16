@@ -20,7 +20,8 @@ import BibEditorMenu from '../components/BibEditor/menu/bib-editor-menu.vue';
 // @States:
 const bibEditorRef = ref<any>(null);
 const { editorCompose, initEditor } = useEditor({
-  initContent: ''
+  initContent: '',
+  docName: 'Playground'
 });
 const logDocJSON = () => {
   console.log(editorCompose.view.value.state.doc.toJSON());

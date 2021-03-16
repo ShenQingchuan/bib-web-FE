@@ -5,6 +5,7 @@ import { Ref } from 'vue';
 
 export interface BibEditorOptions {
   initContent: string;
+  docName: string;
   placeholder?: string;
 }
 

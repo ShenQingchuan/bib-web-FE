@@ -35,14 +35,9 @@ import clearNodes from '../commands/clearNodes';
 import * as Y from 'yjs';
 import { WebsocketProvider } from 'y-websocket';
 import { ySyncPlugin, yCursorPlugin, yUndoPlugin } from 'y-prosemirror';
-
-const ydoc = new Y.Doc();
-const provider = new WebsocketProvider(
-  'ws://localhost:2048',
-  'prosemirror',
-  ydoc
-);
-const type = ydoc.getXmlFragment('prosemirror');
+import { usePayloadFromToken } from '../../../utils/user-token-validation';
+import { uniqueNamesGenerator, names, starWars } from 'unique-names-generator';
+import randomColor from 'randomcolor';
 
 const sampleInitDocJSON = {
   type: 'doc',
@@ -102,6 +97,28 @@ export function useEditor(options: BibEditorOptions) {
 
   /** 通过 ref hook 初始化 EditorView */
   const initEditor = (el: any) => {
+    // Y.js 协同配置：
+    const ydoc = new Y.Doc();
+    const provider = new WebsocketProvider(
+      'ws://localhost:2048',
+      options.docName,
+      ydoc
+    );
+    const yFragment = ydoc.getXmlFragment(options.docName);
+    const tokenPayload = usePayloadFromToken();
+    const randomName = uniqueNamesGenerator({
+      dictionaries: [starWars, names],
+      separator: '',
+      style: 'capital',
+      length: 2
+    });
+    provider.awareness.setLocalStateField('user', {
+      color: randomColor({
+        luminosity: 'dark'
+      }),
+      name: tokenPayload?.userName || randomName
+    });
+
     editorView.value = new EditorView(el as HTMLDivElement, {
       state: EditorState.create({
         doc: createInitDoc(EditorSchema, options.initContent),
@@ -109,8 +126,21 @@ export function useEditor(options: BibEditorOptions) {
           history(),
           buildInputRules(EditorSchema),
           ...buildPasteRules(EditorSchema),
-          ySyncPlugin(type),
-          yCursorPlugin(provider.awareness),
+          ySyncPlugin(yFragment),
+          // @ts-ignore :: 此处该库类型定义存疑
+          yCursorPlugin(provider.awareness, {
+            cursorBuilder: (user) => {
+              const cursor = document.createElement('span');
+              cursor.classList.add('ProseMirror-yjs-cursor');
+              cursor.style.borderColor = user.color;
+
+              const userDiv = document.createElement('div');
+              userDiv.style.backgroundColor = user.color;
+              userDiv.insertBefore(document.createTextNode(user.name), null);
+              cursor.insertBefore(userDiv, null);
+              return cursor;
+            }
+          }),
           yUndoPlugin(),
           addBibKeymap(EditorSchema),
           keymap(baseKeymap),

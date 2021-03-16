@@ -63,7 +63,6 @@ export const nodes: {
     parseDOM: [{ tag: 'p', getAttrs: extendsTextBlockStyleAttrs() }],
     toDOM(node: Node) {
       const style = stylesOfTextBlock(node);
-      console.log('[ toDOM: style ]', style);
       return ['p', { style }, 0];
     }
   },

@@ -17,7 +17,7 @@ import {
   sinkListItem
 } from 'prosemirror-schema-list';
 import { Schema, NodeType, MarkType } from 'prosemirror-model';
-import { undo, redo } from 'prosemirror-history';
+import { undo, redo } from 'y-prosemirror';
 import { undoInputRule } from 'prosemirror-inputrules';
 import { keymap } from 'prosemirror-keymap';
 

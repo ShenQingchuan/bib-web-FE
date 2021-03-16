@@ -1,11 +1,10 @@
 import { EditorState, Transaction } from 'prosemirror-state';
 import { EditorView } from 'prosemirror-view';
 import { Node, NodeType, MarkType, Schema } from 'prosemirror-model';
-import { addBibKeymap } from '../helpers/buildKeymap';
+import { addBibKeymap } from '../helpers/add-bib-keymap';
 import { buildInputRules, buildPasteRules } from '../input-rules';
 import {
   baseKeymap,
-  chainCommands,
   lift,
   setBlockType,
   toggleMark as _tm,
@@ -32,8 +31,18 @@ import * as pmutils from 'prosemirror-utils';
 import { liftListItem, wrapInList } from 'prosemirror-schema-list';
 import TaskItemView from '../node-views/task-item-view';
 import { keymap } from 'prosemirror-keymap';
-import { chain } from 'underscore';
 import clearNodes from '../commands/clearNodes';
+import * as Y from 'yjs';
+import { WebsocketProvider } from 'y-websocket';
+import { ySyncPlugin, yCursorPlugin, yUndoPlugin } from 'y-prosemirror';
+
+const ydoc = new Y.Doc();
+const provider = new WebsocketProvider(
+  'ws://localhost:2048',
+  'prosemirror',
+  ydoc
+);
+const type = ydoc.getXmlFragment('prosemirror');
 
 const sampleInitDocJSON = {
   type: 'doc',
@@ -100,6 +109,9 @@ export function useEditor(options: BibEditorOptions) {
           history(),
           buildInputRules(EditorSchema),
           ...buildPasteRules(EditorSchema),
+          ySyncPlugin(type),
+          yCursorPlugin(provider.awareness),
+          yUndoPlugin(),
           addBibKeymap(EditorSchema),
           keymap(baseKeymap),
           dropCursor(),
@@ -328,7 +340,6 @@ export function useEditor(options: BibEditorOptions) {
     fn.hookMeta = meta;
     updateHooks.value.push(fn);
   };
-
   /** 将 fn 回调函数应用于当前光标处的所有 node */
   const applyForNodesAtCursor = (fn: (node: Node, pos: number) => void) => {
     const { from, to, empty } = editorView.value.state.selection;

@@ -1,7 +1,7 @@
 import { MarkType } from 'prosemirror-model';
 import { EditorState, Transaction } from 'prosemirror-state';
 import { EditorSchema } from '../editor-schema';
-import getMarkRange from '../helpers/getMarkRange';
+import getMarkRange from '../helpers/get-mark-range';
 
 export default function(
   type: MarkType,

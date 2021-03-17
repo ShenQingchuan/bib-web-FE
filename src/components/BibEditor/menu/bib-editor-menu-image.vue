@@ -40,7 +40,7 @@ import { inject } from 'vue';
 import Icon, { DesktopOutlined, GlobalOutlined } from '@ant-design/icons-vue';
 import insertImageIcon from '../icons/insert-image-icon.vue';
 import { templateRef } from '@vueuse/core';
-import fusions from '../../../fusions';
+import { fusions } from '../../../fusions';
 import { usePayloadFromToken } from '../../../utils/user-token-validation';
 import { message } from 'ant-design-vue';
 import { Node, Fragment } from "prosemirror-model";

@@ -94,18 +94,18 @@ export const trKeyInsertImage = 'tr-insertImage';
 export function useEditor(options: BibEditorOptions) {
   let editorView = shallowRef({} as EditorView);
   const updateHooks = ref<DispatchHook[]>([]);
+  // Y.js 协同配置：
+  const ydoc = new Y.Doc();
+  const provider = new WebsocketProvider(
+    'ws://localhost:2048',
+    options.docName,
+    ydoc
+  );
+  const yFragment = ydoc.getXmlFragment(options.docName);
+  const tokenPayload = usePayloadFromToken();
 
   /** 通过 ref hook 初始化 EditorView */
   const initEditor = (el: any) => {
-    // Y.js 协同配置：
-    const ydoc = new Y.Doc();
-    const provider = new WebsocketProvider(
-      'ws://localhost:2048',
-      options.docName,
-      ydoc
-    );
-    const yFragment = ydoc.getXmlFragment(options.docName);
-    const tokenPayload = usePayloadFromToken();
     const randomName = uniqueNamesGenerator({
       dictionaries: [starWars, names],
       separator: '',

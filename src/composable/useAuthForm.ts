@@ -1,37 +1,37 @@
-import { computed, reactive, ref } from "vue";
+import { computed, reactive, ref } from 'vue';
 import {
   EMAIL_REGEXP,
   MOBILE_PHONE_REGEXP,
   PASSWORD_REGEXP,
   USERNAME_REGEXP,
-  VCODE_REGEXP,
-} from "../utils/commonly-used-regexp";
-import { ValidationRule } from "ant-design-vue/lib/form/Form";
-import { Form, message } from "ant-design-vue";
-import * as _ from "underscore";
-import fusions from "../fusions";
-import { useRoute, useRouter } from "vue-router";
-import { tokenStorageRef } from "../utils/user-token-validation";
-import router from "../router";
+  VCODE_REGEXP
+} from '../utils/commonly-used-regexp';
+import { ValidationRule } from 'ant-design-vue/lib/form/Form';
+import { Form, message } from 'ant-design-vue';
+import * as _ from 'underscore';
+import { fusions } from '../fusions';
+import { useRoute, useRouter } from 'vue-router';
+import { tokenStorageRef } from '../utils/user-token-validation';
+import router from '../router';
 
 /** 表单中可能发生的错误 */
 export enum LoginRegisterFormError {
-  USEREMAIL_FORMAT_INVALID = "邮箱格式不正确！",
-  USEREMAIL_NOTFOUND = "该邮箱未注册！",
-  USERNAME_FORMAT_INVALID = "用户名格式不正确！",
-  PASSWORD_FORMAT_INVALID = "密码格式不正确！",
-  PHONE_FORMAT_INVALID = "手机号码格式不正确！",
-  PHONE_VERIFY_FORMAT_INVALID = "短信验证码格式不正确！",
-  PASSWORD_NOTSAME = "两次密码输入不一致！",
-  FORM_VALIDATE_FAILED = "表单有字段填写错误！",
-  LOGIN_REQUEST_FAILED = "登录请求失败！",
-  REGISTER_REQUEST_FAILED = "注册请求失败！",
-  VCODE_FORMAT_INVALID = "验证码应为 6 位数字！",
+  USEREMAIL_FORMAT_INVALID = '邮箱格式不正确！',
+  USEREMAIL_NOTFOUND = '该邮箱未注册！',
+  USERNAME_FORMAT_INVALID = '用户名格式不正确！',
+  PASSWORD_FORMAT_INVALID = '密码格式不正确！',
+  PHONE_FORMAT_INVALID = '手机号码格式不正确！',
+  PHONE_VERIFY_FORMAT_INVALID = '短信验证码格式不正确！',
+  PASSWORD_NOTSAME = '两次密码输入不一致！',
+  FORM_VALIDATE_FAILED = '表单有字段填写错误！',
+  LOGIN_REQUEST_FAILED = '登录请求失败！',
+  REGISTER_REQUEST_FAILED = '注册请求失败！',
+  VCODE_FORMAT_INVALID = '验证码应为 6 位数字！'
 }
 /** 表单类型 */
 export enum LoginFormType {
   NAME_FORM = 0,
-  EMAIL_FORM = 1,
+  EMAIL_FORM = 1
 }
 /** 表单最终提交的数据模型 */
 export interface LoginFormData {
@@ -40,11 +40,11 @@ export interface LoginFormData {
   formType: LoginFormType;
 }
 
-const authFormMessageKey = "auth";
+const authFormMessageKey = 'auth';
 const $content = (content: string) => ({
   content,
   key: authFormMessageKey,
-  duration: 1,
+  duration: 1
 });
 
 export function useLoginForm() {
@@ -52,20 +52,20 @@ export function useLoginForm() {
 
   // @States:
   const loginForm = reactive({
-    userName: route.query.userName || "",
-    userEmail: route.query.userEmail || "",
-    password: "",
+    userName: route.query.userName || '',
+    userEmail: route.query.userEmail || '',
+    password: '',
     formType:
-      route.query.type === "email"
+      route.query.type === 'email'
         ? LoginFormType.EMAIL_FORM
         : LoginFormType.NAME_FORM,
-    rememberMe: false,
+    rememberMe: false
   });
   const loginFormTRef = ref<InstanceType<typeof Form> | null>(null);
 
   const seekByEmailFn /** @Utils: */ = _.debounce(
     async (email: string) => {
-      const res = await fusions.get("/auth/seekByEmail?email=" + email);
+      const res = await fusions.get('/auth/seekByEmail?email=' + email);
       if (res.data.isResponseOk) {
         loginForm.userName = res.data.data.userName;
       }
@@ -89,8 +89,8 @@ export function useLoginForm() {
 
           return Promise.resolve();
         },
-        trigger: "change",
-      },
+        trigger: 'change'
+      }
     ],
     userEmail: [
       {
@@ -109,8 +109,8 @@ export function useLoginForm() {
             ? Promise.resolve()
             : Promise.reject(LoginRegisterFormError.USEREMAIL_NOTFOUND);
         },
-        trigger: "change",
-      },
+        trigger: 'change'
+      }
     ],
     password: [
       {
@@ -123,9 +123,9 @@ export function useLoginForm() {
 
           return Promise.resolve();
         },
-        trigger: "change",
-      },
-    ],
+        trigger: 'change'
+      }
+    ]
   };
 
   // @Computed:
@@ -133,14 +133,14 @@ export function useLoginForm() {
     () =>
       loginFormTRef.value?.fields.reduce((p, c) => p + c.errors.length, 0) ===
         0 &&
-      loginFormTRef.value?.fields.every((field) => field.fieldValue !== "")
+      loginFormTRef.value?.fields.every((field) => field.fieldValue !== '')
   );
 
   // @Methods:
   const clearForm = () => {
-    loginForm.userName = "";
-    loginForm.userEmail = "";
-    loginForm.password = "";
+    loginForm.userName = '';
+    loginForm.userEmail = '';
+    loginForm.password = '';
     loginForm.rememberMe = false;
   };
   const handleChangeFormType = (_type: LoginFormType) => {
@@ -160,13 +160,13 @@ export function useLoginForm() {
             return;
           }
           const res = await fusions.post(
-            "/auth/login",
-            _.omit(loginForm, ["userEmail"])
+            '/auth/login',
+            _.omit(loginForm, ['userEmail'])
           );
           if (res.data.isResponseOk) {
-            message.success($content("登录成功！"));
+            message.success($content('登录成功！'));
             tokenStorageRef.value = res.data.data.token;
-            router.push("/dashboard");
+            router.push('/dashboard');
           }
         })
         .catch(() => {
@@ -183,7 +183,7 @@ export function useLoginForm() {
     loginFormRules,
     handleSubmitLoginForm,
     handleChangeFormType,
-    submitable,
+    submitable
   };
 }
 
@@ -192,12 +192,12 @@ export function useRegisterForm() {
 
   // @States:
   const registerForm = reactive({
-    userName: "",
-    userEmail: "",
-    userPhone: "",
-    phoneVerify: "",
-    password: "",
-    confirmPassword: "",
+    userName: '',
+    userEmail: '',
+    userPhone: '',
+    phoneVerify: '',
+    password: '',
+    confirmPassword: ''
   });
   const isSendSmsCodeBtnDisabled = ref(false);
   const sendSmsCodeAgainPendingSeconds = ref(0);
@@ -212,8 +212,8 @@ export function useRegisterForm() {
               LoginRegisterFormError.USERNAME_FORMAT_INVALID
             );
           return Promise.resolve();
-        },
-      },
+        }
+      }
     ],
     userEmail: [
       {
@@ -224,8 +224,8 @@ export function useRegisterForm() {
             );
           }
           return Promise.resolve();
-        },
-      },
+        }
+      }
     ],
     userPhone: [
       {
@@ -234,8 +234,8 @@ export function useRegisterForm() {
             return Promise.reject(LoginRegisterFormError.PHONE_FORMAT_INVALID);
           }
           return Promise.resolve();
-        },
-      },
+        }
+      }
     ],
     phoneVerify: [
       {
@@ -246,8 +246,8 @@ export function useRegisterForm() {
             );
           }
           return Promise.resolve();
-        },
-      },
+        }
+      }
     ],
     password: [
       {
@@ -258,8 +258,8 @@ export function useRegisterForm() {
             );
           }
           return Promise.resolve();
-        },
-      },
+        }
+      }
     ],
     confirmPassword: [
       {
@@ -268,9 +268,9 @@ export function useRegisterForm() {
             return Promise.reject(LoginRegisterFormError.PASSWORD_NOTSAME);
           }
           return Promise.resolve();
-        },
-      },
-    ],
+        }
+      }
+    ]
   };
 
   // @Computed:
@@ -280,7 +280,7 @@ export function useRegisterForm() {
         (p, c) => p + c.errors.length,
         0
       ) === 0 &&
-      registerFormTRef.value?.fields.every((field) => field.fieldValue !== "")
+      registerFormTRef.value?.fields.every((field) => field.fieldValue !== '')
   );
 
   // @Methods:
@@ -297,12 +297,12 @@ export function useRegisterForm() {
           }
 
           const res = await fusions.post(
-            "/auth/register",
-            _.omit(registerForm, ["confirmPassword"])
+            '/auth/register',
+            _.omit(registerForm, ['confirmPassword'])
           );
           if (res.data.isResponseOk) {
-            message.success($content("注册成功！"));
-            router.push("/login");
+            message.success($content('注册成功！'));
+            router.push('/login');
           }
         })
         .catch(() => {
@@ -316,12 +316,12 @@ export function useRegisterForm() {
   );
   const sendSmsCode = async () => {
     if (!MOBILE_PHONE_REGEXP.test(registerForm.userPhone)) {
-      message.warn("您输入的手机号码有误，请检查后再试！");
+      message.warn('您输入的手机号码有误，请检查后再试！');
       return;
     }
 
-    const smsSendRes = await fusions.post("/auth/sendSmsCode", {
-      userPhone: registerForm.userPhone,
+    const smsSendRes = await fusions.post('/auth/sendSmsCode', {
+      userPhone: registerForm.userPhone
     });
     if (smsSendRes.data.isResponseOk) {
       message.success($content(smsSendRes.data.message));
@@ -347,14 +347,14 @@ export function useRegisterForm() {
     sendSmsCodeAgainPendingSeconds,
     handleSubmitRegisterForm,
     submitable,
-    sendSmsCode,
+    sendSmsCode
   };
 }
 
 export function runLogout() {
   tokenStorageRef.value = null;
-  const logoutMsgCloser = message.loading("正在退出登录...", 1, () => {
-    router.push("/login").then(() => {
+  const logoutMsgCloser = message.loading('正在退出登录...', 1, () => {
+    router.push('/login').then(() => {
       logoutMsgCloser();
     });
   });

@@ -99,7 +99,7 @@ import {
   PASSWORD_REGEXP,
   VCODE_REGEXP,
 } from "../utils/commonly-used-regexp";
-import fusions from "../fusions";
+import { fusions } from "../fusions";
 import { message, Form } from "ant-design-vue";
 import { ValidationRule } from "ant-design-vue/lib/form/Form";
 import { LoginRegisterFormError } from "../composable/useAuthForm";

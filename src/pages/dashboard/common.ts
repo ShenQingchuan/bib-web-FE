@@ -6,6 +6,11 @@ export enum DocListItemArchiveType {
   OrgWiki = 3
 }
 
+export interface DocFilter {
+  archiveType: number;
+  text: string;
+}
+
 export interface DocListItem {
   title: string; // 文档标题
   creatorId: number; // 文档创建者的 uid

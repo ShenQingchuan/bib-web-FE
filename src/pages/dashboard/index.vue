@@ -1,12 +1,29 @@
 <template>
   <div class="dashboard-page__doc-list-wrapper p-12">
     <div class="dashboard-page__doc-list flex-col">
-      <h2>我的文档列表</h2>
+      <div class="flex-row anis-center m-b-16">
+        <h2 class="inline m-b-0">最近文档列表</h2>
+        <a-dropdown class="m-l-auto">
+          <span class="doc-list-filter__text">
+            {{ filterName }}
+            <DownOutlined />
+          </span>
+          <template #overlay>
+            <a-menu>
+              <a-menu-item
+                v-for="f in filters"
+                :key="f.archiveType"
+                @click="setFilter(f)"
+              >{{ f.text }}</a-menu-item>
+            </a-menu>
+          </template>
+        </a-dropdown>
+      </div>
       <a-skeleton active :loading="listLoading">
-        <a-empty v-if="docList.length === 0" />
+        <a-empty v-if="filteredDocList.length === 0" />
         <template v-else>
           <div
-            v-for="doc in docList"
+            v-for="doc in filteredDocList"
             :key="doc.createTime"
             class="dashboard-page__doc-list-item flex-row anis-center p-tb-14 p-lr-10"
           >
@@ -32,23 +49,36 @@
 </template>
 
 <script lang="ts">
-import mocker from "../../fusions/mocker";
-import { defineComponent, ref, onMounted } from "vue";
+import { mocker } from "../../fusions";
+import { defineComponent, ref, onMounted, computed } from "vue";
 import DocBelongBreadcrumb from "./doc-belong-breadcrumb.vue";
 import * as dayjs from "dayjs";
 import 'dayjs/locale/zh-cn' // 导入本地化语言
-import type { DocListItem } from "./typings";
+import { DownOutlined } from "@ant-design/icons-vue"
+import { DocListItemArchiveType } from './common';
+import type { DocListItem, DocFilter } from "./common";
 
 dayjs.locale('zh-cn');
+
+const filters: DocFilter[] = [
+  { archiveType: -1, text: '所有' },
+  { archiveType: DocListItemArchiveType.UserOnly, text: '个人空间' },
+  { archiveType: DocListItemArchiveType.UserWiki, text: '个人知识库' },
+  { archiveType: DocListItemArchiveType.OrgOnly, text: '团队空间' },
+  { archiveType: DocListItemArchiveType.OrgWiki, text: '团队知识库' }
+]
 
 export default defineComponent({
   name: "dashboard-index-subpage",
   components: {
-    DocBelongBreadcrumb
+    DocBelongBreadcrumb,
+    DownOutlined
   },
   setup() {
     const docList = ref<DocListItem[]>([]);
     const listLoading = ref(false);
+    const filterType = ref(-1);
+    const filterName = ref('归属');
 
     onMounted(() => {
       listLoading.value = true;
@@ -61,11 +91,25 @@ export default defineComponent({
     const formatTime = (timestamp: number) => {
       return dayjs.unix(timestamp).format('YYYY/MM/DD HH:mm:ss');
     }
+    const filteredDocList = computed(() => {
+      if (filterType.value === -1) {
+        return docList.value
+      }
+      return docList.value.filter(doc => doc.archiveType === filterType.value)
+    })
+    const setFilter = (f: DocFilter) => {
+      filterType.value = f.archiveType;
+      filterName.value = f.text;
+    }
 
     return {
-      docList,
+      filteredDocList,
       listLoading,
       formatTime,
+      filterType,
+      filters,
+      setFilter,
+      filterName,
     };
   }
 });
@@ -113,5 +157,10 @@ export default defineComponent({
   height: 16px;
   visibility: hidden;
   cursor: pointer;
+}
+
+.doc-list-filter__text {
+  cursor: pointer;
+  color: @N500;
 }
 </style>

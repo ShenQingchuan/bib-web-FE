@@ -23,14 +23,12 @@
 
 <script setup lang="ts">
 import { defineProps } from "vue";
-import { DocListItemArchiveType } from './typings';
-import type { DocListItem } from './typings';
+import { DocListItemArchiveType } from './common';
+import type { DocListItem } from './common';
 
-const props = defineProps<{
+defineProps<{
   doc: DocListItem
 }>();
-
-console.log('[ doc ]', props.doc);
 </script>
 
 <style lang="less" scoped="">

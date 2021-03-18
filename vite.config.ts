@@ -3,10 +3,6 @@ import vueJsx from '@vitejs/plugin-vue-jsx';
 import { defineConfig } from 'vite';
 import { resolve } from 'path';
 
-function pathResolve(dir: string) {
-  return resolve(__dirname, '.', dir);
-}
-
 /**
  * @type {import('vite').UserConfig}
  */
@@ -15,13 +11,11 @@ export default defineConfig({
   optimizeDeps: {
     include: [
       '@ant-design/icons-vue',
-      'ant-design-vue',
-      'ant-design-vue/lib/form/Form',
       'underscore',
       '@vueuse/core',
       'vuex',
       'vue-router',
-      'jsonwebtoken',
+      'jsonwebtoken'
     ]
   },
   css: {

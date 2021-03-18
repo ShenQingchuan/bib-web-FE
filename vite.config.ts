@@ -22,7 +22,6 @@ export default defineConfig({
       'vuex',
       'vue-router',
       'jsonwebtoken',
-      'cos-nodejs-sdk-v5'
     ]
   },
   css: {

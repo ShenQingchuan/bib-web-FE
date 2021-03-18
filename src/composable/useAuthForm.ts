@@ -8,7 +8,7 @@ import {
 } from '../utils/commonly-used-regexp';
 import { ValidationRule } from 'ant-design-vue/lib/form/Form';
 import { Form, message } from 'ant-design-vue';
-import * as _ from 'underscore';
+import _ from 'underscore';
 import { fusions } from '../fusions';
 import { useRoute, useRouter } from 'vue-router';
 import { tokenStorageRef } from '../utils/user-token-validation';

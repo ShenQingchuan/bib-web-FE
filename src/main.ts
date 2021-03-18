@@ -48,7 +48,10 @@ import {
   Layout,
   Row,
   Col,
-  ConfigProvider
+  ConfigProvider,
+  Empty,
+  Skeleton,
+  Breadcrumb
 } from 'ant-design-vue';
 
 createApp(App)
@@ -74,6 +77,9 @@ createApp(App)
   .use(Switch)
   .use(Tabs)
   .use(Tooltip)
+  .use(Empty)
+  .use(Skeleton)
+  .use(Breadcrumb)
   // for vue3-colorpicker
   .use(colorPicker)
   .mount('#app');

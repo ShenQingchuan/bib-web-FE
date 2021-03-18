@@ -1,0 +1,49 @@
+<template>
+  <a-breadcrumb class="doc-belong-breadcrumb-wrapper">
+    <a-breadcrumb-item>
+      <a class="doc-belong-breadcrumb-link" :href="`/user/${doc.creatorName}`">{{ doc.creatorName }}</a>
+      <template
+        v-if="doc.archiveType === DocListItemArchiveType.OrgOnly
+        || doc.archiveType === DocListItemArchiveType.OrgWiki"
+      >
+        <a class="doc-belong-breadcrumb-link" :href="`/org/${doc.orgId}`">
+          <span class="m-l-6">@</span>
+          {{ doc.orgName }}
+        </a>
+      </template>
+    </a-breadcrumb-item>
+    <a-breadcrumb-item
+      v-if="doc.archiveType == DocListItemArchiveType.UserWiki
+      || doc.archiveType == DocListItemArchiveType.OrgWiki"
+    >
+      <a class="doc-belong-breadcrumb-link" :href="`/wiki/${doc.wikiId}`">{{ doc.wikiName }}</a>
+    </a-breadcrumb-item>
+  </a-breadcrumb>
+</template>
+
+<script setup lang="ts">
+import { defineProps } from "vue";
+import { DocListItemArchiveType } from './typings';
+import type { DocListItem } from './typings';
+
+const props = defineProps<{
+  doc: DocListItem
+}>();
+
+console.log('[ doc ]', props.doc);
+</script>
+
+<style lang="less" scoped="">
+@import "../../less/color.less";
+
+.doc-belong-breadcrumb-link {
+  &,
+  &:visited,
+  &:link {
+    color: @N500;
+  }
+  &:hover {
+    color: @primary-color;
+  }
+}
+</style>

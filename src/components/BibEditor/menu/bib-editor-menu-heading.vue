@@ -37,7 +37,6 @@ import { EditorSchema } from "../editor-schema";
 import type { EditorComposable } from "../typings";
 import { trKeyHeading } from '../composable/useEditor'
 import { findParentNode } from "prosemirror-utils";
-import { head } from "underscore";
 
 type DisplayLevelEnumItem = { label: string, fs?: number, attrs?: { level: number } };
 const DisplayLevelEnum: Record<string, DisplayLevelEnumItem> = {

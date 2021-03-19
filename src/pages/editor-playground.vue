@@ -19,7 +19,7 @@ import BibEditorMenu from '../components/BibEditor/menu/bib-editor-menu.vue';
 
 // @States:
 const bibEditorRef = ref<any>(null);
-const { editorCompose, initEditor } = useEditor({
+const { editorCompose, initEditor, onlineOtherUsers } = useEditor({
   initContent: '',
   docName: 'Playground'
 });

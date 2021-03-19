@@ -47,3 +47,8 @@ export interface EditorComposable {
 }
 
 export type InsertImageType = 'local' | 'online';
+
+export interface OnlineUser {
+  userId: number;
+  userName: string;
+}

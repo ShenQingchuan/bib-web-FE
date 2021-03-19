@@ -17,7 +17,7 @@
 <script setup lang="ts">
 import { inject, defineProps, ref, onMounted } from "vue";
 import type { EditorComposable, EditorToggleCategories } from "../typings";
-import _ from "underscore";
+import us from "underscore";
 import { EditorSchema } from "../editor-schema";
 
 const props = defineProps<{
@@ -50,7 +50,7 @@ onMounted(() => {
         || [];
       let concated = storedMarks.concat($from.marks());
       if (!empty) concated = concated.concat($to.marks());
-      isActive.value = _.uniq(concated).map(m => m.type.name).includes(props.mark);
+      isActive.value = us.uniq(concated).map(m => m.type.name).includes(props.mark);
     }
   }, {
     $needUpdate: needUpdate

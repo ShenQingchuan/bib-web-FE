@@ -152,13 +152,21 @@ defineProps<{
   border-right: 1px solid black;
   border-color: orange;
   word-break: normal;
-  pointer-events: none;
+  z-index: 99;
+}
+.ProseMirror-yjs-cursor__dot {
+  width: 8px;
+  height: 8px;
+  display: block;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
 }
 /* This renders the username above the caret */
-.ProseMirror-yjs-cursor > div {
+.ProseMirror-yjs-cursor__user-name {
   position: absolute;
-  top: -1.05em;
-  left: -1px;
+  top: -1.75em;
+  left: -3px;
   font-size: 13px;
   background-color: rgb(250, 129, 0);
   font-style: normal;
@@ -168,5 +176,14 @@ defineProps<{
   color: white;
   padding: 4px;
   white-space: nowrap;
+  transform: scale(0);
+  opacity: 0;
+  transition: transform 0.4s cubic-bezier(0, 0.5, 0, 1) 0.5s,
+    opacity 0.4s cubic-bezier(0, 0.5, 0, 1) 0.2s;
+  transform-origin: left bottom;
+}
+.ProseMirror-yjs-cursor__dot:hover + .ProseMirror-yjs-cursor__user-name {
+  opacity: 1;
+  transform: scale(1);
 }
 </style>

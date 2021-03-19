@@ -1,8 +1,27 @@
+import * as pmutils from 'prosemirror-utils';
+import * as Y from 'yjs';
+import { useRouter } from 'vue-router';
+import randomColor from 'randomcolor';
+import TaskItemView from '../node-views/task-item-view';
+import clearNodes from '../commands/clearNodes';
+import placeholder from '../plugins/placeholder';
+import handleLinkClick from '../plugins/handle-link-click';
 import { EditorState, Transaction } from 'prosemirror-state';
 import { EditorView } from 'prosemirror-view';
 import { Node, NodeType, MarkType, Schema } from 'prosemirror-model';
 import { addBibKeymap } from '../helpers/add-bib-keymap';
 import { buildInputRules, buildPasteRules } from '../input-rules';
+import { dropCursor } from 'prosemirror-dropcursor';
+import { gapCursor } from 'prosemirror-gapcursor';
+import { history } from 'prosemirror-history';
+import { EditorSchema } from '../editor-schema';
+import { onUnmounted, shallowRef, ref, h } from 'vue';
+import { liftListItem, wrapInList } from 'prosemirror-schema-list';
+import { WebsocketProvider } from 'y-websocket';
+import { ySyncPlugin, yCursorPlugin, yUndoPlugin } from 'y-prosemirror';
+import { usePayloadFromToken } from '../../../utils/user-token-validation';
+import { keymap } from 'prosemirror-keymap';
+import { notification } from 'ant-design-vue';
 import {
   baseKeymap,
   lift,
@@ -10,34 +29,18 @@ import {
   toggleMark as _tm,
   wrapIn
 } from 'prosemirror-commands';
-import { dropCursor } from 'prosemirror-dropcursor';
-import { gapCursor } from 'prosemirror-gapcursor';
-import { history } from 'prosemirror-history';
 import CodeBlockView, {
   arrowHandlersInCodeBlock
 } from '../node-views/code-block-view';
-import placeholder from '../plugins/placeholder';
-import handleLinkClick from '../plugins/handle-link-click';
 import {
   BibEditorOptions,
   DispatchHook,
   EditorComposable,
   EditorToggleCategories,
-  InsertImageType
+  InsertImageType,
+  OnlineUser
 } from '../typings';
-import { EditorSchema, listTypeNames } from '../editor-schema';
-import { onUnmounted, shallowRef, ref } from 'vue';
-import * as pmutils from 'prosemirror-utils';
-import { liftListItem, wrapInList } from 'prosemirror-schema-list';
-import TaskItemView from '../node-views/task-item-view';
-import { keymap } from 'prosemirror-keymap';
-import clearNodes from '../commands/clearNodes';
-import * as Y from 'yjs';
-import { WebsocketProvider } from 'y-websocket';
-import { ySyncPlugin, yCursorPlugin, yUndoPlugin } from 'y-prosemirror';
-import { usePayloadFromToken } from '../../../utils/user-token-validation';
-import { uniqueNamesGenerator, names, starWars } from 'unique-names-generator';
-import randomColor from 'randomcolor';
+import router from 'router';
 
 const sampleInitDocJSON = {
   type: 'doc',
@@ -102,21 +105,31 @@ export function useEditor(options: BibEditorOptions) {
     ydoc
   );
   const yFragment = ydoc.getXmlFragment(options.docName);
+  const onlineOtherUsers = ref<OnlineUser[]>([]);
   const tokenPayload = usePayloadFromToken();
+
+  // 更新本文档在线的其他用户
+  // @ts-ignore
+  provider.awareness.on('update', ({ added, updated, removed }) => {
+    if (added.length > 0) {
+      onlineOtherUsers.value = [...provider.awareness.getStates().entries()]
+        .filter((s) => s[0] !== provider.awareness.clientID)
+        .map((s) => ({
+          userId: s[1].user.uid,
+          userName: s[1].user.name,
+          color: s[1].user.color
+        }));
+    }
+  });
 
   /** 通过 ref hook 初始化 EditorView */
   const initEditor = (el: any) => {
-    const randomName = uniqueNamesGenerator({
-      dictionaries: [starWars, names],
-      separator: '',
-      style: 'capital',
-      length: 2
-    });
     provider.awareness.setLocalStateField('user', {
       color: randomColor({
         luminosity: 'dark'
       }),
-      name: tokenPayload?.userName || randomName
+      name: tokenPayload?.userName,
+      uid: tokenPayload?.userId
     });
 
     editorView.value = new EditorView(el as HTMLDivElement, {
@@ -134,9 +147,16 @@ export function useEditor(options: BibEditorOptions) {
               cursor.classList.add('ProseMirror-yjs-cursor');
               cursor.style.borderColor = user.color;
 
+              const dot = document.createElement('div');
+              dot.classList.add('ProseMirror-yjs-cursor__dot');
+              dot.style.backgroundColor = user.color;
+
               const userDiv = document.createElement('div');
+              userDiv.classList.add('ProseMirror-yjs-cursor__user-name');
               userDiv.style.backgroundColor = user.color;
               userDiv.insertBefore(document.createTextNode(user.name), null);
+
+              cursor.insertBefore(dot, null);
               cursor.insertBefore(userDiv, null);
               return cursor;
             }
@@ -398,6 +418,7 @@ export function useEditor(options: BibEditorOptions) {
 
   return {
     initEditor,
-    editorCompose
+    editorCompose,
+    onlineOtherUsers
   };
 }

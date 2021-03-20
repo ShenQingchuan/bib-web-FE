@@ -159,8 +159,10 @@ defineProps<{
   height: 8px;
   display: block;
   position: absolute;
+  top: -4px;
   left: 50%;
   transform: translateX(-50%);
+  cursor: text;
 }
 /* This renders the username above the caret */
 .ProseMirror-yjs-cursor__user-name {
@@ -178,7 +180,7 @@ defineProps<{
   white-space: nowrap;
   transform: scale(0);
   opacity: 0;
-  transition: transform 0.4s cubic-bezier(0, 0.5, 0, 1) 0.5s,
+  transition: transform 0.4s cubic-bezier(0, 0.5, 0, 1) 0.3s,
     opacity 0.4s cubic-bezier(0, 0.5, 0, 1) 0.2s;
   transform-origin: left bottom;
 }

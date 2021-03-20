@@ -65,11 +65,11 @@ export function useLoginForm() {
 
   const seekByEmailFn /** @Utils: */ = _.debounce(
     async (email: string) => {
-      const res = await fusions.get('/auth/seekByEmail?email=' + email);
-      if (res.data.isResponseOk) {
+      const res = await fusions.get('/user/seekByEmail?email=' + email);
+      if (res.data.responseOk) {
         loginForm.userName = res.data.data.userName;
       }
-      return res.data.isResponseOk;
+      return res.data.responseOk;
     },
     2000,
     true
@@ -160,10 +160,10 @@ export function useLoginForm() {
             return;
           }
           const res = await fusions.post(
-            '/auth/login',
+            '/user/login',
             _.omit(loginForm, ['userEmail'])
           );
-          if (res.data.isResponseOk) {
+          if (res.data.responseOk) {
             message.success($content('登录成功！'));
             tokenStorageRef.value = res.data.data.token;
             router.push('/dashboard');
@@ -297,10 +297,10 @@ export function useRegisterForm() {
           }
 
           const res = await fusions.post(
-            '/auth/register',
+            '/user/register',
             _.omit(registerForm, ['confirmPassword'])
           );
-          if (res.data.isResponseOk) {
+          if (res.data.responseOk) {
             message.success($content('注册成功！'));
             router.push('/login');
           }
@@ -320,10 +320,10 @@ export function useRegisterForm() {
       return;
     }
 
-    const smsSendRes = await fusions.post('/auth/sendSmsCode', {
+    const smsSendRes = await fusions.post('/user/sendSmsCode', {
       userPhone: registerForm.userPhone
     });
-    if (smsSendRes.data.isResponseOk) {
+    if (smsSendRes.data.responseOk) {
       message.success($content(smsSendRes.data.message));
       isSendSmsCodeBtnDisabled.value = true; // 刚发送，禁用按钮避免重复发送
       sendSmsCodeCount.value++;

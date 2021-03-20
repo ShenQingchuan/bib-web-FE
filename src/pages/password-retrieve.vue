@@ -101,7 +101,6 @@ import {
 } from "../utils/commonly-used-regexp";
 import { fusions } from "../fusions";
 import { message, Form } from "ant-design-vue";
-import { ValidationRule } from "ant-design-vue/lib/form/Form";
 import { LoginRegisterFormError } from "../composable/useAuthForm";
 
 const messageKey = "passwordRetrieve";
@@ -118,10 +117,10 @@ const retrieveForm = reactive({
   newPasswordConfirm: "",
 });
 const retrieveFormTRef = ref<InstanceType<typeof Form> | null>(null);
-const registerFormRules: Record<string, ValidationRule[]> = {
+const registerFormRules: Record<string, any[]> = {
   vcode: [
     {
-      validator: (rule, value) => {
+      validator: (rule: any, value: string) => {
         if (!VCODE_REGEXP.test(value)) {
           return Promise.reject(LoginRegisterFormError.VCODE_FORMAT_INVALID);
         }
@@ -131,7 +130,7 @@ const registerFormRules: Record<string, ValidationRule[]> = {
   ],
   newPassword: [
     {
-      validator: (rule, value) => {
+      validator: (rule: any, value: string) => {
         if (!PASSWORD_REGEXP.test(value)) {
           return Promise.reject(LoginRegisterFormError.PASSWORD_FORMAT_INVALID);
         }
@@ -141,7 +140,7 @@ const registerFormRules: Record<string, ValidationRule[]> = {
   ],
   newPasswordConfirm: [
     {
-      validator: (rule, value) => {
+      validator: (rule: any, value: string) => {
         if (value !== retrieveForm.newPassword) {
           return Promise.reject(LoginRegisterFormError.PASSWORD_NOTSAME);
         }
@@ -177,17 +176,17 @@ const onSlideVerifySuccess = () => {
 const onNextStep = [
   async () => {
     const queryForUserName = await fusions.get(
-      `/auth/seekByEmail?email=${targetUserEmail.value}`
+      `/user/seekByEmail?email=${targetUserEmail.value}`
     );
-    if (queryForUserName.data.isResponseOk) {
+    if (queryForUserName.data.responseOk) {
       targetUserName.value = queryForUserName.data.data.userName;
     }
 
     message.loading({ content: "加载中，请稍候...", key: messageKey });
-    const res = await fusions.post("/auth/passwordRetrieve", {
+    const res = await fusions.post("/user/passwordRetrieve", {
       userEmail: targetUserEmail.value,
     });
-    if (res.data.isResponseOk) {
+    if (res.data.responseOk) {
       message.success({ content: "验证码邮件已发送！", key: messageKey });
       step.value++;
     } else
@@ -198,12 +197,12 @@ const onNextStep = [
   },
   async () => {
     message.loading({ content: "加载中，请稍候...", key: messageKey });
-    const res = await fusions.post("/auth/passwordRetrieveVerify", {
+    const res = await fusions.post("/user/passwordRetrieveVerify", {
       userEmail: targetUserEmail.value,
       vcode: retrieveForm.vcode,
       newPassword: retrieveForm.newPassword,
     });
-    if (res.data.isResponseOk) {
+    if (res.data.responseOk) {
       message.success({ content: "验证码正确！", key: messageKey });
       step.value++;
     } else return message.error({ content: "验证码不正确！", key: messageKey });

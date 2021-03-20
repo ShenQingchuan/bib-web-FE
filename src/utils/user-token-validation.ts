@@ -16,13 +16,23 @@ export function isBibUserTokenValid() {
   return true;
 }
 
-export function usePayloadFromToken(): {
+export interface UserTokenPayload {
   expiredAt: number;
   userId: number;
   userName: string;
-} | null {
+  avatarURL: string;
+}
+
+export function usePayloadFromToken(): UserTokenPayload | null {
   if (tokenStorageRef.value && isBibUserTokenValid()) {
-    const { exp, uid, sub } = decode(tokenStorageRef.value) as BibTokenPayload;
-    return { expiredAt: exp * 1000, userId: uid, userName: sub };
+    const { exp, uid, sub, avatarURL } = decode(
+      tokenStorageRef.value
+    ) as BibTokenPayload;
+    return {
+      expiredAt: exp * 1000,
+      userId: uid,
+      userName: sub,
+      avatarURL
+    };
   } else return null;
 }

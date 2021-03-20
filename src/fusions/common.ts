@@ -36,7 +36,7 @@ export const requestInterceptorErrCallback = (error: any) => {
 };
 
 export const responseInterceptorCallback = (response: AxiosResponse<any>) => {
-  if (!response.data.isResponseOk) {
+  if (!response.data.responseOk) {
     message.error(`请求失败 - ${response.data.message}`);
   }
   return Promise.resolve(response);

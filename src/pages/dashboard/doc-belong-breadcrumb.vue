@@ -34,6 +34,11 @@ defineProps<{
 <style lang="less" scoped="">
 @import "../../less/color.less";
 
+.doc-belong-breadcrumb-wrapper {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
 .doc-belong-breadcrumb-link {
   &,
   &:visited,

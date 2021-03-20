@@ -2,11 +2,14 @@ import { EditorState, Transaction } from 'prosemirror-state';
 import { Node, Schema, NodeType } from 'prosemirror-model';
 import { EditorView } from 'prosemirror-view';
 import { Ref } from 'vue';
+import { UserTokenPayload } from 'utils/user-token-validation';
 
 export interface BibEditorOptions {
   initContent: string;
   docName: string;
+  credential: UserTokenPayload; // Bib 编辑器默认协同，要求必须提供用户凭证
   placeholder?: string;
+  disabled?: boolean;
 }
 
 export type EditorToggleMethodReturns = (

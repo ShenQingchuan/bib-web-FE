@@ -30,7 +30,27 @@
           <span v-else class="m-l-8 detail-placeholder">还未填写个人简介</span>
         </div>
       </a-card>
-      <a-card class="m-t-16" title="团队"></a-card>
+      <a-card class="m-t-16" title="团队" :bodyStyle="{ padding: '6px 12px' }">
+        <a-empty
+          v-if="!joinedOrgs.length"
+          description="暂无团队"
+          image="/assets/img/no-team__empty-placeholder.png"
+          :imageStyle="{
+            width: '24px',
+            height: '24px',
+            margin: '10px auto'
+          }"
+        />
+        <div class="flex-row anis-center p-6">
+          <a-avatar
+            :size="48"
+            v-for="org in joinedOrgs"
+            :key="org.id"
+            :src="org.avatarURL"
+            class="detail-org-avatar"
+          />
+        </div>
+      </a-card>
     </a-col>
     <a-col :span="15" :offset="1">
       <a-card></a-card>
@@ -39,10 +59,11 @@
 </template>
 
 <script setup lang="ts">
-import { reactive } from "vue";
+import { reactive, ref } from "vue";
 import { useRoute } from 'vue-router';
 import { EnvironmentOutlined, ProfileOutlined } from "@ant-design/icons-vue";
 import { fusions } from "../fusions";
+import type { Organization } from '../models'
 import CommonHeader from "../components/page-header/common-header.vue";
 
 const userDetails = reactive({
@@ -53,12 +74,13 @@ const userDetails = reactive({
   fansCount: 0,
   subscribeCount: 0,
 });
+const joinedOrgs = ref<Organization[]>([]);
 const route = useRoute();
 let userName = route.params['userName'] as string;
 
 (async () => {
-  const detailRes = await fusions.get(`/auth/getUserDetails?userName=${userName}`);
-  if (detailRes.data.isResponseOk) {
+  const detailRes = await fusions.get(`/user/userDetails?userName=${userName}`);
+  if (detailRes.data.responseOk) {
     const { avatarURL, introduce, address, profession } = detailRes.data.data;
     userDetails.avatarURL = avatarURL;
     userDetails.introduce = introduce;
@@ -66,6 +88,13 @@ let userName = route.params['userName'] as string;
     userDetails.profession = profession;
   }
 })();
+
+(async () => {
+  const joinedOrgsRes = await fusions.get(`/user/joinedOrgs?userName=${userName}`);
+  if (joinedOrgsRes.data.responseOk) {
+    joinedOrgs.value = joinedOrgsRes.data.data;
+  }
+})()
 </script>
 
 <style lang="less">
@@ -96,5 +125,9 @@ let userName = route.params['userName'] as string;
       }
     }
   }
+}
+
+.detail-org-avatar {
+  cursor: pointer;
 }
 </style>

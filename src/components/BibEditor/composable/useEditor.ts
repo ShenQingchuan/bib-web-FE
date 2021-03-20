@@ -1,6 +1,5 @@
 import * as pmutils from 'prosemirror-utils';
 import * as Y from 'yjs';
-import { useRouter } from 'vue-router';
 import randomColor from 'randomcolor';
 import TaskItemView from '../node-views/task-item-view';
 import clearNodes from '../commands/clearNodes';
@@ -15,13 +14,11 @@ import { dropCursor } from 'prosemirror-dropcursor';
 import { gapCursor } from 'prosemirror-gapcursor';
 import { history } from 'prosemirror-history';
 import { EditorSchema } from '../editor-schema';
-import { onUnmounted, shallowRef, ref, h } from 'vue';
+import { onUnmounted, shallowRef, ref } from 'vue';
 import { liftListItem, wrapInList } from 'prosemirror-schema-list';
 import { WebsocketProvider } from 'y-websocket';
 import { ySyncPlugin, yCursorPlugin, yUndoPlugin } from 'y-prosemirror';
-import { usePayloadFromToken } from '../../../utils/user-token-validation';
 import { keymap } from 'prosemirror-keymap';
-import { notification } from 'ant-design-vue';
 import {
   baseKeymap,
   lift,
@@ -106,11 +103,11 @@ export function useEditor(options: BibEditorOptions) {
   );
   const yFragment = ydoc.getXmlFragment(options.docName);
   const onlineOtherUsers = ref<OnlineUser[]>([]);
-  const tokenPayload = usePayloadFromToken();
+  const credential = options.credential;
 
   // 更新本文档在线的其他用户
   // @ts-ignore
-  provider.awareness.on('update', ({ added, updated, removed }) => {
+  provider.awareness.on('update', ({ added }) => {
     if (added.length > 0) {
       onlineOtherUsers.value = [...provider.awareness.getStates().entries()]
         .filter((s) => s[0] !== provider.awareness.clientID)
@@ -128,8 +125,8 @@ export function useEditor(options: BibEditorOptions) {
       color: randomColor({
         luminosity: 'dark'
       }),
-      name: tokenPayload?.userName,
-      uid: tokenPayload?.userId
+      name: credential?.userName,
+      uid: credential?.userId
     });
 
     editorView.value = new EditorView(el as HTMLDivElement, {
@@ -189,6 +186,10 @@ export function useEditor(options: BibEditorOptions) {
         task_item(node, view, getPos) {
           return new TaskItemView(node, view, getPos);
         }
+      },
+      // @ts-ignore
+      editable() {
+        return !options.disabled;
       }
     });
   };

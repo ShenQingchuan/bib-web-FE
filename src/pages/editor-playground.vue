@@ -14,14 +14,17 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import { useEditor } from '../components/BibEditor/composable/useEditor';
+import { usePayloadFromToken } from '../utils/user-token-validation';
 import BibEditor from '../components/BibEditor/bib-editor.vue';
 import BibEditorMenu from '../components/BibEditor/menu/bib-editor-menu.vue';
 
 // @States:
 const bibEditorRef = ref<any>(null);
+const credential = usePayloadFromToken()!;
 const { editorCompose, initEditor, onlineOtherUsers } = useEditor({
   initContent: '',
-  docName: 'Playground'
+  docName: 'Playground',
+  credential,
 });
 const logDocJSON = () => {
   console.log(editorCompose.view.value.state.doc.toJSON());

@@ -37,7 +37,7 @@
               />
             </a-tooltip>
 
-            <div class="dashboard-page__doc-list-item-meta-info m-r-12">
+            <div class="dashboard-page__doc-list-item-meta-info flex-row anis-center m-r-12">
               <doc-belong-breadcrumb class="belong m-r-24 inline-block" :doc="doc" />
               <span class="create-time">{{ formatTime(doc.createTime) }}</span>
             </div>
@@ -143,6 +143,9 @@ export default defineComponent({
 .dashboard-page__doc-list-item-meta-info {
   margin-left: auto;
   color: @N500;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .dashboard-page__doc-list-item-title {

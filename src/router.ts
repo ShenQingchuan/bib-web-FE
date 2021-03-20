@@ -75,9 +75,13 @@ const routes: Array<RouteRecordRaw> = [
   createRoute(
     '/editor-playground',
     dynamicViewsModules['./pages/editor-playground.vue'],
-    '编辑器预览'
+    '编辑器预览',
+    {
+      requiredAuth: true
+    }
   ),
 
+  // 其余无法找到的都重定向到 not-found
   createRoute(
     '/not-found',
     dynamicViewsModules['./pages/not-found.vue'],

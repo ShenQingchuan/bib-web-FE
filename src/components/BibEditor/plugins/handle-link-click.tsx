@@ -6,6 +6,7 @@ import { ref } from 'vue';
 import { EditorSchema } from '../editor-schema';
 import { trKeyLinkChange } from '../composable/useEditor';
 import { EditorView } from 'prosemirror-view';
+import { URL_REGEX } from '../../../utils/commonly-used-regexp';
 
 const {
   marks: { link: linkMarkType }
@@ -49,7 +50,12 @@ export function showUpdateLinkModal(
   }
 ) {
   const text = ref<string>(attrs?.text || currentTextNode?.textContent || ''),
-    href = ref<string>(attrs?.href || 'https://');
+    href = ref<string>(
+      attrs?.href ||
+        (URL_REGEX.test(currentTextNode?.textContent)
+          ? currentTextNode?.textContent
+          : 'https://')
+    );
 
   Modal.confirm({
     title: '更改链接',

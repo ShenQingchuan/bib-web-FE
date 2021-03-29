@@ -1,6 +1,7 @@
 <template>
-  <div class="dashboard-page__doc-list-wrapper p-12">
-    <div class="dashboard-page__doc-list flex-col">
+  <div class="dashboard-page__doc-list-wrapper flex-row anis-center p-12">
+    <!-- 最近文档列表 -->
+    <div class="dashboard-page__doc-list flex-col flex-1">
       <div class="flex-row anis-center m-b-16">
         <h2 class="inline m-b-0">最近文档列表</h2>
         <a-dropdown class="m-l-auto">
@@ -48,6 +49,27 @@
         </template>
       </a-skeleton>
     </div>
+
+    <!-- 新建 -->
+    <div class="dashboard-page__new-wrapper ansf-start flex-col m-l-48">
+      <h3 class="m-t-6">新建</h3>
+      <a-divider class="m-tb-2" />
+      <div class="dashboard-page__new flex-row anis-center p-tb-12">
+        <div
+          v-for="(item, i) in NewThingList"
+          :key="item.text"
+          class="dashboard-page__new-item flex-col anis-center"
+          :class="{
+            'm-l-4': i === 0,
+            'm-lr-36': i === 1,
+            'm-r-4': i === 2
+          }"
+        >
+          <img :src="item.icon" width="24" height="24" />
+          <span class="m-t-10 to-ellipsis">{{ item.text }}</span>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -69,7 +91,21 @@ const filters: DocFilter[] = [
   { archiveType: DocListItemArchiveType.UserWiki, text: '个人知识库' },
   { archiveType: DocListItemArchiveType.OrgOnly, text: '团队空间' },
   { archiveType: DocListItemArchiveType.OrgWiki, text: '团队知识库' }
-]
+];
+const NewThingList = [
+  {
+    text: "新建文档",
+    icon: "/assets/svg/user-action__new__doc.svg"
+  },
+  {
+    text: "新建知识库",
+    icon: "/assets/svg/user-action__new__book.svg"
+  },
+  {
+    text: "新建团队",
+    icon: "/assets/svg/user-action__new__org.svg"
+  }
+];
 
 export default defineComponent({
   name: "dashboard-index-subpage",
@@ -113,6 +149,7 @@ export default defineComponent({
       filters,
       setFilter,
       filterName,
+      NewThingList
     };
   }
 });
@@ -121,7 +158,6 @@ export default defineComponent({
 <style lang="less" scoped>
 @import "../../less/color.less";
 .dashboard-page__doc-list-wrapper {
-  max-width: 940px;
   .dashboard-page__doc-list {
     &-item {
       border-top: 1px solid #80808012;
@@ -170,7 +206,8 @@ export default defineComponent({
   cursor: pointer;
 }
 
-.doc-list-filter__text {
+.doc-list-filter__text,
+.dashboard-page__new-item {
   cursor: pointer;
   color: @N500;
 }

@@ -1,6 +1,7 @@
 <template>
   <common-header consice />
   <a-row class="page-user-info__wrapper w-p80 m-lr-auto flex-row p-t-24 p-b-32 p-lr-16">
+    <!-- 用户中心 左栏 -->
     <a-col :span="8">
       <!-- 基本资料 -->
       <a-card class="basic-info-card flex-col anis-center">
@@ -46,12 +47,16 @@
         />
         <div class="flex-row anis-center p-6">
           <div v-for="org in joinedOrgs" :key="org.id" class="flex-col anis-center">
-            <a-avatar :size="48" :src="org.avatarURL" class="detail-org-avatar" />
+            <a :href="`/org/${org.id}`">
+              <a-avatar :size="48" :src="org.avatarURL" class="detail-org-avatar" />
+            </a>
             <span class="detail-org-name p-6 fs-12">{{ org.name }}</span>
           </div>
         </div>
       </a-card>
     </a-col>
+
+    <!-- 用户中心 右栏 用户动态 -->
     <a-col :span="13" :offset="1">
       <a-card>
         <template #title>
@@ -62,7 +67,13 @@
         </template>
 
         <!-- 动态卡片内容区域 -->
-        <a-timeline>
+        <div
+          class="user-activity-loading flex-row jyct-center anis-center"
+          v-if="loadingUserActivities"
+        >
+          <a-spin tip="加载用户动态中..."></a-spin>
+        </div>
+        <a-timeline v-else>
           <user-activity-card v-for="act in activities" :key="act.activityTime" :activity="act" />
           <a-timeline-item>
             <template #dot>
@@ -117,10 +128,13 @@ let userName = route.params['userName'] as string;
   }
 })();
 
+const loadingUserActivities = ref(false);
 (async () => {
+  loadingUserActivities.value = true;
   const UserActivitiesRes = await mocker.get(`/user/activities?userName=${userName}`);
   if (UserActivitiesRes.data.responseOk) {
     activities.value = UserActivitiesRes.data.data;
+    loadingUserActivities.value = false;
   }
 })();
 </script>
@@ -161,5 +175,9 @@ let userName = route.params['userName'] as string;
 .detail-org-name,
 .user-center__activity-nomoredot-text {
   color: @N500;
+}
+
+.user-activity-loading {
+  height: 200px;
 }
 </style>

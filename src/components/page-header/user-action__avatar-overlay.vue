@@ -3,7 +3,7 @@
     <a-menu-item @click="$router.push(`/user/${userName}`)">
       <UserOutlined />个人中心
     </a-menu-item>
-    <a-menu-item @click="$router.push('/settings')">
+    <a-menu-item @click="$router.push('/user-settings')">
       <SettingOutlined />帐户设置
     </a-menu-item>
     <a-menu-item @click="$router.push('/help')">
@@ -35,7 +35,7 @@ export default {
     ReadOutlined,
   },
   setup() {
-    const { userName } = usePayloadFromToken();
+    const userName = usePayloadFromToken()?.userName ?? "";
 
     return {
       userName,

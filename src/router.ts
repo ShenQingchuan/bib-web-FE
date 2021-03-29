@@ -73,6 +73,11 @@ const routes: Array<RouteRecordRaw> = [
     '个人中心'
   ),
   createRoute(
+    '/user-settings',
+    dynamicViewsModules['./pages/user-settings.vue'],
+    '账户设置'
+  ),
+  createRoute(
     '/editor-playground',
     dynamicViewsModules['./pages/editor-playground.vue'],
     '编辑器预览',

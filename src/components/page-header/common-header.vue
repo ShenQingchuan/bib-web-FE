@@ -42,22 +42,6 @@
       >
         <!-- 已登录用户 - 非简洁模式下可用操作 -->
         <template v-if="!consice">
-          <!-- 操作::新建 -->
-          <a-dropdown placement="bottomCenter">
-            <span class="component-page-header__inner-user-actions-item user-actions__new" />
-            <template #overlay>
-              <user-action-new-book-overlay />
-            </template>
-          </a-dropdown>
-
-          <!-- 操作::历史 -->
-          <a-popover>
-            <ClockCircleOutlined class="component-page-header__inner-user-actions-item" />
-            <template #content>
-              <user-action-recent-overlay />
-            </template>
-          </a-popover>
-
           <!-- 操作::通知 -->
           <BellOutlined
             class="component-page-header__inner-user-actions-item"
@@ -95,15 +79,11 @@ import {
 } from "@ant-design/icons-vue";
 import { isBibUserTokenValid } from "../../utils/user-token-validation";
 import { usePayloadFromToken } from "../../utils/user-token-validation";
-import userActionNewBookOverlay from "./user-action__new__book-overlay.vue";
-import userActionRecentOverlay from "./user-action__recent-overlay.vue";
 import userActionAvatarOverlay from "./user-action__avatar-overlay.vue";
 
 export default {
   name: "common-header",
   components: {
-    userActionNewBookOverlay,
-    userActionRecentOverlay,
     userActionAvatarOverlay,
     SearchOutlined,
     ClockCircleOutlined,
@@ -114,7 +94,7 @@ export default {
   },
   setup() {
     const userLogined = isBibUserTokenValid();
-    const { userName } = usePayloadFromToken() ?? {};
+    const userName = usePayloadFromToken()?.userName ?? "";
 
     return {
       navs: [

@@ -173,7 +173,7 @@ export const nodes: {
     ],
     toDOM(node: Node) {
       let { src, alt, title } = node.attrs;
-      return ['img', { src, alt, title }];
+      return ['img', { src, alt, title, class: "bib-editor-doc-img" }];
     }
   },
 

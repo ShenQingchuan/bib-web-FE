@@ -27,8 +27,11 @@
             :key="doc.createTime"
             class="dashboard-page__doc-list-item flex-row anis-center p-tb-14 p-lr-10"
           >
-            <img src="/assets/svg/dashboard__doc.svg" width="24" height="24" />
-            <div class="dashboard-page__doc-list-item-title m-l-24 fs-14">{{ doc.title }}</div>
+            <img src="/assets/svg/dashboard__doc-icon.svg" width="24" height="24" />
+            <a
+              class="dashboard-page__doc-list-item-title m-l-24 fs-14"
+              :href="`/doc/${doc.id}`"
+            >{{ doc.title }}</a>
             <a-tooltip placement="top" title="编辑">
               <img
                 src="/assets/svg/dashboard__doc-edit.svg"
@@ -83,7 +86,7 @@ export default defineComponent({
     onMounted(() => {
       listLoading.value = true;
       mocker.get('/dashboard/docList').then(res => {
-        docList.value = res.data.data.docList;
+        docList.value = res.data.data;
         listLoading.value = false;
       });
     })
@@ -149,10 +152,15 @@ export default defineComponent({
 }
 
 .dashboard-page__doc-list-item-title {
+  color: @N800;
   max-width: 220px;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+
+  &:hover {
+    color: @primary-color;
+  }
 }
 
 .dashboard-page__doc-list-item-edit-icon {

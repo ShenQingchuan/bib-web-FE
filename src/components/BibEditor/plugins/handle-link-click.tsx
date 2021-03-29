@@ -12,7 +12,20 @@ const {
   marks: { link: linkMarkType }
 } = EditorSchema;
 
-export function updateLink(
+export function updateLinkWithRange(
+  view: EditorView,
+  text: string,
+  marks: Mark[],
+  from: number,
+  to: number
+) {
+  const { tr } = view.state;
+  tr.replaceRangeWith(from, to, EditorSchema.text(text, marks));
+  tr.setMeta('trKey', trKeyLinkChange);
+  view.dispatch(tr);
+}
+
+export function updateLinkWithPos(
   view: EditorView,
   text: string,
   marks: Mark[],
@@ -94,18 +107,23 @@ export function showUpdateLinkModal(
       </Form>
     ),
     onOk: () => {
-      updateLink(
-        view,
-        text.value,
-        linkMarkType
-          .create({
-            href: href.value,
-            text: text.value
-          })
-          .addToSet(currentTextNode?.marks || []),
-        currentTextNode === null,
-        pos
-      );
+      const marks = linkMarkType
+        .create({
+          href: href.value,
+          text: text.value
+        })
+        .addToSet(currentTextNode?.marks || []);
+      if (!view.state.selection.empty) {
+        const { from, to } = view.state.selection;
+        updateLinkWithRange(view, text.value, marks, from, to);
+      } else
+        updateLinkWithPos(
+          view,
+          text.value,
+          marks,
+          currentTextNode === null,
+          pos
+        );
     }
   });
 }

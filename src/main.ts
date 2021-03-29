@@ -51,7 +51,8 @@ import {
   ConfigProvider,
   Empty,
   Skeleton,
-  Breadcrumb
+  Breadcrumb,
+  Timeline,
 } from 'ant-design-vue';
 
 createApp(App)
@@ -80,6 +81,7 @@ createApp(App)
   .use(Empty)
   .use(Skeleton)
   .use(Breadcrumb)
+  .use(Timeline)
   // for vue3-colorpicker
   .use(colorPicker)
   .mount('#app');

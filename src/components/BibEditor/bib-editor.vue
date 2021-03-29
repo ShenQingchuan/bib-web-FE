@@ -118,6 +118,10 @@ defineProps<{
       border: 1px solid transparent;
       cursor: text;
     }
+
+    img.bib-editor-doc-img {
+      width: 100%;
+    }
   }
   .CodeMirror {
     font-family: SFMono-Regular, Consolas, Liberation Mono, Menlo, Courier,

@@ -12,6 +12,7 @@ export interface DocFilter {
 }
 
 export interface DocListItem {
+  id: number; // 文档唯一 id
   title: string; // 文档标题
   creatorId: number; // 文档创建者的 uid
   creatorName: string; // 文档创建者的 userName

@@ -2,6 +2,7 @@
   <common-header consice />
   <a-row class="page-user-info__wrapper w-p80 m-lr-auto flex-row p-t-24 p-b-32 p-lr-16">
     <a-col :span="8">
+      <!-- 基本资料 -->
       <a-card class="basic-info-card flex-col anis-center">
         <a-avatar
           class="user-avatar"
@@ -30,6 +31,8 @@
           <span v-else class="m-l-8 detail-placeholder">还未填写个人简介</span>
         </div>
       </a-card>
+
+      <!-- 加入的团队列表 -->
       <a-card class="m-t-16" title="团队" :bodyStyle="{ padding: '6px 12px' }">
         <a-empty
           v-if="!joinedOrgs.length"
@@ -42,18 +45,33 @@
           }"
         />
         <div class="flex-row anis-center p-6">
-          <a-avatar
-            :size="48"
-            v-for="org in joinedOrgs"
-            :key="org.id"
-            :src="org.avatarURL"
-            class="detail-org-avatar"
-          />
+          <div v-for="org in joinedOrgs" :key="org.id" class="flex-col anis-center">
+            <a-avatar :size="48" :src="org.avatarURL" class="detail-org-avatar" />
+            <span class="detail-org-name p-6 fs-12">{{ org.name }}</span>
+          </div>
         </div>
       </a-card>
     </a-col>
-    <a-col :span="15" :offset="1">
-      <a-card></a-card>
+    <a-col :span="13" :offset="1">
+      <a-card>
+        <template #title>
+          <div class="flex-row anis-center">
+            <img src="/assets/svg/user-center__activity-icon.svg" alt="动态" width="26" height="26" />
+            <h4 class="inline m-tb-0 m-l-4">动态</h4>
+          </div>
+        </template>
+
+        <!-- 动态卡片内容区域 -->
+        <a-timeline>
+          <user-activity-card v-for="act in activities" :key="act.activityTime" :activity="act" />
+          <a-timeline-item>
+            <template #dot>
+              <local-two theme="outline" size="16" />
+            </template>
+            <span class="user-center__activity-nomoredot-text m-t-6">找不到更早的动态了，就让以前随风而逝吧…</span>
+          </a-timeline-item>
+        </a-timeline>
+      </a-card>
     </a-col>
   </a-row>
 </template>
@@ -62,9 +80,11 @@
 import { reactive, ref } from "vue";
 import { useRoute } from 'vue-router';
 import { EnvironmentOutlined, ProfileOutlined } from "@ant-design/icons-vue";
-import { fusions } from "../fusions";
-import type { Organization } from '../models'
+import { LocalTwo } from '@icon-park/vue-next';
+import { fusions, mocker } from "../fusions";
 import CommonHeader from "../components/page-header/common-header.vue";
+import UserActivityCard from '../components/page-user-center/user-activity-card.vue';
+import type { Organization, UserActivity } from '../models'
 
 const userDetails = reactive({
   avatarURL: "",
@@ -75,6 +95,7 @@ const userDetails = reactive({
   subscribeCount: 0,
 });
 const joinedOrgs = ref<Organization[]>([]);
+const activities = ref<UserActivity[]>([]);
 const route = useRoute();
 let userName = route.params['userName'] as string;
 
@@ -94,7 +115,14 @@ let userName = route.params['userName'] as string;
   if (joinedOrgsRes.data.responseOk) {
     joinedOrgs.value = joinedOrgsRes.data.data;
   }
-})()
+})();
+
+(async () => {
+  const UserActivitiesRes = await mocker.get(`/user/activities?userName=${userName}`);
+  if (UserActivitiesRes.data.responseOk) {
+    activities.value = UserActivitiesRes.data.data;
+  }
+})();
 </script>
 
 <style lang="less">
@@ -129,5 +157,9 @@ let userName = route.params['userName'] as string;
 
 .detail-org-avatar {
   cursor: pointer;
+}
+.detail-org-name,
+.user-center__activity-nomoredot-text {
+  color: @N500;
 }
 </style>

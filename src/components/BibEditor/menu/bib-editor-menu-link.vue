@@ -18,7 +18,7 @@ import { ref, inject, onMounted, createVNode } from 'vue';
 import { ExclamationCircleOutlined } from '@ant-design/icons-vue';
 import { LinkOutlined } from "@ant-design/icons-vue";
 import { EditorSchema } from '../editor-schema';
-import { showUpdateLinkModal, updateLink } from '../plugins/handle-link-click';
+import { showUpdateLinkModal, updateLinkWithPos } from '../plugins/handle-link-click';
 import { Modal } from 'ant-design-vue';
 import type { EditorComposable } from "../typings";
 
@@ -46,7 +46,7 @@ onMounted(() => {
 // @Methods:
 const toggleLinkMark = () => {
   const view = editorCompose!.view.value;
-  const { doc, selection: { from } } = view.state;
+  const { doc, selection: { from, to }, tr } = view.state;
 
   if (isActive.value) {
     const currentTextNode = doc.nodeAt(from)!;
@@ -55,13 +55,13 @@ const toggleLinkMark = () => {
       icon: createVNode(ExclamationCircleOutlined),
       content: '这段文字将被恢复成普通文本格式。',
       onOk: () => {
-        updateLink(view, currentTextNode.textContent, [], false, from);
+        updateLinkWithPos(view, currentTextNode.textContent, [], false, from);
       }
     })
     return;
   }
 
-  const currentTextNode = doc.nodeAt(from)!;
+  const currentTextNode = view.state.doc.cut(from, to);
   showUpdateLinkModal(view, from, currentTextNode);
 }
 </script>

@@ -371,6 +371,11 @@
   resolved "https://registry.npmjs.org/@ctrl/tinycolor/-/tinycolor-3.3.2.tgz#902c4c7e6b48553e4f83c0c1c565a6b071b02520"
   integrity sha512-28A2j9DISNtHRcfc+FSCkxIAMnQoORQYz+UQLjc0+KlsGl80MqfbG3EzqXxzVmCMatlgmHfcX7/DBoMg+ik/Fg==
 
+"@icon-park/vue-next@^1.3.1":
+  version "1.3.1"
+  resolved "https://registry.npmjs.org/@icon-park/vue-next/-/vue-next-1.3.1.tgz#8ab019337e4387f762bb95cdb3346728fb41176a"
+  integrity sha512-1MAySFrVkBMps0EYH7pFvwe9a1nAKXiClX2KdluCXa7w81zYmEjUPDkfau2maYBqfPe+OyQ+xyyFkRphV8lLqA==
+
 "@intlify/core-base@9.0.0-beta.16":
   version "9.0.0-beta.16"
   resolved "https://registry.npmjs.org/@intlify/core-base/-/core-base-9.0.0-beta.16.tgz#ab35802b982f52db20d4758d020c2dcd1724e7f9"

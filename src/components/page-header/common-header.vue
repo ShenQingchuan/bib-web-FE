@@ -9,16 +9,15 @@
       <!-- Header Logo -->
       <div class="flex-row anis-center component-page-header__inner-logo">
         <a href="/">
-          <img src="/assets/img/Icon-png-logo.png" alt="header-logo" height="48"
-        /></a>
+          <img src="/assets/img/Icon-png-logo.png" alt="header-logo" height="48" />
+        </a>
       </div>
       <!-- 搜索框 -->
-      <a-auto-complete
-        v-show="!consice"
-        class="component-page-header__inner-search"
-      >
+      <a-auto-complete v-show="!consice" class="component-page-header__inner-search">
         <a-input placeholder="搜索">
-          <template #prefix><search-outlined></search-outlined></template>
+          <template #prefix>
+            <search-outlined></search-outlined>
+          </template>
         </a-input>
       </a-auto-complete>
 
@@ -45,9 +44,7 @@
         <template v-if="!consice">
           <!-- 操作::新建 -->
           <a-dropdown placement="bottomCenter">
-            <span
-              class="component-page-header__inner-user-actions-item user-actions__new"
-            />
+            <span class="component-page-header__inner-user-actions-item user-actions__new" />
             <template #overlay>
               <user-action-new-book-overlay />
             </template>
@@ -55,9 +52,7 @@
 
           <!-- 操作::历史 -->
           <a-popover>
-            <ClockCircleOutlined
-              class="component-page-header__inner-user-actions-item"
-            />
+            <ClockCircleOutlined class="component-page-header__inner-user-actions-item" />
             <template #content>
               <user-action-recent-overlay />
             </template>
@@ -84,12 +79,8 @@
       <!-- 未登录状态 -->
       <div v-else class="flex-row vc component-page-header__login-register">
         <a-space>
-          <a-button type="primary" @click="$router.push('/login')"
-            >登录</a-button
-          >
-          <a-button type="default" @click="$router.push('/register')"
-            >注册</a-button
-          >
+          <a-button type="primary" @click="$router.push('/login')">登录</a-button>
+          <a-button type="default" @click="$router.push('/register')">注册</a-button>
         </a-space>
       </div>
     </div>
@@ -123,7 +114,7 @@ export default {
   },
   setup() {
     const userLogined = isBibUserTokenValid();
-    const { userName } = usePayloadFromToken();
+    const { userName } = usePayloadFromToken() ?? {};
 
     return {
       navs: [

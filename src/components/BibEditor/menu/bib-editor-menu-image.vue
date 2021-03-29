@@ -111,6 +111,7 @@ const onLocalImageInput = () => {
   outline: none;
   box-shadow: 0 2px 10px @N400;
   transition: all 0.25s cubic-bezier(0.3, 1.2, 0.2, 1);
+  background-color: white;
 
   &-item {
     cursor: pointer;

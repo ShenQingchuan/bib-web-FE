@@ -6,8 +6,9 @@
       <!-- 基本资料 -->
       <a-card class="basic-info-card flex-col anis-center">
         <a-avatar
+          v-show="userDetails.avatarURL.length > 0"
           class="user-avatar"
-          :src="userDetails.avatarURL || '/assets/svg/user-avatar__default.svg'"
+          :src="userDetails.avatarURL"
         ></a-avatar>
         <h3 class="text-center m-tb-16">{{ userName }}</h3>
         <div class="counter-wrapper w-p100 m-t-6 m-b-32 flex-row jyct-center anis-center">
@@ -20,16 +21,31 @@
             <div class="label-text">关注</div>
           </div>
         </div>
-        <a-button class="m-b-20" block>编辑资料</a-button>
+        <a-button
+          class="m-b-20"
+          block
+          @click="$router.push({
+            path: '/user-settings#profile',
+          })"
+        >编辑资料</a-button>
         <div class="w-p100 m-tb-6 text-left">
-          <EnvironmentOutlined />
-          <span v-if="userDetails.address">{{ userDetails.address }}</span>
-          <span v-else class="m-l-8 detail-placeholder">还未填写地址</span>
-          <br />
-          <br />
-          <ProfileOutlined />
-          <p v-if="userDetails.introduce">{{ userDetails.introduce }}</p>
-          <span v-else class="m-l-8 detail-placeholder">还未填写个人简介</span>
+          <div class="flex-row anis-center m-tb-16">
+            <EnvironmentOutlined />
+            <span
+              class="user-detail-address m-l-16"
+              v-if="userDetails.address"
+            >{{ userDetails.address }}</span>
+            <span v-else class="m-l-8 detail-placeholder">还未填写地址</span>
+          </div>
+
+          <div class="flex-row anis-center m-tb-16">
+            <ProfileOutlined />
+            <p
+              class="user-detail-introduce m-l-16 m-tb-0 inline"
+              v-if="userDetails.introduce"
+            >{{ userDetails.introduce }}</p>
+            <span v-else class="m-l-8 detail-placeholder">还未填写个人简介</span>
+          </div>
         </div>
       </a-card>
 
@@ -111,7 +127,7 @@ const route = useRoute();
 let userName = route.params['userName'] as string;
 
 (async () => {
-  const detailRes = await fusions.get(`/user/userDetails?userName=${userName}`);
+  const detailRes = await fusions.get(`/details/?userName=${userName}`);
   if (detailRes.data.responseOk) {
     const { avatarURL, introduce, address, profession } = detailRes.data.data;
     userDetails.avatarURL = avatarURL;
@@ -173,8 +189,11 @@ const loadingUserActivities = ref(false);
   cursor: pointer;
 }
 .detail-org-name,
+.user-detail-address,
+.user-detail-introduce,
 .user-center__activity-nomoredot-text {
   color: @N500;
+  user-select: none;
 }
 
 .user-activity-loading {

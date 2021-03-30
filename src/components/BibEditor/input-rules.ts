@@ -16,7 +16,7 @@ import {
   Node
 } from 'prosemirror-model';
 import { EditorState, Plugin, PluginKey } from 'prosemirror-state';
-import { URL_REGEX } from '../../utils/commonly-used-regexp';
+import { URL_REGEX } from '../../utils';
 
 function nodeInputRule(
   regexp: RegExp,

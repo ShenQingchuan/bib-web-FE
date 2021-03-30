@@ -90,7 +90,7 @@
               class="fs-18 fw-500 publish-doc-title m-b-12"
               :href="`/doc/${t_publishDoc(activity).activityData.id}`"
             >{{ t_publishDoc(activity).activityData.title }}</a>
-            <p class="publish-doc-desc">{{ t_publishDoc(activity).activityData.abstract }}</p>
+            <p class="publish-doc-desc">{{ t_publishDoc(activity).activityData.contentAbstract }}</p>
           </div>
         </template>
       </div>

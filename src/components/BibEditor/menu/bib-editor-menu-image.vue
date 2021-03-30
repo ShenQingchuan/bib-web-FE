@@ -41,9 +41,13 @@ import Icon, { DesktopOutlined, GlobalOutlined } from '@ant-design/icons-vue';
 import insertImageIcon from '../icons/insert-image-icon.vue';
 import { templateRef } from '@vueuse/core';
 import { fusions } from '../../../fusions';
-import { usePayloadFromToken } from '../../../utils/user-token-validation';
+import {
+  usePayloadFromToken,
+  cosImageURLPrefix,
+  cosImageUploadLoadingKey,
+  multiplePartFormContentType
+} from '../../../utils';
 import { message } from 'ant-design-vue';
-import { Node, Fragment } from "prosemirror-model";
 import { trKeyInsertImage } from '../composable/useEditor';
 import { EditorSchema } from '../editor-schema';
 import type { EditorComposable, InsertImageType } from '../typings';
@@ -66,15 +70,22 @@ const onLocalImageInput = () => {
     const images = inputRef.value.files;
     let formData = new FormData();
 
-    formData.append("uploadImages", inputRef.value.files[0]);
+    message.loading({
+      content: '图片上传中，请稍候...',
+      key: cosImageUploadLoadingKey
+    });
+    formData.append("uploadImages", images[0]);
     formData.append("userId", `${tokenPayload.userId}`);
     fusions.post('/docs/uploadImages', formData, {
       headers: {
-        "Content-Type": "multipart/form-data;charset=UTF-8",
+        "Content-Type": multiplePartFormContentType,
       }
     }).then((res) => {
       // 本地图片上传成功
-      message.success(res.data.message);
+      message.success({
+        content: res.data.message,
+        key: cosImageUploadLoadingKey
+      });
       const r: { key: string, putObjectResult: any } = res.data.data.uploadResults[0];
       const src = `${cosImageURLPrefix}${r.key}`;
 

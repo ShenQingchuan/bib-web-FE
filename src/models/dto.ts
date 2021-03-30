@@ -21,7 +21,7 @@ export interface FocusedUser extends UserAccount {
 export interface PublishedDoc {
   id: number;
   title: string;
-  abstract: string;
+  contentAbstract: string;
   publishedOnWiki: boolean;
   wikiId?: number;
 }

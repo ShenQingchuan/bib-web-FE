@@ -4,14 +4,14 @@ import {
   MOBILE_PHONE_REGEXP,
   PASSWORD_REGEXP,
   USERNAME_REGEXP,
-  VCODE_REGEXP
-} from '../utils/commonly-used-regexp';
+  VCODE_REGEXP,
+  tokenStorageRef
+} from '../utils';
 import { ValidationRule } from 'ant-design-vue/lib/form/Form';
 import { Form, message } from 'ant-design-vue';
 import _ from 'underscore';
 import { fusions } from '../fusions';
 import { useRoute, useRouter } from 'vue-router';
-import { tokenStorageRef } from '../utils/user-token-validation';
 import router from '../router';
 
 /** 表单中可能发生的错误 */
@@ -332,7 +332,7 @@ export function useRegisterForm() {
         if (sendSmsCodeAgainPendingSeconds.value > 0) {
           sendSmsCodeAgainPendingSeconds.value--;
         } else if (sendSmsCodeAgainPendingSeconds.value === 0) {
-          isSendSmsCodeBtnDisabled.value = true; // 结束倒计时
+          isSendSmsCodeBtnDisabled.value = false; // 结束倒计时
           clearInterval(pending);
         }
       }, 1000); // 一秒一次

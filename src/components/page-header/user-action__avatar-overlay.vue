@@ -23,7 +23,7 @@ import {
   LogoutOutlined,
   ReadOutlined,
 } from "@ant-design/icons-vue";
-import { usePayloadFromToken } from "../../utils/user-token-validation";
+import { usePayloadFromToken } from "../../utils";
 import { runLogout } from "../../composable/useAuthForm";
 
 export default {

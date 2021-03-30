@@ -6,7 +6,7 @@ import { ref } from 'vue';
 import { EditorSchema } from '../editor-schema';
 import { trKeyLinkChange } from '../composable/useEditor';
 import { EditorView } from 'prosemirror-view';
-import { URL_REGEX } from '../../../utils/commonly-used-regexp';
+import { URL_REGEX } from '../../../utils';
 
 const {
   marks: { link: linkMarkType }

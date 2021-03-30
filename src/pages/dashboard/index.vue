@@ -56,13 +56,13 @@
       <a-divider class="m-tb-2" />
       <div class="dashboard-page__new flex-row anis-center p-tb-12">
         <div
-          v-for="(item, i) in NewThingList"
+          v-for="item in NewThingList"
           :key="item.text"
           class="dashboard-page__new-item flex-col anis-center"
           :class="{
-            'm-l-4': i === 0,
-            'm-lr-36': i === 1,
-            'm-r-4': i === 2
+            'm-l-4': item.id === 0,
+            'm-lr-36': item.id === 1,
+            'm-r-4': item.id === 2
           }"
         >
           <img :src="item.icon" width="24" height="24" />
@@ -94,14 +94,17 @@ const filters: DocFilter[] = [
 ];
 const NewThingList = [
   {
+    id: 0,
     text: "新建文档",
     icon: "/assets/svg/user-action__new__doc.svg"
   },
   {
+    id: 1,
     text: "新建知识库",
     icon: "/assets/svg/user-action__new__book.svg"
   },
   {
+    id: 2,
     text: "新建团队",
     icon: "/assets/svg/user-action__new__org.svg"
   }

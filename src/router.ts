@@ -1,4 +1,4 @@
-import { isBibUserTokenValid } from './utils/user-token-validation';
+import { isBibUserTokenValid } from './utils';
 import { message } from 'ant-design-vue';
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router';
 import { Component } from 'vue';

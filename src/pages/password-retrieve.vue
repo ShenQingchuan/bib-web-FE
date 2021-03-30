@@ -98,7 +98,7 @@ import {
   EMAIL_REGEXP,
   PASSWORD_REGEXP,
   VCODE_REGEXP,
-} from "../utils/commonly-used-regexp";
+} from "../utils";
 import { fusions } from "../fusions";
 import { message, Form } from "ant-design-vue";
 import { LoginRegisterFormError } from "../composable/useAuthForm";

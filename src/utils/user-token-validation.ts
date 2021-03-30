@@ -6,6 +6,12 @@ export const tokenStorageRef = useStorage<string | null>(
   '__$bT',
   tokenDefaultValue
 );
+export const userDetailsStorageRef = useStorage('__$bib_user_details', {
+  avatarURL: '',
+  address: '',
+  profession: '',
+  introduce: ''
+});
 
 /** 检查当前 Token 是否可用 */
 export function isBibUserTokenValid() {

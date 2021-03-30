@@ -14,7 +14,7 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import { useEditor } from '../components/BibEditor/composable/useEditor';
-import { usePayloadFromToken } from '../utils/user-token-validation';
+import { usePayloadFromToken } from '../utils';
 import BibEditor from '../components/BibEditor/bib-editor.vue';
 import BibEditorMenu from '../components/BibEditor/menu/bib-editor-menu.vue';
 
@@ -27,7 +27,7 @@ const { editorCompose, initEditor, onlineOtherUsers } = useEditor({
   credential,
 });
 const logDocJSON = () => {
-  console.log(editorCompose.view.value.state.doc.textContent);
+  console.log(JSON.stringify(editorCompose.view.value.state.doc.toJSON()).length);
 };
 const logSelectionNodesBetween = () => {
   const { selection } = editorCompose.view.value.state;

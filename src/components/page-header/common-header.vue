@@ -53,7 +53,7 @@
         <a-popover :title="userName">
           <a-avatar
             class="component-page-header__inner-user-actions-avatar"
-            src="/assets/svg/user-avatar__default.svg"
+            :src="userDetailsStorageRef.avatarURL || '/assets/svg/user-avatar__default.svg'"
           ></a-avatar>
           <template #content>
             <user-action-avatar-overlay />
@@ -77,8 +77,7 @@ import {
   ClockCircleOutlined,
   BellOutlined,
 } from "@ant-design/icons-vue";
-import { isBibUserTokenValid } from "../../utils/user-token-validation";
-import { usePayloadFromToken } from "../../utils/user-token-validation";
+import { isBibUserTokenValid, usePayloadFromToken, userDetailsStorageRef } from "../../utils";
 import userActionAvatarOverlay from "./user-action__avatar-overlay.vue";
 
 export default {
@@ -105,6 +104,7 @@ export default {
       ],
       userName,
       userLogined,
+      userDetailsStorageRef
     };
   },
 };

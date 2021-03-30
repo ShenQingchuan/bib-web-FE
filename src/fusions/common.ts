@@ -3,7 +3,7 @@ import { AxiosRequestConfig, AxiosResponse } from 'axios';
 import {
   isBibUserTokenValid,
   tokenStorageRef
-} from '../utils/user-token-validation';
+} from '../utils';
 
 function $slice(str: string) {
   if (str.length <= 60) return str;

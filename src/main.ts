@@ -53,7 +53,7 @@ import {
   Skeleton,
   Breadcrumb,
   Timeline,
-  Spin
+  Spin,
 } from 'ant-design-vue';
 
 createApp(App)
@@ -84,7 +84,6 @@ createApp(App)
   .use(Breadcrumb)
   .use(Timeline)
   .use(Spin)
-  .use(Tabs)
   // for vue3-colorpicker
   .use(colorPicker)
   .mount('#app');

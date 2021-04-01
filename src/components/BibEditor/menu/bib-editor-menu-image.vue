@@ -52,8 +52,6 @@ import { trKeyInsertImage } from '../composable/useEditor';
 import { EditorSchema } from '../editor-schema';
 import type { EditorComposable, InsertImageType } from '../typings';
 
-const cosImageURLPrefix = 'https://techdict-1257165552.cos.ap-shanghai.myqcloud.com/'
-
 // @States:
 const editorCompose = inject<EditorComposable>("editorCompose");
 const inputRef = templateRef<HTMLInputElement>('localImageInputer');

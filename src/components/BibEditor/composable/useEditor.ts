@@ -38,6 +38,7 @@ import {
   OnlineUser
 } from '../typings';
 import router from 'router';
+import { insertOnlineImage } from '../plugins/insert-online-img';
 
 const sampleInitDocJSON = {
   type: 'doc',
@@ -374,8 +375,6 @@ export function useEditor(options: BibEditorOptions) {
   /** 插入 图片 */
   const insertImage = (insertType: InsertImageType) => {
     focus();
-    const { state, dispatch } = editorView.value;
-    const { tr, selection } = state;
     if (insertType === 'local') {
       const inputer: HTMLInputElement | null = document.querySelector(
         '.bib-editor__local-image-inputer'
@@ -383,6 +382,9 @@ export function useEditor(options: BibEditorOptions) {
       inputer?.click();
       // 呼出文件上传窗口，后续由 input 的 @change 事件接管
     } else {
+      const { state, dispatch } = editorView.value;
+      const { tr } = state;
+      insertOnlineImage(tr, dispatch);
     }
   };
 

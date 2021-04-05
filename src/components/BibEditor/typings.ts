@@ -37,6 +37,7 @@ export interface EditorComposable {
   };
   focus: () => void;
   toggleHeading: (attrs: { level: number }) => void;
+  toggleFontSize: (size: number) => void;
   toggleAlign: (direction: string) => void;
   toggleList: (listType: NodeType, itemTyp: NodeType) => void;
   toggleMark: (markName: EditorToggleCategories) => void;

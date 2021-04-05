@@ -71,18 +71,16 @@ const showColorForSvg = computed(() =>
 onMounted(() => {
   editorCompose?.onEditorDispatched((tr) => {
     editorCompose.applyForNodesAtCursor((node) => {
-      if (!tr.getMeta("pointer") && node.type === EditorSchema.nodes.text) {
+      if (!tr.getMeta("pointer") && node.isText) {
         const coloredMarkType = EditorSchema.marks.colored;
-        if (
-          node.marks.map(m => m.type).includes(coloredMarkType)
-          || tr.storedMarks?.map(m => m.type).includes(coloredMarkType)
-        ) {
-          const mark = node.marks.find(m => m.type === coloredMarkType);
-          if (mark) {
-            pickedColor.value = mark.attrs.color;
-          }
-        }
-        else if (!updating.value && pickedColor.value !== defaultColor) {
+
+        if (node.marks.map(m => m.type).includes(coloredMarkType)) {
+          const mark = node.marks.find(m => m.type === coloredMarkType)!;
+          pickedColor.value = mark.attrs.color;
+        } else if (tr.storedMarks?.map(m => m.type).includes(coloredMarkType)) {
+          const mark = tr.storedMarks?.find(m => m.type === coloredMarkType)!;
+          pickedColor.value = mark.attrs.color;
+        } else if (!updating.value && pickedColor.value !== defaultColor) {
           pickedColor.value = defaultColor;
         }
       }

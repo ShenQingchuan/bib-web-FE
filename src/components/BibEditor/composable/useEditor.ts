@@ -45,7 +45,8 @@ import {
   trKeyList,
   trKeyTextColor,
   trKeyQuote,
-  trKeyHr
+  trKeyHr,
+  trKeyFontSize
 } from '../trKeys';
 
 const sampleInitDocJSON = {
@@ -230,6 +231,28 @@ export function useEditor(options: BibEditorOptions) {
         })
     );
   };
+  /** 切换 字体大小 */
+  const toggleFontSize = (size: number) => {
+    focus();
+    const { state, dispatch } = editorView.value;
+    const { selection, tr } = state;
+    const { from, to, empty } = selection;
+
+    const sizeMark = EditorSchema.marks.fontSizeMark.create({
+      size
+    });
+    // 是选区状态
+    if (!empty) {
+      tr.addMark(from, to, sizeMark);
+    }
+    // 是光标状态
+    else {
+      tr.addStoredMark(sizeMark);
+    }
+
+    tr.setMeta('trKey', trKeyFontSize);
+    dispatch(tr);
+  };
   /** 切换 文字对齐方向 */
   const toggleAlign = (direction: string) => {
     focus();
@@ -312,6 +335,7 @@ export function useEditor(options: BibEditorOptions) {
     // just wrap in list
     wrapInList(listType)(state, dispatch);
   };
+  // inner: 创建切换颜色的 Command，分别用于文字颜色和高亮颜色
   const createToggleColorCommand = (markType: MarkType, trKey: string) => {
     return (color: string) => {
       const { state, dispatch } = editorView.value;
@@ -403,6 +427,7 @@ export function useEditor(options: BibEditorOptions) {
     view: editorView,
     options,
     toggleHeading,
+    toggleFontSize,
     toggleAlign,
     toggleList,
     toggleMark,

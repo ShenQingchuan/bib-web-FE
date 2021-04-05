@@ -2,7 +2,8 @@
   <div class="bib-menu flex-row jyct-center anis-center p-10" :class="{
     fixed: props.fixed
   }">
-    <bib-menu-header />
+    <bib-menu-heading />
+    <bib-menu-font-size />
     <bib-menu-text-color />
     <bib-menu-text-bg-color />
     <bib-menu-mark v-for="item in marksGroup" :key="item.mark" :mark="item.mark">
@@ -26,7 +27,8 @@ import CodeMarkIcon from "../icons/code-mark-icon.vue";
 import SuperScriptIcon from "../icons/superscript-mark-icon.vue";
 import SubScriptIcon from "../icons/subscript-mark-icon.vue";
 import BibMenuMark from "./bib-editor-menu-mark.vue";
-import BibMenuHeader from "./bib-editor-menu-heading.vue";
+import BibMenuHeading from "./bib-editor-menu-heading.vue";
+import BibMenuFontSize from './bib-editor-menu-fontSize.vue';
 import BibMenuAlign from "./bib-editor-menu-align.vue";
 import BibMenuList from './bib-editor-menu-list.vue';
 import BibMenuTextColor from './bib-editor-menu-text-color.vue';

@@ -5,13 +5,16 @@ import {
 } from '../typings';
 
 /** 获取 doc 文档的目录 */
-const getTableOfContents = (doc: DocContentElement) => {
+const getTableOfContents = (
+  doc: DocContentElement
+): DocTableOfContentsUnit[] => {
   const headings: DocHeading[] = [];
 
   const getHeadingBlock = (content: DocContentElement[]) => {
     content.forEach((e) => {
       if (e.type === 'heading') {
         headings.push(e as DocHeading);
+        return;
       }
       if (e.content) {
         getHeadingBlock(e.content);
@@ -22,6 +25,9 @@ const getTableOfContents = (doc: DocContentElement) => {
   const _level = (h: DocHeading) => h.attrs.level;
 
   doc.content && getHeadingBlock(doc.content);
+
+  // 如果没有找到任何一个 heading 则返回空
+  if (!headings.length) return [];
 
   const generateTocUnit = (h: DocHeading): DocTableOfContentsUnit => ({
     title: _text(h),

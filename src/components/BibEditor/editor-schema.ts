@@ -322,6 +322,29 @@ export const marks: {
       return ['span', { style }, 0];
     }
   },
+  fontSizeMark: {
+    attrs: { size: { default: 14 } },
+    group: 'inline',
+    content: 'text*',
+    parseDOM: [
+      {
+        tag: 'span',
+        style: 'font-size',
+        getAttrs(el: HTMLElement) {
+          return {
+            fontSize: el.style.fontSize
+          };
+        }
+      }
+    ],
+    toDOM(mark: Mark) {
+      let style = '';
+      if (mark.attrs.size) {
+        style += `font-size: ${mark.attrs.size}px;`;
+      }
+      return ['span', { style }, 0];
+    }
+  },
   hightlighted: {
     attrs: { color: { default: '' } },
     group: 'inline',

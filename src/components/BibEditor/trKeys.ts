@@ -1,0 +1,10 @@
+export const trKeyMark = 'tr-mark';
+export const trKeyHeading = 'tr-heading';
+export const trKeyAlign = 'tr-align';
+export const trKeyList = 'tr-list';
+export const trKeyTextColor = 'tr-textColor';
+export const trKeyTextBgColor = 'tr-textBgColor';
+export const trKeyLinkChange = 'tr-linkChange';
+export const trKeyQuote = 'tr-quote';
+export const trKeyHr = 'tr-hr';
+export const trKeyInsertImage = 'tr-insertImage';

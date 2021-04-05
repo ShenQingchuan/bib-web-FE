@@ -25,20 +25,11 @@ const insertHrLine = () => {
 
 <style lang="less" scoped>
 @import "../../../less/color.less";
+@import "./menu-btn-common.less";
 
 .bib-editor-menu-item {
   &__hr-btn {
-    &,
-    &:hover {
-      border: none;
-      color: @N600;
-    }
-
-    &:hover,
-    &.active {
-      background-color: @N200;
-      border-radius: 6px;
-    }
+    .menu-btn-common;
   }
 }
 </style>

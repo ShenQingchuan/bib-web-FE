@@ -2,7 +2,7 @@ import { ref } from 'vue';
 import { Modal, Form, Input } from 'ant-design-vue';
 import { Transaction } from 'prosemirror-state';
 import { EditorSchema } from '../editor-schema';
-import { trKeyInsertImage } from '../composable/useEditor';
+import { trKeyInsertImage } from '../trKeys';
 
 export function insertOnlineImage(
   tr: Transaction,

@@ -1,5 +1,5 @@
 <template>
-  <div class="bib-menu flex-row anis-center p-10" :class="{
+  <div class="bib-menu flex-row jyct-center anis-center p-10" :class="{
     fixed: props.fixed
   }">
     <bib-menu-header />
@@ -14,6 +14,7 @@
     <bib-menu-quote />
     <bib-menu-hr />
     <bib-menu-insert-image />
+    <bib-menu-indent />
   </div>
 </template>
 
@@ -34,6 +35,7 @@ import BibMenuLink from "./bib-editor-menu-link.vue";
 import BibMenuQuote from "./bib-editor-menu-quote.vue";
 import BibMenuHr from "./bib-editor-menu-hr.vue";
 import BibMenuInsertImage from './bib-editor-menu-image.vue';
+import BibMenuIndent from './bib-editor-menu-indent.vue';
 import type { EditorToggleCategories, EditorComposable } from "../typings";
 
 const createMarkMenuItem = (mark: EditorToggleCategories, icon: any) => ({ mark, icon });

@@ -48,7 +48,7 @@ import {
   multiplePartFormContentType
 } from '../../../utils';
 import { message } from 'ant-design-vue';
-import { trKeyInsertImage } from '../composable/useEditor';
+import { trKeyInsertImage } from '../trKeys';
 import { EditorSchema } from '../editor-schema';
 import type { EditorComposable, InsertImageType } from '../typings';
 
@@ -100,19 +100,10 @@ const onLocalImageInput = () => {
 
 <style lang="less" scoped>
 @import "../../../less/color.less";
+@import "./menu-btn-common.less";
 .bib-editor-menu-item {
   &__image-btn {
-    &,
-    &:hover {
-      border: none;
-      color: @N600;
-    }
-
-    &:hover,
-    &.active {
-      background-color: @N200;
-      border-radius: 6px;
-    }
+    .menu-btn-common;
   }
 }
 .bib-editor-menu-item__image-dropdown-overlay {

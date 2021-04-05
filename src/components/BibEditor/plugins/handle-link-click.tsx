@@ -4,7 +4,7 @@ import { Modal, Form, Input } from 'ant-design-vue';
 import { Node, Mark } from 'prosemirror-model';
 import { ref } from 'vue';
 import { EditorSchema } from '../editor-schema';
-import { trKeyLinkChange } from '../composable/useEditor';
+import { trKeyLinkChange } from '../trKeys';
 import { EditorView } from 'prosemirror-view';
 import { URL_REGEX } from '../../../utils';
 

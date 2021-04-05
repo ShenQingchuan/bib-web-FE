@@ -41,9 +41,9 @@
             <span class="m-l-auto">
               来自：
               <a
-                class="like-doc-author"
-                :href="`/user/${doc.author.userName}`"
-              >{{ doc.author.userName }}</a>
+                class="like-doc-creator"
+                :href="`/user/${doc.creator.userName}`"
+              >{{ doc.creator.userName }}</a>
             </span>
           </div>
         </template>
@@ -135,7 +135,7 @@ const timeFromNow = (timestamp: number) => {
   }
 }
 
-.like-doc-author:hover {
+.like-doc-creator:hover {
   text-decoration: none;
 }
 

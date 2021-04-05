@@ -73,16 +73,8 @@ const toggleFn = () => {
 
 <style lang="less" scoped>
 @import "../../../less/color.less";
-.bib-editor-menu-item {
-  &__wrapper {
-    &:hover,
-    &.active {
-      background-color: @N200;
-      border-radius: 6px;
-    }
-  }
-  &__btn {
-    color: @N600;
-  }
+@import "./menu-btn-common.less";
+.bib-editor-menu-item__btn {
+  .menu-btn-common;
 }
 </style>

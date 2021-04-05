@@ -4,7 +4,7 @@ import { UserAccount } from 'models';
 export interface LikedDoc {
   id: number;
   title: string;
-  author: UserAccount;
+  creator: UserAccount;
 }
 
 export interface FocusedWiki {

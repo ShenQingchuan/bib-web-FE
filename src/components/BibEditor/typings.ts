@@ -55,3 +55,23 @@ export interface OnlineUser {
   userId: number;
   userName: string;
 }
+
+export interface DocContentElement {
+  type: string;
+  attrs?: Record<string, any>;
+  content?: DocContentElement[];
+}
+
+export interface DocHeading extends DocContentElement {
+  attrs: {
+    level: number;
+    [key: string]: any;
+  };
+  content: [{ type: 'text'; text: string }];
+}
+
+export interface DocTableOfContentsUnit {
+  title: string;
+  level: number;
+  children: DocTableOfContentsUnit[];
+}

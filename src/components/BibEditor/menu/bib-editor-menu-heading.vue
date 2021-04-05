@@ -35,7 +35,7 @@ import { CaretDownOutlined } from "@ant-design/icons-vue";
 import { setBlockType } from 'prosemirror-commands';
 import { EditorSchema } from "../editor-schema";
 import type { EditorComposable } from "../typings";
-import { trKeyHeading } from '../composable/useEditor'
+import { trKeyHeading } from '../trKeys';
 import { findParentNode } from "prosemirror-utils";
 
 type DisplayLevelEnumItem = { label: string, fs?: number, attrs?: { level: number } };

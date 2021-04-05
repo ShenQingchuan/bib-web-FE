@@ -16,6 +16,12 @@ import {
   Node
 } from 'prosemirror-model';
 import { EditorState, Plugin, PluginKey } from 'prosemirror-state';
+import {
+  makeBlockMathInputRule,
+  makeInlineMathInputRule,
+  REGEX_INLINE_MATH_DOLLARS,
+  REGEX_BLOCK_MATH_DOLLARS
+} from '@benrbray/prosemirror-math';
 import { URL_REGEX } from '../../utils';
 
 function nodeInputRule(
@@ -261,6 +267,14 @@ export function buildInputRules(schema: Schema) {
     rules.push(markInputRule(/(?:\_)([^`]+)(?:\_)/g, type));
   if ((type = schema.marks.strong))
     rules.push(markInputRule(/(?:\*\*|__)([^*_]+)(?:\*\*|__)$/, type));
+
+  // create input rules for mathjax
+  rules.push(
+    makeInlineMathInputRule(REGEX_INLINE_MATH_DOLLARS, schema.nodes.math_inline)
+  );
+  rules.push(
+    makeBlockMathInputRule(REGEX_BLOCK_MATH_DOLLARS, schema.nodes.math_display)
+  );
 
   return inputRules({ rules });
 }

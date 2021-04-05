@@ -192,4 +192,11 @@ defineProps<{
   opacity: 1;
   transform: scale(1);
 }
+
+// prosemirror-math: blockmath style
+.math-src .ProseMirror {
+  min-height: 100%;
+  line-height: normal;
+  padding: 0;
+}
 </style>

@@ -264,6 +264,32 @@ export const nodes: {
     toDOM() {
       return ['task_item', 0];
     }
+  },
+
+  // prosemirror-math:
+  math_inline: {
+    group: 'inline math',
+    content: 'text*', // important!
+    inline: true, // important!
+    atom: true, // important!
+    toDOM: () => ['math-inline', { class: 'math-node' }, 0],
+    parseDOM: [
+      {
+        tag: 'math-inline' // important!
+      }
+    ]
+  },
+  math_display: {
+    group: 'block math',
+    content: 'text*', // important!
+    atom: true, // important!
+    code: true, // important!
+    toDOM: () => ['math-display', { class: 'math-node' }, 0],
+    parseDOM: [
+      {
+        tag: 'math-display' // important!
+      }
+    ]
   }
 };
 

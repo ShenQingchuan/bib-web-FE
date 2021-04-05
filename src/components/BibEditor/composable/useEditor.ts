@@ -48,6 +48,7 @@ import {
   trKeyHr,
   trKeyFontSize
 } from '../trKeys';
+import { mathPlugin, mathSerializer } from '@benrbray/prosemirror-math';
 
 const sampleInitDocJSON = {
   type: 'doc',
@@ -159,13 +160,14 @@ export function useEditor(options: BibEditorOptions) {
             }
           }),
           yUndoPlugin(),
-          addBibKeymap(EditorSchema),
           keymap(baseKeymap),
+          addBibKeymap(EditorSchema),
           dropCursor(),
           gapCursor(),
           arrowHandlersInCodeBlock,
           placeholder(options.placeholder || '写点什么吧 ...'),
-          handleLinkClick
+          handleLinkClick,
+          mathPlugin
         ]
       }),
       dispatchTransaction(tr) {
@@ -190,6 +192,9 @@ export function useEditor(options: BibEditorOptions) {
       // @ts-ignore
       editable() {
         return !options.disabled;
+      },
+      clipboardTextSerializer: (slice) => {
+        return mathSerializer.serializeSlice(slice);
       }
     });
   };

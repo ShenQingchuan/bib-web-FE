@@ -366,6 +366,11 @@
     lodash "^4.17.19"
     to-fast-properties "^2.0.0"
 
+"@benrbray/prosemirror-math@^0.1.4":
+  version "0.1.4"
+  resolved "https://registry.npmjs.org/@benrbray/prosemirror-math/-/prosemirror-math-0.1.4.tgz#2390b7a94696c6d1d8700c6b6a8712ba81208958"
+  integrity sha512-Mlr9rChTD7wWmd5rSjjAL+OPWsHK6RlO+bprf0vrVCQhmmBTA1S8ZzRKPx5TymmtmvViVytKOk8vBXjg7EwbFg==
+
 "@ctrl/tinycolor@^3.3.1":
   version "3.3.2"
   resolved "https://registry.npmjs.org/@ctrl/tinycolor/-/tinycolor-3.3.2.tgz#902c4c7e6b48553e4f83c0c1c565a6b071b02520"
@@ -1134,7 +1139,7 @@ colorette@^1.2.1:
   resolved "https://registry.npmjs.org/colorette/-/colorette-1.2.1.tgz#4d0b921325c14faf92633086a536db6e89564b1b"
   integrity sha512-puCDz0CzydiSYOrnXpz/PKd69zRrribezjtE9yd4zvytoRc8+RY/KJPvtPFKZS3E3wP6neGyMe0vOTlHO5L3Pw==
 
-commander@^6.1.0:
+commander@^6.0.0, commander@^6.1.0:
   version "6.2.1"
   resolved "https://registry.npmjs.org/commander/-/commander-6.2.1.tgz#0792eb682dfbc325999bb2b84fddddba110ac73c"
   integrity sha512-U7VdrJFnJgo4xjrHpTzu0yrHPGImdsmD95ZlgYSEajAn2JKzDhDTPG9kBTefmObL2w/ngeZnilk+OV9CG3d7UA==
@@ -1892,6 +1897,13 @@ jws@^3.2.2:
   dependencies:
     jwa "^1.4.1"
     safe-buffer "^5.0.1"
+
+katex@^0.13.0:
+  version "0.13.0"
+  resolved "https://registry.npmjs.org/katex/-/katex-0.13.0.tgz#62900e56c1ad8fdf7da23399e50d7a7b690b39ab"
+  integrity sha512-6cHbzbegYgS9vvVGuH8UA+o97X+ZshtboSqJJCdq7trBYzuD75JNwr7Ef606xkUjecPPhFnyB+afx1dVafielg==
+  dependencies:
+    commander "^6.0.0"
 
 less@^3.0.4:
   version "3.13.1"

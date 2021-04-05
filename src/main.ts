@@ -29,6 +29,10 @@ import 'codemirror/mode/rust/rust.js';
 import colorPicker from 'vue3-colorpicker';
 import 'vue3-colorpicker/bundle.css';
 
+// prosemirro-math for mathjax
+import 'katex/dist/katex.min.css';
+import '@benrbray/prosemirror-math/style/math.css';
+
 import {
   Space,
   Input,

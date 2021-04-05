@@ -8,7 +8,10 @@ import {
   joinDown,
   lift,
   selectParentNode,
-  Command
+  Command,
+  deleteSelection,
+  selectNodeBackward,
+  joinBackward
 } from 'prosemirror-commands';
 import {
   wrapInList,
@@ -20,6 +23,7 @@ import { Schema, NodeType, MarkType } from 'prosemirror-model';
 import { undo, redo } from 'y-prosemirror';
 import { undoInputRule } from 'prosemirror-inputrules';
 import { keymap } from 'prosemirror-keymap';
+import { mathBackspaceCmd } from '@benrbray/prosemirror-math';
 
 const mac =
   typeof navigator != 'undefined' ? /Mac/.test(navigator.platform) : false;
@@ -66,7 +70,16 @@ export function addBibKeymap(schema: Schema, mapKeys?: any) {
 
   bind('Mod-z', undo);
   bind('Shift-Mod-z', redo);
-  bind('Backspace', undoInputRule);
+  bind(
+    'Backspace',
+    chainCommands(
+      undoInputRule,
+      deleteSelection,
+      mathBackspaceCmd,
+      joinBackward,
+      selectNodeBackward
+    )
+  );
   if (!mac) bind('Mod-y', redo);
 
   bind('Alt-ArrowUp', joinUp);

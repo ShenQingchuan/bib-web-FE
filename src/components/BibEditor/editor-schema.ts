@@ -52,6 +52,12 @@ const extendsTextBlockStyleAttrs = (
   if (!!dom.style.textAlign) {
     textBlockStylesAttrs.textAlign = dom.style.textAlign;
   }
+  if (!!dom.style.paddingLeft) {
+    if (dom.style.paddingLeft.endsWith('px')) {
+      const paddingNumber = Number(dom.style.paddingLeft.slice(0, -2));
+      textBlockStylesAttrs.textIndent = paddingNumber;
+    }
+  }
 
   const otherAttrs = computeOther ? computeOther(dom) : {};
   return {
@@ -85,7 +91,6 @@ export const nodes: {
 
   // :: NodeSpec A blockquote (`<blockquote>`) wrapping one or more blocks.
   blockquote: {
-    attrs: extends_textBlockAttrs(),
     content: 'block+',
     group: 'block',
     defining: true,
@@ -308,6 +313,26 @@ export const nodes: {
         tag: 'math-display' // important!
       }
     ]
+  },
+
+  // video-iframe:
+  video_iframe: {
+    attrs: { src: { default: '' } },
+    defining: true,
+    group: 'block',
+    parseDOM: [
+      {
+        tag: 'iframe[class="prosemirror-video-iframe"]',
+        getAttrs(dom: HTMLIFrameElement) {
+          return {
+            src: dom.src
+          };
+        }
+      }
+    ],
+    toDOM() {
+      return ['video_iframe', 0];
+    }
   }
 };
 

@@ -16,6 +16,7 @@
     <bib-menu-quote />
     <bib-menu-hr />
     <bib-menu-insert-image />
+    <bib-menu-video />
   </div>
 </template>
 
@@ -38,6 +39,7 @@ import BibMenuQuote from "./bib-editor-menu-quote.vue";
 import BibMenuHr from "./bib-editor-menu-hr.vue";
 import BibMenuInsertImage from './bib-editor-menu-image.vue';
 import BibMenuIndent from './bib-editor-menu-indent.vue';
+import BibMenuVideo from './bib-editor-menu-video.vue';
 import type { EditorToggleCategories, EditorComposable } from "../typings";
 
 const createMarkMenuItem = (mark: EditorToggleCategories, icon: any) => ({ mark, icon });

@@ -42,7 +42,7 @@ import {
   InsertImageType,
   OnlineUser
 } from '../typings';
-import { insertOnlineImage } from '../plugins/insert-online-img';
+import { insertOnlineImage } from '../helpers/insert-online-img';
 import {
   trKeyMark,
   trKeyHeading,
@@ -55,6 +55,8 @@ import {
   trKeyIndent
 } from '../trKeys';
 import { mathPlugin, mathSerializer } from '@benrbray/prosemirror-math';
+import VideoIframeView from '../node-views/video-iframe';
+import { insertVideoIframe } from '../helpers/insert-video-iframe';
 
 const sampleInitDocJSON = {
   type: 'doc',
@@ -193,6 +195,9 @@ export function useEditor(options: BibEditorOptions) {
         },
         task_item(node, view, getPos) {
           return new TaskItemView(node, view, getPos);
+        },
+        video_iframe(node, view, getPos) {
+          return new VideoIframeView(node, view, getPos);
         }
       },
       // @ts-ignore
@@ -471,6 +476,13 @@ export function useEditor(options: BibEditorOptions) {
       insertOnlineImage(tr, dispatch);
     }
   };
+  /** 插入 视频 */
+  const insertVideo = (icon: string, label: string) => {
+    focus();
+    const { state, dispatch } = editorView.value;
+    const { tr } = state;
+    insertVideoIframe(icon, label, tr, dispatch);
+  };
 
   /** 注册 Dispatch 回调钩子 */
   const onEditorDispatched = (fn: DispatchHook, meta?: Record<string, any>) => {
@@ -499,6 +511,7 @@ export function useEditor(options: BibEditorOptions) {
     toggleQuoteBlock,
     insertHorizontalRuleLine,
     insertImage,
+    insertVideo,
     toJSON,
     focus,
     onEditorDispatched,

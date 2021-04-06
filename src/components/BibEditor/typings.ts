@@ -47,6 +47,7 @@ export interface EditorComposable {
   toggleQuoteBlock: () => void;
   insertHorizontalRuleLine: () => void;
   insertImage: (insertType: InsertImageType) => void;
+  insertVideo: (icon: string, label: string) => void;
   onEditorDispatched: (fn: DispatchHook, meta?: Record<string, any>) => void;
   applyForNodesAtCursor: (fn: (node: Node, pos: number) => void) => void;
 }

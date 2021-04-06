@@ -15,7 +15,11 @@ import { gapCursor } from 'prosemirror-gapcursor';
 import { history } from 'prosemirror-history';
 import { EditorSchema } from '../editor-schema';
 import { onUnmounted, shallowRef, ref } from 'vue';
-import { liftListItem, wrapInList } from 'prosemirror-schema-list';
+import {
+  liftListItem,
+  sinkListItem,
+  wrapInList
+} from 'prosemirror-schema-list';
 import { WebsocketProvider } from 'y-websocket';
 import { ySyncPlugin, yCursorPlugin, yUndoPlugin } from 'y-prosemirror';
 import { keymap } from 'prosemirror-keymap';
@@ -46,7 +50,8 @@ import {
   trKeyTextColor,
   trKeyQuote,
   trKeyHr,
-  trKeyFontSize
+  trKeyFontSize,
+  trKeyIndent
 } from '../trKeys';
 import { mathPlugin, mathSerializer } from '@benrbray/prosemirror-math';
 
@@ -160,14 +165,14 @@ export function useEditor(options: BibEditorOptions) {
             }
           }),
           yUndoPlugin(),
-          keymap(baseKeymap),
           addBibKeymap(EditorSchema),
+          keymap(baseKeymap),
           dropCursor(),
           gapCursor(),
-          arrowHandlersInCodeBlock,
           placeholder(options.placeholder || '写点什么吧 ...'),
-          handleLinkClick,
-          mathPlugin
+          arrowHandlersInCodeBlock,
+          handleLinkClick
+          // mathPlugin
         ]
       }),
       dispatchTransaction(tr) {
@@ -280,8 +285,8 @@ export function useEditor(options: BibEditorOptions) {
     else {
       const selection = editorView.value.state.selection;
       const { from, to } = selection;
-      const parent = pmutils.findParentNode((node) =>
-        ['list_item'].includes(node.type.name)
+      const parent = pmutils.findParentNode(
+        (node) => node.type.name === 'list_item'
       )(selection);
       if (parent) {
         const newAttrs = {
@@ -300,6 +305,57 @@ export function useEditor(options: BibEditorOptions) {
 
     tr.setMeta('trKey', trKeyAlign);
     editorView.value.dispatch(tr);
+  };
+  /** 增加/减少缩进 */
+  const updateIndent = (t: '+' | '-') => {
+    focus();
+    const { state, dispatch } = editorView.value;
+    const { selection, tr } = state;
+    const { from, to } = selection;
+    tr.doc.nodesBetween(from, to, (node, pos) => {
+      // 对于在 List 里的情况，特殊化处理：
+      const runCommandForListCases = (
+        cmd: (
+          state: EditorState<Schema<string, string>>,
+          dispatch?: (tr: Transaction<Schema<string, string>>) => void
+        ) => boolean
+      ) => {
+        return cmd(state, (tr) =>
+          useViewDispatch(editorView.value, tr, {
+            trKey: trKeyIndent
+          })
+        );
+      };
+      const listItemType = EditorSchema.nodes.list_item,
+        taskItemType = EditorSchema.nodes.task_item;
+      if (
+        node.type === EditorSchema.nodes.ordered_list ||
+        node.type === EditorSchema.nodes.bullet_list
+      ) {
+        t === '+'
+          ? runCommandForListCases(sinkListItem(listItemType))
+          : runCommandForListCases(liftListItem(listItemType));
+        return;
+      } else if (node.type === EditorSchema.nodes.task_list) {
+        t === '+'
+          ? runCommandForListCases(sinkListItem(taskItemType))
+          : runCommandForListCases(liftListItem(taskItemType));
+        return;
+      }
+
+      // 其他：则必须是含 textIndent 的 textBlock 类型节点
+      if (!node.type.spec.attrs?.textIndent) {
+        return;
+      }
+      let textIndent = node.attrs?.textIndent;
+      t === '+' ? (textIndent += 1) : (textIndent -= 1);
+      tr.setNodeMarkup(pos, null as any, {
+        ...node.attrs,
+        textIndent
+      });
+      tr.setMeta('trKey', trKeyIndent);
+      dispatch(tr);
+    });
   };
   /** 切换 列表类型 */
   const toggleList = (listType: NodeType, itemType: NodeType) => {
@@ -434,6 +490,7 @@ export function useEditor(options: BibEditorOptions) {
     toggleHeading,
     toggleFontSize,
     toggleAlign,
+    updateIndent,
     toggleList,
     toggleMark,
     toggleTextColor,

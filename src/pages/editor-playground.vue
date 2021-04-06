@@ -31,7 +31,7 @@ const { editorCompose, initEditor, onlineOtherUsers } = useEditor({
   credential,
 });
 const logDocJSON = () => {
-  console.log(JSON.stringify(editorCompose.view.value.state.doc.toJSON()));
+  console.log(editorCompose.view.value.state.doc.toJSON());
 };
 const logSelectionNodesBetween = () => {
   const { selection } = editorCompose.view.value.state;

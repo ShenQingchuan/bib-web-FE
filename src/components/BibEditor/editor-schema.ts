@@ -1,4 +1,5 @@
 import { Schema, Node, Mark } from 'prosemirror-model';
+import * as us from 'underscore';
 
 const blockquoteDOM = ['blockquote', 0],
   brDOM = ['br'],
@@ -11,14 +12,29 @@ const blockquoteDOM = ['blockquote', 0],
   codeDOM = ['code', 0],
   olDOM = ['ol', 0];
 
-const extends_textBlockAttrs = (others: Record<string, any> = {}) => ({
-  textAlign: { default: '' },
-  ...others
-});
+const extends_textBlockAttrs = (
+  others: Record<string, any> = {},
+  excludes?: string[]
+) => {
+  let textBlockAttrs: Record<string, any> = us.extend(
+    {
+      textAlign: { default: '' },
+      textIndent: { default: 0 }
+    },
+    others
+  );
+  if (excludes) {
+    textBlockAttrs = us.omit(textBlockAttrs, ...excludes);
+  }
+  return textBlockAttrs;
+};
 const stylesOfTextBlock = (node: Node, append?: (node: Node) => string) => {
   let style = '';
   if (node.attrs.textAlign) {
     style += `text-align:${node.attrs.textAlign};`;
+  }
+  if (node.attrs.textIndent > 0) {
+    style += `padding-left:${node.attrs.textIndent}em;`;
   }
   // ... more styles
 
@@ -189,7 +205,7 @@ export const nodes: {
   },
 
   ordered_list: {
-    attrs: { order: { default: 1 } },
+    attrs: { order: { default: 1 }, textIndent: { default: 0 } },
     group: 'block',
     content: 'list_item+',
     parseDOM: [
@@ -209,6 +225,7 @@ export const nodes: {
     }
   },
   bullet_list: {
+    attrs: { textIndent: { default: 0 } },
     group: 'block',
     content: 'list_item+',
     parseDOM: [{ tag: 'ul' }],
@@ -217,6 +234,7 @@ export const nodes: {
     }
   },
   task_list: {
+    attrs: { textIndent: { default: 0 } },
     group: 'block',
     content: 'task_item+',
     parseDOM: [
@@ -230,14 +248,13 @@ export const nodes: {
     }
   },
   list_item: {
-    attrs: extends_textBlockAttrs(),
-    group: 'block',
+    attrs: extends_textBlockAttrs(undefined, ['textIndent']),
     content: 'paragraph block*',
     defining: true,
     parseDOM: [
       {
         tag: 'li',
-        getAttrs: extendsTextBlockStyleAttrs
+        getAttrs: extendsTextBlockStyleAttrs()
       }
     ],
     toDOM(node: Node) {
@@ -246,8 +263,9 @@ export const nodes: {
     }
   },
   task_item: {
-    attrs: extends_textBlockAttrs({ checked: { default: false } }),
-    group: 'block',
+    attrs: extends_textBlockAttrs({ checked: { default: false } }, [
+      'textIndent'
+    ]),
     content: 'paragraph block*',
     defining: true,
     parseDOM: [

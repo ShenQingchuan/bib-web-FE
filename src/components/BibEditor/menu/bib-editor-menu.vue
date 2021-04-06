@@ -10,12 +10,12 @@
       <Icon :component="item.icon" />
     </bib-menu-mark>
     <bib-menu-align />
+    <bib-menu-indent />
     <bib-menu-list />
     <bib-menu-link />
     <bib-menu-quote />
     <bib-menu-hr />
     <bib-menu-insert-image />
-    <bib-menu-indent />
   </div>
 </template>
 

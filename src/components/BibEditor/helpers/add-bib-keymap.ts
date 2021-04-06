@@ -105,11 +105,20 @@ export function addBibKeymap(schema: Schema, mapKeys?: any) {
     bind('Shift-Enter', cmd);
     if (mac) bind('Ctrl-Enter', cmd);
   }
-  if ((type = schema.nodes.list_item)) {
-    bind('Mod-[', liftListItem(type));
-    bind('Mod-]', sinkListItem(type));
-    bind('Tab', sinkListItem(type));
-  }
+  bind(
+    'Tab',
+    chainCommands(
+      sinkListItem(schema.nodes.list_item),
+      sinkListItem(schema.nodes.task_item)
+    )
+  );
+  bind(
+    'Shift-Tab',
+    chainCommands(
+      liftListItem(schema.nodes.list_item),
+      liftListItem(schema.nodes.task_item)
+    )
+  );
   bind(
     'Enter',
     chainCommands(

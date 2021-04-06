@@ -2,6 +2,7 @@ export const trKeyMark = 'tr-mark';
 export const trKeyHeading = 'tr-heading';
 export const trKeyFontSize = 'tr-fontSize';
 export const trKeyAlign = 'tr-align';
+export const trKeyIndent = 'tr-Indent';
 export const trKeyList = 'tr-list';
 export const trKeyTextColor = 'tr-textColor';
 export const trKeyTextBgColor = 'tr-textBgColor';

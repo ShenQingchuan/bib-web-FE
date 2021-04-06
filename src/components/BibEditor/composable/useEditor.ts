@@ -25,6 +25,7 @@ import { ySyncPlugin, yCursorPlugin, yUndoPlugin } from 'y-prosemirror';
 import { keymap } from 'prosemirror-keymap';
 import {
   baseKeymap,
+  Command,
   lift,
   setBlockType,
   toggleMark as _tm,
@@ -171,8 +172,8 @@ export function useEditor(options: BibEditorOptions) {
           gapCursor(),
           placeholder(options.placeholder || '写点什么吧 ...'),
           arrowHandlersInCodeBlock,
-          handleLinkClick
-          // mathPlugin
+          handleLinkClick,
+          mathPlugin
         ]
       }),
       dispatchTransaction(tr) {
@@ -310,52 +311,52 @@ export function useEditor(options: BibEditorOptions) {
   const updateIndent = (t: '+' | '-') => {
     focus();
     const { state, dispatch } = editorView.value;
-    const { selection, tr } = state;
+    const { selection, tr, doc } = state;
     const { from, to } = selection;
-    tr.doc.nodesBetween(from, to, (node, pos) => {
-      // 对于在 List 里的情况，特殊化处理：
-      const runCommandForListCases = (
-        cmd: (
-          state: EditorState<Schema<string, string>>,
-          dispatch?: (tr: Transaction<Schema<string, string>>) => void
-        ) => boolean
-      ) => {
-        return cmd(state, (tr) =>
-          useViewDispatch(editorView.value, tr, {
+
+    const listParent = pmutils.findParentNode((node) =>
+      ['bullet_list', 'ordered_list', 'task_list'].includes(node.type.name)
+    )(selection);
+    // 对于在 List 里的情况，特殊化处理：
+    if (listParent) {
+      const listItemType = EditorSchema.nodes.list_item,
+        taskItemType = EditorSchema.nodes.task_item;
+      const runCommandForListCases = (cmd: Command) => {
+        cmd(state, ($tr) =>
+          useViewDispatch(editorView.value, $tr, {
             trKey: trKeyIndent
           })
         );
       };
-      const listItemType = EditorSchema.nodes.list_item,
-        taskItemType = EditorSchema.nodes.task_item;
       if (
-        node.type === EditorSchema.nodes.ordered_list ||
-        node.type === EditorSchema.nodes.bullet_list
+        listParent.node.type === EditorSchema.nodes.ordered_list ||
+        listParent.node.type === EditorSchema.nodes.bullet_list
       ) {
         t === '+'
           ? runCommandForListCases(sinkListItem(listItemType))
           : runCommandForListCases(liftListItem(listItemType));
-        return;
-      } else if (node.type === EditorSchema.nodes.task_list) {
+      } else if (listParent.node.type === EditorSchema.nodes.task_list) {
         t === '+'
           ? runCommandForListCases(sinkListItem(taskItemType))
           : runCommandForListCases(liftListItem(taskItemType));
-        return;
       }
-
-      // 其他：则必须是含 textIndent 的 textBlock 类型节点
-      if (!node.type.spec.attrs?.textIndent) {
-        return;
-      }
-      let textIndent = node.attrs?.textIndent;
-      t === '+' ? (textIndent += 1) : (textIndent -= 1);
-      tr.setNodeMarkup(pos, null as any, {
-        ...node.attrs,
-        textIndent
+    }
+    // 其他：则必须是含 textIndent 的 textBlock 类型节点
+    else {
+      doc.nodesBetween(from, to, (node, pos) => {
+        if (!node.type.spec.attrs?.textIndent) {
+          return;
+        }
+        let textIndent = node.attrs?.textIndent;
+        t === '+' ? (textIndent += 1) : (textIndent -= 1);
+        tr.setNodeMarkup(pos, null as any, {
+          ...node.attrs,
+          textIndent
+        });
+        tr.setMeta('trKey', trKeyIndent);
+        dispatch(tr);
       });
-      tr.setMeta('trKey', trKeyIndent);
-      dispatch(tr);
-    });
+    }
   };
   /** 切换 列表类型 */
   const toggleList = (listType: NodeType, itemType: NodeType) => {

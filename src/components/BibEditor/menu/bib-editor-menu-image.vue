@@ -1,6 +1,6 @@
 <template>
   <div class="bib-editor-menu-item__wrapper flex-row anis-center p-lr-2">
-    <a-dropdown class="bib-editor-menu-item__image-dropdown" :trigger="['click']">
+    <a-dropdown class="bib-editor-menu-item__image-dropdown">
       <a-button class="bib-editor-menu-item__image-btn p-lr-4" type="link">
         <Icon :component="insertImageIcon" />
       </a-button>

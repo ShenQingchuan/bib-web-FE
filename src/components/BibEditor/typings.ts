@@ -48,6 +48,8 @@ export interface EditorComposable {
   insertHorizontalRuleLine: () => void;
   insertImage: (insertType: InsertImageType) => void;
   insertVideo: (icon: string, label: string) => void;
+  insertTable: (rowsCount: number, colsCount: number) => void;
+  execTableCommand: (cmdName: TableCommand) => void;
   onEditorDispatched: (fn: DispatchHook, meta?: Record<string, any>) => void;
   applyForNodesAtCursor: (fn: (node: Node, pos: number) => void) => void;
 }
@@ -78,3 +80,13 @@ export interface DocTableOfContentsUnit {
   level: number;
   children: DocTableOfContentsUnit[];
 }
+
+export type TableCommand =
+  | 'addColumnBefore'
+  | 'addColumnAfter'
+  | 'deleteColumn'
+  | 'addRowBefore'
+  | 'addRowAfter'
+  | 'deleteRow'
+  | 'mergeCells'
+  | 'splitCell';

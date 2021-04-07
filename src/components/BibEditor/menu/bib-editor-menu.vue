@@ -12,17 +12,24 @@
     <bib-menu-align />
     <bib-menu-indent />
     <bib-menu-list />
+
     <bib-menu-link />
     <bib-menu-quote />
     <bib-menu-hr />
+
+    <bib-menu-insert-table v-show="!isInTable" />
+    <!-- 表格专用工具 -->
+    <bib-menu-table-kits v-show="isInTable" />
+
     <bib-menu-insert-image />
     <bib-menu-video />
   </div>
 </template>
 
 <script setup lang="ts">
-import { defineProps, provide } from "vue";
+import { defineProps, onMounted, provide, ref } from "vue";
 import { BoldOutlined, ItalicOutlined, StrikethroughOutlined, UnderlineOutlined } from "@ant-design/icons-vue";
+import * as pmutils from 'prosemirror-utils';
 import Icon from "@ant-design/icons-vue";
 import CodeMarkIcon from "../icons/code-mark-icon.vue";
 import SuperScriptIcon from "../icons/superscript-mark-icon.vue";
@@ -40,7 +47,10 @@ import BibMenuHr from "./bib-editor-menu-hr.vue";
 import BibMenuInsertImage from './bib-editor-menu-image.vue';
 import BibMenuIndent from './bib-editor-menu-indent.vue';
 import BibMenuVideo from './bib-editor-menu-video.vue';
+import BibMenuInsertTable from './bib-editor-menu-insert-table.vue';
+import BibMenuTableKits from './bibi-editor-menu-table-kits.vue';
 import type { EditorToggleCategories, EditorComposable } from "../typings";
+import { EditorSchema } from "../editor-schema";
 
 const createMarkMenuItem = (mark: EditorToggleCategories, icon: any) => ({ mark, icon });
 const marksGroup = [
@@ -58,6 +68,19 @@ const props = defineProps<{
   fixed?: boolean
 }>();
 provide("editorCompose", props.editorCompose);
+
+const isInTable = ref(false);
+
+onMounted(() => {
+  props.editorCompose.onEditorDispatched((tr) => {
+    isInTable.value = !!pmutils.findParentNode((node) => [
+      EditorSchema.nodes.table,
+      EditorSchema.nodes.table_row,
+      EditorSchema.nodes.table_cell,
+      EditorSchema.nodes.table_header
+    ].includes(node.type))(tr.selection);
+  });
+})
 </script>
 
 <style lang="less">

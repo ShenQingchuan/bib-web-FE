@@ -11,3 +11,4 @@ export const trKeyQuote = 'tr-quote';
 export const trKeyHr = 'tr-hr';
 export const trKeyInsertImage = 'tr-insertImage';
 export const trKeyInsertVideo = 'tr-insertVideo';
+export const trKeyInsertTable = 'tr-insertTable';

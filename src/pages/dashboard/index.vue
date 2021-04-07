@@ -66,7 +66,7 @@
           }"
         >
           <img :src="item.icon" width="24" height="24" />
-          <span class="m-t-10 to-ellipsis">{{ item.text }}</span>
+          <span class="m-t-10 to-ellipsis text-noselect">{{ item.text }}</span>
         </div>
       </div>
     </div>

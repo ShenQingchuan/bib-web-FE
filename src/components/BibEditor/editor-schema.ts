@@ -1,4 +1,5 @@
 import { Schema, Node, Mark } from 'prosemirror-model';
+import { tableNodes } from 'prosemirror-tables';
 import * as us from 'underscore';
 
 const blockquoteDOM = ['blockquote', 0],
@@ -333,7 +334,25 @@ export const nodes: {
     toDOM() {
       return ['video_iframe', 0];
     }
-  }
+  },
+
+  ...tableNodes({
+    tableGroup: 'block',
+    cellContent: 'block+',
+    cellAttributes: {
+      background: {
+        default: null,
+        getFromDOM(dom: any) {
+          return dom.style.backgroundColor || null;
+        },
+        setDOMAttr(value, attrs) {
+          if (value) {
+            attrs.style = (attrs.style || '') + `background-color: ${value};`;
+          }
+        }
+      }
+    }
+  })
 };
 
 // :: Object [Specs](#model.MarkSpec) for the marks in the schema.

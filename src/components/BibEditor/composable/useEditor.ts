@@ -40,7 +40,8 @@ import {
   EditorComposable,
   EditorToggleCategories,
   InsertImageType,
-  OnlineUser
+  OnlineUser,
+  TableCommand
 } from '../typings';
 import { insertOnlineImage } from '../helpers/insert-online-img';
 import {
@@ -57,6 +58,9 @@ import {
 import { mathPlugin, mathSerializer } from '@benrbray/prosemirror-math';
 import VideoIframeView from '../node-views/video-iframe';
 import { insertVideoIframe } from '../helpers/insert-video-iframe';
+import { columnResizing, goToNextCell, tableEditing } from 'prosemirror-tables';
+import insertTableCommand from '../commands/insertTable';
+import execTableCommandFn from '../helpers/exec-table-command';
 
 const sampleInitDocJSON = {
   type: 'doc',
@@ -170,6 +174,13 @@ export function useEditor(options: BibEditorOptions) {
           yUndoPlugin(),
           addBibKeymap(EditorSchema),
           keymap(baseKeymap),
+          keymap({
+            Tab: goToNextCell(1),
+            'Shift-Tab': goToNextCell(-1)
+          }),
+          // @ts-ignore :: 此处 prosemirror-tables 类型定义存疑
+          columnResizing(),
+          tableEditing(),
           dropCursor(),
           gapCursor(),
           placeholder(options.placeholder || '写点什么吧 ...'),
@@ -483,6 +494,18 @@ export function useEditor(options: BibEditorOptions) {
     const { tr } = state;
     insertVideoIframe(icon, label, tr, dispatch);
   };
+  /** 插入 表格 */
+  const insertTable = (rowsCount: number, colsCount: number) => {
+    focus();
+    const { state, dispatch } = editorView.value;
+    insertTableCommand(state, dispatch, { rowsCount, colsCount });
+  };
+  // 表格工具集：execTableCommand
+  const execTableCommand = (cmdName: TableCommand) => {
+    const { state, dispatch } = editorView.value;
+    execTableCommandFn(state, dispatch, cmdName);
+    focus();
+  };
 
   /** 注册 Dispatch 回调钩子 */
   const onEditorDispatched = (fn: DispatchHook, meta?: Record<string, any>) => {
@@ -512,6 +535,8 @@ export function useEditor(options: BibEditorOptions) {
     insertHorizontalRuleLine,
     insertImage,
     insertVideo,
+    insertTable,
+    execTableCommand,
     toJSON,
     focus,
     onEditorDispatched,

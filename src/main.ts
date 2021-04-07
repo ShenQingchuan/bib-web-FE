@@ -33,6 +33,9 @@ import 'vue3-colorpicker/bundle.css';
 import 'katex/dist/katex.min.css';
 import '@benrbray/prosemirror-math/style/math.css';
 
+// prosemirror-tables:
+import 'prosemirror-tables/style/tables.css';
+
 import {
   Space,
   Input,
@@ -57,7 +60,7 @@ import {
   Skeleton,
   Breadcrumb,
   Timeline,
-  Spin,
+  Spin
 } from 'ant-design-vue';
 
 createApp(App)

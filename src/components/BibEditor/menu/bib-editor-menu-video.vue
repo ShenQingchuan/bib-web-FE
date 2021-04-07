@@ -1,6 +1,6 @@
 <template>
   <div class="bib-editor-menu-item flex-row anis-center p-lr-2">
-    <a-dropdown class="bib-editor-menu-item__image-dropdown" :trigger="['click']">
+    <a-dropdown class="bib-editor-menu-item__image-dropdown">
       <a-button type="link" class="bib-editor-menu-item__video-btn p-lr-4">
         <Video theme="outline" class="bib-editor-menu-item__video-btn-icon" />
       </a-button>

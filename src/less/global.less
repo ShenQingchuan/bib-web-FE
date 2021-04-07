@@ -27,10 +27,27 @@ a:visited {
   margin-top: 12px;
 }
 
+// ProseMirror 相关
 ::selection {
   color: @N900;
   background: #d2ddf0;
 }
 li.ProseMirror-selectednode:after {
   border: none;
+}
+.ProseMirror table {
+  margin: 0;
+}
+.ProseMirror th,
+.ProseMirror td {
+  min-width: 1em;
+  border: 1px solid #ddd;
+  padding: 3px 5px;
+}
+.ProseMirror .tableWrapper {
+  margin: 1em 0;
+}
+.ProseMirror th {
+  font-weight: bold;
+  text-align: left;
 }

@@ -1,4 +1,4 @@
-import { UserAccount } from 'models';
+import { DocumentComment, UserAccount } from './entity';
 
 /** --- 用户动态相关 ---  */
 export interface LikedDoc {
@@ -24,4 +24,21 @@ export interface PublishedDoc {
   contentAbstract: string;
   publishedOnWiki: boolean;
   wikiId?: number;
+}
+
+export interface DocumentViewData {
+  id: number;
+  title: string;
+  contentAbstract: string;
+  content: string;
+  creator: UserAccount;
+  thumbUpUsers: UserAccount[];
+  collaborators: UserAccount[];
+  comments: DocumentComment[];
+  stared: boolean;
+  inWiki: {
+    id: number;
+    name: string;
+    private: boolean;
+  };
 }

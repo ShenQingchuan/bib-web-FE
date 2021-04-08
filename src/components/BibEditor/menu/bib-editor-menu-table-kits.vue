@@ -1,5 +1,6 @@
 <template>
   <div class="bib-editor-menu-item__wraper flex-row anis-center p-lr-2">
+    <!-- 添加、删除列 -->
     <a-button
       type="link"
       class="bib-editor-menu-item__table-kits-btn p-lr-4"
@@ -15,6 +16,7 @@
       <Icon :component="IconInsertColAfter" />
     </a-button>
 
+    <!-- 添加、删除行 -->
     <a-button
       type="link"
       class="bib-editor-menu-item__table-kits-btn p-lr-4"
@@ -30,19 +32,20 @@
       <Icon :component="IconInsertRowAfter" />
     </a-button>
 
+    <!-- 合并、拆分单元格 -->
     <a-button
       type="link"
       class="bib-editor-menu-item__table-kits-btn p-lr-4"
       @click="execTableCommand('mergeCells')"
     >
-      <MergeCells theme="outline" style="position: relative;top: 2px;" />
+      <MergeCells theme="outline" class="iconpark" />
     </a-button>
     <a-button
       type="link"
       class="bib-editor-menu-item__table-kits-btn p-lr-4"
       @click="execTableCommand('splitCell')"
     >
-      <SplitCells theme="outline" style="position: relative;top: 2px;" />
+      <SplitCells theme="outline" class="iconpark" />
     </a-button>
   </div>
 </template>
@@ -70,6 +73,7 @@ const execTableCommand = (cmdName: TableCommand) => {
 
 <style lang="less" scoped>
 @import "../../../less/color.less";
+@import "../../../less/shared.less";
 @import "./menu-btn-common.less";
 
 .bib-editor-menu-item {

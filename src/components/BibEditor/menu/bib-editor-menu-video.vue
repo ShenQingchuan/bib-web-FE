@@ -45,6 +45,7 @@ const editorCompose = inject<EditorComposable>("editorCompose");
 
 <style lang="less" scoped>
 @import "../../../less/color.less";
+@import "../../../less/shared.less";
 @import "./menu-btn-common.less";
 
 .bib-editor-menu-item {
@@ -52,8 +53,7 @@ const editorCompose = inject<EditorComposable>("editorCompose");
     .menu-btn-common;
 
     &-icon {
-      position: relative;
-      top: 2px;
+      .iconpark-fix;
     }
   }
 }

@@ -9,7 +9,7 @@ export interface BibEditorOptions {
   docName: string;
   credential: UserTokenPayload; // Bib 编辑器默认协同，要求必须提供用户凭证
   placeholder?: string;
-  disabled?: boolean;
+  readonly?: boolean;
 }
 
 export type EditorToggleMethodReturns = (

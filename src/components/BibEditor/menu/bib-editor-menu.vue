@@ -48,7 +48,7 @@ import BibMenuInsertImage from './bib-editor-menu-image.vue';
 import BibMenuIndent from './bib-editor-menu-indent.vue';
 import BibMenuVideo from './bib-editor-menu-video.vue';
 import BibMenuInsertTable from './bib-editor-menu-insert-table.vue';
-import BibMenuTableKits from './bibi-editor-menu-table-kits.vue';
+import BibMenuTableKits from './bib-editor-menu-table-kits.vue';
 import type { EditorToggleCategories, EditorComposable } from "../typings";
 import { EditorSchema } from "../editor-schema";
 

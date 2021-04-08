@@ -14,7 +14,7 @@
   />
 </template>
 <script setup lang="ts">
-import { ref } from 'vue';
+import { templateRef } from '@vueuse/core';
 import { useEditor } from '../components/BibEditor/composable/useEditor';
 import { usePayloadFromToken } from '../utils';
 import BibEditor from '../components/BibEditor/bib-editor.vue';
@@ -23,7 +23,7 @@ import getTableOfContents from '../components/BibEditor/composable/useTableOfCon
 import type { DocContentElement } from '../components/BibEditor/typings';
 
 // @States:
-const bibEditorRef = ref<any>(null);
+const bibEditorRef = templateRef('bibEditorRef');
 const credential = usePayloadFromToken()!;
 const { editorCompose, initEditor, onlineOtherUsers } = useEditor({
   initContent: '',

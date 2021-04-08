@@ -75,12 +75,23 @@ const routes: Array<RouteRecordRaw> = [
   createRoute(
     '/user-settings',
     dynamicViewsModules['./pages/user-settings.vue'],
-    '账户设置'
+    '账户设置',
+    {
+      requiredAuth: true
+    }
   ),
   createRoute(
     '/editor-playground',
     dynamicViewsModules['./pages/editor-playground.vue'],
     '编辑器预览',
+    {
+      requiredAuth: true
+    }
+  ),
+  createRoute(
+    '/doc/:docId',
+    dynamicViewsModules['./pages/document/view.vue'],
+    'Bib · 查看文档',
     {
       requiredAuth: true
     }

@@ -75,6 +75,7 @@ function createInitDoc(schema: Schema, initContent: string) {
   try {
     const parseFromOptions = JSON.parse(initContent);
     const doc = Node.fromJSON(schema, parseFromOptions);
+    console.log('[ doc ]', doc);
     return doc;
   } catch (err) {
     return Node.fromJSON(schema, sampleInitDocJSON);
@@ -132,8 +133,54 @@ export function useEditor(options: BibEditorOptions) {
     }
   });
 
-  /** 通过 ref hook 初始化 EditorView */
-  const initEditor = (el: any) => {
+  let plugins = [
+    history(),
+    buildInputRules(EditorSchema),
+    ...buildPasteRules(EditorSchema),
+    addBibKeymap(EditorSchema),
+    keymap(baseKeymap),
+    keymap({
+      Tab: goToNextCell(1),
+      'Shift-Tab': goToNextCell(-1)
+    }),
+    // @ts-ignore :: 此处 prosemirror-tables 类型定义存疑
+    columnResizing(),
+    tableEditing(),
+    dropCursor(),
+    gapCursor(),
+    placeholder(options.placeholder || '写点什么吧 ...'),
+    arrowHandlersInCodeBlock,
+    handleLinkClick,
+    mathPlugin
+  ];
+
+  if (!options.readonly) {
+    plugins = plugins.concat([
+      ySyncPlugin(yFragment),
+      // @ts-ignore :: 此处该库类型定义存疑
+      yCursorPlugin(provider.awareness, {
+        cursorBuilder: (user) => {
+          const cursor = document.createElement('span');
+          cursor.classList.add('ProseMirror-yjs-cursor');
+          cursor.style.borderColor = user.color;
+
+          const dot = document.createElement('div');
+          dot.classList.add('ProseMirror-yjs-cursor__dot');
+          dot.style.backgroundColor = user.color;
+
+          const userDiv = document.createElement('div');
+          userDiv.classList.add('ProseMirror-yjs-cursor__user-name');
+          userDiv.style.backgroundColor = user.color;
+          userDiv.insertBefore(document.createTextNode(user.name), null);
+
+          cursor.insertBefore(dot, null);
+          cursor.insertBefore(userDiv, null);
+          return cursor;
+        }
+      }),
+      yUndoPlugin()
+    ]);
+
     provider.awareness.setLocalStateField('user', {
       color: randomColor({
         luminosity: 'dark'
@@ -141,53 +188,14 @@ export function useEditor(options: BibEditorOptions) {
       name: credential?.userName,
       uid: credential?.userId
     });
+  }
 
+  /** 通过 ref hook 初始化 EditorView */
+  const initEditor = (el: any) => {
     editorView.value = new EditorView(el as HTMLDivElement, {
       state: EditorState.create({
         doc: createInitDoc(EditorSchema, options.initContent),
-        plugins: [
-          history(),
-          buildInputRules(EditorSchema),
-          ...buildPasteRules(EditorSchema),
-          ySyncPlugin(yFragment),
-          // @ts-ignore :: 此处该库类型定义存疑
-          yCursorPlugin(provider.awareness, {
-            cursorBuilder: (user) => {
-              const cursor = document.createElement('span');
-              cursor.classList.add('ProseMirror-yjs-cursor');
-              cursor.style.borderColor = user.color;
-
-              const dot = document.createElement('div');
-              dot.classList.add('ProseMirror-yjs-cursor__dot');
-              dot.style.backgroundColor = user.color;
-
-              const userDiv = document.createElement('div');
-              userDiv.classList.add('ProseMirror-yjs-cursor__user-name');
-              userDiv.style.backgroundColor = user.color;
-              userDiv.insertBefore(document.createTextNode(user.name), null);
-
-              cursor.insertBefore(dot, null);
-              cursor.insertBefore(userDiv, null);
-              return cursor;
-            }
-          }),
-          yUndoPlugin(),
-          addBibKeymap(EditorSchema),
-          keymap(baseKeymap),
-          keymap({
-            Tab: goToNextCell(1),
-            'Shift-Tab': goToNextCell(-1)
-          }),
-          // @ts-ignore :: 此处 prosemirror-tables 类型定义存疑
-          columnResizing(),
-          tableEditing(),
-          dropCursor(),
-          gapCursor(),
-          placeholder(options.placeholder || '写点什么吧 ...'),
-          arrowHandlersInCodeBlock,
-          handleLinkClick,
-          mathPlugin
-        ]
+        plugins
       }),
       dispatchTransaction(tr) {
         try {
@@ -213,18 +221,13 @@ export function useEditor(options: BibEditorOptions) {
       },
       // @ts-ignore
       editable() {
-        return !options.disabled;
+        return !options.readonly;
       },
       clipboardTextSerializer: (slice) => {
         return mathSerializer.serializeSlice(slice);
       }
     });
   };
-
-  /** 卸载 EditorView */
-  onUnmounted(() => {
-    editorView.value.destroy();
-  });
 
   /** 将文档 doc 输出为 JSON 字符串 */
   const toJSON = () => {

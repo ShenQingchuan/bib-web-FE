@@ -1,3 +1,5 @@
+import { UserSimpleDTO } from './dto';
+
 export interface UserAccount {
   uid: number;
   userName: string;
@@ -33,11 +35,14 @@ export interface Wiki {
   followers: UserAccount[];
 }
 
-export interface DocumentComment {
+export interface DocumentComment<UT = UserAccount> {
   id: number;
   content: string;
-  creator: UserAccount;
-  thumbUpUsers: UserAccount[];
+  creator: UT;
+  thumbUpUsers: UT[];
+  replyTo: UT | null;
+  createTime: Date | number;
+  updateTime: Date | number;
 }
 
 export interface Document {
@@ -50,5 +55,6 @@ export interface Document {
   starUsers: UserAccount[];
   inWiki: Wiki | null;
   comments: DocumentComment[];
+  createTime: Date | number;
+  updateTime: Date | number;
 }
-

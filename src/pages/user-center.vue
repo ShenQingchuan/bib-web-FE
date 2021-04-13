@@ -126,6 +126,7 @@ const activities = ref<UserActivity[]>([]);
 const route = useRoute();
 let userName = route.params['userName'] as string;
 
+// 获取 用户详细信息
 (async () => {
   const detailRes = await fusions.get(`/details/?userName=${userName}`);
   if (detailRes.data.responseOk) {
@@ -137,6 +138,7 @@ let userName = route.params['userName'] as string;
   }
 })();
 
+// 获取 加入的团队
 (async () => {
   const joinedOrgsRes = await fusions.get(`/user/joinedOrgs?userName=${userName}`);
   if (joinedOrgsRes.data.responseOk) {
@@ -144,6 +146,7 @@ let userName = route.params['userName'] as string;
   }
 })();
 
+// 获取 用户的动态
 const loadingUserActivities = ref(false);
 (async () => {
   loadingUserActivities.value = true;

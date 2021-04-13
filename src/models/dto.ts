@@ -1,6 +1,5 @@
 import { DocumentComment, UserAccount } from './entity';
 
-/** --- 用户动态相关 ---  */
 export interface LikedDoc {
   id: number;
   title: string;
@@ -26,16 +25,25 @@ export interface PublishedDoc {
   wikiId?: number;
 }
 
+export interface UserSimpleDTO {
+  uid: number;
+  userName: string;
+  userDetails: {
+    id?: number;
+    avatarURL: string;
+  };
+}
+
 export interface DocumentViewData {
   id: number;
   title: string;
   contentAbstract: string;
   content: string;
-  creator: UserAccount;
-  thumbUpUsers: UserAccount[];
-  collaborators: UserAccount[];
-  comments: DocumentComment[];
-  stared: boolean;
+  creator: UserSimpleDTO;
+  thumbUpUsers: UserSimpleDTO[];
+  collaborators: UserSimpleDTO[];
+  comments: DocumentComment<UserSimpleDTO>[];
+  thumbsUped: boolean;
   inWiki: {
     id: number;
     name: string;

@@ -41,6 +41,7 @@ import {
   Input,
   Button,
   AutoComplete,
+  Comment,
   Dropdown,
   Popover,
   Card,
@@ -91,6 +92,7 @@ createApp(App)
   .use(Breadcrumb)
   .use(Timeline)
   .use(Spin)
+  .use(Comment)
   // for vue3-colorpicker
   .use(colorPicker)
   .mount('#app');

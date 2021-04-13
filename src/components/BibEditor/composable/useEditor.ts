@@ -14,7 +14,7 @@ import { dropCursor } from 'prosemirror-dropcursor';
 import { gapCursor } from 'prosemirror-gapcursor';
 import { history } from 'prosemirror-history';
 import { EditorSchema } from '../editor-schema';
-import { onUnmounted, shallowRef, ref } from 'vue';
+import { shallowRef, ref } from 'vue';
 import {
   liftListItem,
   sinkListItem,
@@ -75,7 +75,6 @@ function createInitDoc(schema: Schema, initContent: string) {
   try {
     const parseFromOptions = JSON.parse(initContent);
     const doc = Node.fromJSON(schema, parseFromOptions);
-    console.log('[ doc ]', doc);
     return doc;
   } catch (err) {
     return Node.fromJSON(schema, sampleInitDocJSON);
@@ -108,30 +107,7 @@ export function useViewDispatch(
 export function useEditor(options: BibEditorOptions) {
   let editorView = shallowRef({} as EditorView);
   const updateHooks = ref<DispatchHook[]>([]);
-  // Y.js 协同配置：
-  const ydoc = new Y.Doc();
-  const provider = new WebsocketProvider(
-    'ws://localhost:2048',
-    options.docName,
-    ydoc
-  );
-  const yFragment = ydoc.getXmlFragment(options.docName);
   const onlineOtherUsers = ref<OnlineUser[]>([]);
-  const credential = options.credential;
-
-  // 更新本文档在线的其他用户
-  // @ts-ignore
-  provider.awareness.on('update', ({ added }) => {
-    if (added.length > 0) {
-      onlineOtherUsers.value = [...provider.awareness.getStates().entries()]
-        .filter((s) => s[0] !== provider.awareness.clientID)
-        .map((s) => ({
-          userId: s[1].user.uid,
-          userName: s[1].user.name,
-          color: s[1].user.color
-        }));
-    }
-  });
 
   let plugins = [
     history(),
@@ -155,6 +131,15 @@ export function useEditor(options: BibEditorOptions) {
   ];
 
   if (!options.readonly) {
+    // Y.js 协同配置：
+    const ydoc = new Y.Doc();
+    const provider = new WebsocketProvider(
+      'ws://localhost:2048',
+      options.docName,
+      ydoc
+    );
+    const yFragment = ydoc.getXmlFragment(options.docName);
+    const credential = options.credential;
     plugins = plugins.concat([
       ySyncPlugin(yFragment),
       // @ts-ignore :: 此处该库类型定义存疑
@@ -180,6 +165,20 @@ export function useEditor(options: BibEditorOptions) {
       }),
       yUndoPlugin()
     ]);
+
+    // 更新本文档在线的其他用户
+    // @ts-ignore
+    provider.awareness.on('update', ({ added }) => {
+      if (added.length > 0) {
+        onlineOtherUsers.value = [...provider.awareness.getStates().entries()]
+          .filter((s) => s[0] !== provider.awareness.clientID)
+          .map((s) => ({
+            userId: s[1].user.uid,
+            userName: s[1].user.name,
+            color: s[1].user.color
+          }));
+      }
+    });
 
     provider.awareness.setLocalStateField('user', {
       color: randomColor({

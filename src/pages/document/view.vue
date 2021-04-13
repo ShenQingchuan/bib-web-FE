@@ -4,7 +4,7 @@
 
     <!-- 通过 readonly ProseMirror 加载出文档 -->
     <div class="page-document-view__content">
-      <a-skeleton active v-if="loadingDocData" :paragraph="{ rows: 20 }" />
+      <a-skeleton class="m-t-40" active v-if="loadingDocData" :paragraph="{ rows: 20 }" />
       <div v-show="!loadingDocData" ref="docViewRef"></div>
     </div>
   </div>
@@ -57,6 +57,6 @@ let docData = ref<DocumentViewData>();
 
 .page-document-view__content {
   width: 60vw;
-  margin: 90px auto 0 auto;
+  margin: 60px auto 0 auto;
 }
 </style>

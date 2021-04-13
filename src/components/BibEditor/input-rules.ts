@@ -71,7 +71,7 @@ export function bulletListRule(nodeType: NodeType) {
 }
 
 export function taskListRule(nodeType: NodeType) {
-  return wrappingInputRule(/^\s*([-+*]\[\])\s$/, nodeType);
+  return wrappingInputRule(/^\s*(\[\])\s$/, nodeType);
 }
 
 // : (NodeType) → InputRule

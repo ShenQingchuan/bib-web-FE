@@ -56,7 +56,7 @@
       <a-divider class="m-tb-2" />
       <div class="dashboard-page__new flex-row anis-center p-tb-12">
         <div
-          v-for="item in NewThingList"
+          v-for="item in NewActionList"
           :key="item.text"
           class="dashboard-page__new-item flex-col anis-center"
           :class="{
@@ -92,11 +92,11 @@ const filters: DocFilter[] = [
   { archiveType: DocListItemArchiveType.OrgOnly, text: '团队空间' },
   { archiveType: DocListItemArchiveType.OrgWiki, text: '团队知识库' }
 ];
-const NewThingList = [
+const NewActionList = [
   {
     id: 0,
     text: "新建文档",
-    icon: "/assets/svg/user-action__new__doc.svg"
+    icon: "/assets/img/Icon-png-new-doc.png"
   },
   {
     id: 1,
@@ -152,7 +152,7 @@ export default defineComponent({
       filters,
       setFilter,
       filterName,
-      NewThingList
+      NewActionList
     };
   }
 });

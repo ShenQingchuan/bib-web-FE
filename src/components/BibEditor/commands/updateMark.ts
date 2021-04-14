@@ -1,12 +1,9 @@
 import { MarkType } from 'prosemirror-model';
 import { EditorState, Transaction } from 'prosemirror-state';
 import { EditorSchema } from '../editor-schema';
-import getMarkRange from '../helpers/get-mark-range';
+import getMarkRange from '@/helpers/get-mark-range';
 
-export default function(
-  type: MarkType,
-  attrs?: Record<string, any>,
-) {
+export default function(type: MarkType, attrs?: Record<string, any>) {
   return (state: EditorState, dispatch: (tr: Transaction) => void) => {
     const { tr, selection, doc } = state;
 

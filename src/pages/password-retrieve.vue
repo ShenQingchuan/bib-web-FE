@@ -92,16 +92,16 @@ import {
   ReloadOutlined,
   CheckCircleFilled,
 } from "@ant-design/icons-vue";
-import TouchVerifyCode from "../components/TouchVerifyCode/index.vue";
-import CenterCardLayout from "../components/layouts/center-card-layout.vue";
+import TouchVerifyCode from "@/components/TouchVerifyCode/index.vue";
+import CenterCardLayout from "@/components/layouts/center-card-layout.vue";
 import {
   EMAIL_REGEXP,
   PASSWORD_REGEXP,
   VCODE_REGEXP,
-} from "../utils";
-import { fusions } from "../fusions";
+} from "@/utils";
+import { fusions } from "@/fusions";
 import { message, Form } from "ant-design-vue";
-import { LoginRegisterFormError } from "../composable/useAuthForm";
+import { LoginRegisterFormError } from "@/composable/useAuthForm";
 
 const messageKey = "passwordRetrieve";
 const router = useRouter();

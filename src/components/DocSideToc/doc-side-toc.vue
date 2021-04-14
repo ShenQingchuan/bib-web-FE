@@ -8,7 +8,7 @@
 import { defineProps, ref, onMounted, onUnmounted, provide, inject } from "vue";
 import DocSideTocItem from './doc-side-toc-item.vue';
 import type { Ref } from 'vue';
-import type { DocTableOfContentsUnit } from '../../components/BibEditor/typings';
+import type { DocTableOfContentsUnit } from '@/components/BibEditor/typings';
 
 const props = defineProps<{
   toc: DocTableOfContentsUnit[]

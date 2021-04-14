@@ -30,7 +30,7 @@
 
 <script lang="ts">
 import { LaptopOutlined, StarOutlined, DeleteOutlined } from "@ant-design/icons-vue"
-import CommonHeader from "../../components/page-header/common-header.vue";
+import CommonHeader from "@/components/page-header/common-header.vue";
 import SideNavigatorItem from "./side-navigator-item.vue"
 
 export default {

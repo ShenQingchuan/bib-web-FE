@@ -15,12 +15,12 @@
 </template>
 <script setup lang="ts">
 import { templateRef } from '@vueuse/core';
-import { useEditor } from '../components/BibEditor/composable/useEditor';
-import { usePayloadFromToken } from '../utils';
-import BibEditor from '../components/BibEditor/bib-editor.vue';
-import BibEditorMenu from '../components/BibEditor/menu/bib-editor-menu.vue';
-import getTableOfContents from '../components/BibEditor/composable/useTableOfContents';
-import type { DocContentElement } from '../components/BibEditor/typings';
+import { useEditor } from '@/components/BibEditor/composable/useEditor';
+import { usePayloadFromToken } from '@/utils';
+import BibEditor from '@/components/BibEditor/bib-editor.vue';
+import BibEditorMenu from '@/components/BibEditor/menu/bib-editor-menu.vue';
+import { useTableOfContents } from '@/components/BibEditor/composable/useTableOfContents';
+import type { DocContentElement } from '@/components/BibEditor/typings';
 
 // @States:
 const bibEditorRef = templateRef('bibEditorRef');
@@ -48,7 +48,7 @@ const logTextContentAbstract = () => {
   console.log(abstract);
 }
 const logTableOfContents = () => {
-  const toc = getTableOfContents(editorCompose.view.value.state.doc.toJSON() as DocContentElement);
+  const toc = useTableOfContents(editorCompose.view.value.state.doc.toJSON() as DocContentElement);
   console.log(JSON.stringify(toc, null, 2));
 }
 </script>

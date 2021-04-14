@@ -49,8 +49,8 @@ const handleClickGrid = () => {
 </script>
 
 <style lang="less" scoped>
-@import "../../../less/color.less";
-@import "../../../less/shared.less";
+@import "@/less/color.less";
+@import "@/less/shared.less";
 @import "./menu-btn-common.less";
 .bib-editor-menu-item {
   &__insert-table-btn {

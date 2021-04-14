@@ -91,10 +91,15 @@ const routes: Array<RouteRecordRaw> = [
   createRoute(
     '/doc/:docId',
     dynamicViewsModules['./pages/document/view.vue'],
-    'Bib · 查看文档',
+    '查看文档',
     {
       requiredAuth: true
     }
+  ),
+  createRoute(
+    '/doc/:docId/edit',
+    dynamicViewsModules['./pages/document/edit.vue'],
+    '编辑文档'
   ),
 
   // 其余无法找到的都重定向到 not-found

@@ -6,4 +6,8 @@
 
 <script setup lang="ts">
 import zhCN from 'ant-design-vue/es/locale/zh_CN';
+import { provide } from 'vue';
+import { globalStore, globalStoreSymbol } from '@/store';
+
+provide(globalStoreSymbol, globalStore);
 </script>

@@ -19,7 +19,7 @@
         }"
         @click="onStarDocument"
       >
-        <thumbs-up :theme="thumbsUped ? 'filled' : 'outline'" :size="24" class="iconpark" />
+        <thumbs-up theme="filled" :size="24" class="iconpark" />
       </div>
       <div
         class="page-document-view__thumbs-up-divider m-lr-auto m-tb-20"
@@ -57,13 +57,13 @@ import { provide, readonly, ref } from "vue";
 import { templateRef } from "@vueuse/core";
 import { useRoute } from 'vue-router';
 import { ThumbsUp } from '@icon-park/vue-next';
-import { mocker } from '../../fusions';
+import { mocker } from '@/fusions';
 import { useEditor } from "../../components/BibEditor/composable/useEditor";
-import { useTableOfContents, decodeContentJSON } from '../../components/BibEditor/composable/useTableOfContents';
+import { useTableOfContents, decodeContentJSON } from '@/components/BibEditor/composable/useTableOfContents';
 import { usePayloadFromToken, userDetailsStorageRef } from "../../utils";
-import DocViewHeader from '../../components/page-doc-view/doc-view-header.vue';
-import DocComment from '../../components/page-doc-view/doc-comment.vue';
-import DocSideToc from '../../components/DocSideToc/doc-side-toc.vue';
+import DocViewHeader from '@/components/page-doc-view/doc-view-header.vue';
+import DocComment from '@/components/page-doc-view/doc-comment.vue';
+import DocSideToc from '@/components/DocSideToc/doc-side-toc.vue';
 import * as us from 'underscore';
 import type { DocumentComment, DocumentViewData, UserSimpleDTO } from "../../models";
 import type { DocTableOfContentsUnit } from "../../components/BibEditor/typings";
@@ -112,6 +112,13 @@ provide('doc-view-heading-refs', readonly(headingRefs));
     x.initEditor(docViewRef.value);
 
     loadingDocData.value = false;
+
+    // 加载完成后 
+
+    // 将文章标题替换到 Tab 
+    document.title = `${docData.value!.title} ｜查看文档 · Bib`
+
+    // 读取文章所有 headings
     headingRefs.value = Array.from(
       docViewRef.value!.querySelectorAll(
         'h1,h2,h3,h4,h5'

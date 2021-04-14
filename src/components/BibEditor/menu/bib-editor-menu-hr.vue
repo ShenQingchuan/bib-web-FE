@@ -9,10 +9,7 @@
 <script setup lang="ts">
 import { inject } from 'vue';
 import { MinusOutlined } from "@ant-design/icons-vue";
-import { exitCode } from 'prosemirror-commands';
-import { chainCommands } from 'prosemirror-commands';
 import type { EditorComposable } from "../typings";
-import { EditorSchema } from '../editor-schema';
 
 // @States:
 const editorCompose = inject<EditorComposable>("editorCompose");

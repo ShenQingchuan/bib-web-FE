@@ -18,6 +18,12 @@ export default defineConfig({
       'jsonwebtoken'
     ]
   },
+  resolve: {
+    alias: {
+      '@': resolve(__dirname, 'src'),
+      '~': resolve(__dirname)
+    }
+  },
   css: {
     preprocessorOptions: {
       less: {

@@ -1,12 +1,13 @@
-import { createStore } from "vuex";
+import { reactive, inject } from 'vue';
+import { DocumentViewData } from './models';
 
-type rootStateType = {};
+interface globalStoreType {
+  editingDoc: DocumentViewData | null;
+}
 
-const store = createStore<rootStateType>({
-  state: {},
-  mutations: {},
-  actions: {},
-  modules: {}
+export const globalStore = reactive<globalStoreType>({
+  editingDoc: null
 });
 
-export default store;
+export const globalStoreSymbol = Symbol('bib-global-store');
+export const useGlobalStore = () => inject<globalStoreType>(globalStoreSymbol)!;

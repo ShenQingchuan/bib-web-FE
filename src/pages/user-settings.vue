@@ -91,11 +91,10 @@ import { ref, reactive } from 'vue';
 import { multiplePartFormContentType, userDetailsStorageRef } from "../utils";
 import { UploadOne } from '@icon-park/vue-next';
 import { templateRef } from '@vueuse/core';
-import CommonHeader from '../components/page-header/common-header.vue';
+import CommonHeader from '@/components/page-header/common-header.vue';
 import { message } from 'ant-design-vue';
-import { fusions } from '../fusions';
-import us from 'underscore';
-import { cosImageUploadLoadingKey, usePayloadFromToken, cosImageURLPrefix } from '../utils'
+import { fusions } from '@/fusions';
+import { cosImageUploadLoadingKey, usePayloadFromToken, cosImageURLPrefix } from '@/utils'
 
 // @States:
 const activeTabKey = ref(
@@ -151,7 +150,7 @@ const onDetailsSubmit = () => {
 </script>
 
 <style lang="less" scoped>
-@import "../less/color.less";
+@import "@/less/color.less";
 .page-user-settings__wrapper {
   width: 100%;
   max-width: 800px;

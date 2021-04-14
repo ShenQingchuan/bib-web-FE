@@ -22,7 +22,7 @@ import {
   REGEX_INLINE_MATH_DOLLARS,
   REGEX_BLOCK_MATH_DOLLARS
 } from '@benrbray/prosemirror-math';
-import { URL_REGEX } from '../../utils';
+import { URL_REGEX } from '@/utils';
 
 function nodeInputRule(
   regexp: RegExp,

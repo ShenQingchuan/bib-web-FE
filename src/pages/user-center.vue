@@ -107,11 +107,11 @@ import { reactive, ref } from "vue";
 import { useRoute } from 'vue-router';
 import { EnvironmentOutlined, ProfileOutlined } from "@ant-design/icons-vue";
 import { LocalTwo } from '@icon-park/vue-next';
-import { fusions, mocker } from "../fusions";
-import { userDetailsStorageRef } from '../utils'
-import CommonHeader from "../components/page-header/common-header.vue";
-import UserActivityCard from '../components/page-user-center/user-activity-card.vue';
-import type { Organization, UserActivity } from '../models'
+import { fusions, mocker } from "@/fusions";
+import { userDetailsStorageRef } from '@/utils'
+import CommonHeader from "@/components/page-header/common-header.vue";
+import UserActivityCard from '@/components/page-user-center/user-activity-card.vue';
+import type { Organization, UserActivity } from '@/models'
 
 const userDetails = reactive({
   avatarURL: "",
@@ -166,7 +166,7 @@ const loadingUserActivities = ref(false);
 }
 </style>
 <style lang="less" scoped>
-@import "../less/color.less";
+@import "@/less/color.less";
 .page-user-info__wrapper {
   .user-avatar {
     width: 160px;

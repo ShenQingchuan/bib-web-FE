@@ -103,8 +103,8 @@ import {
   ReloadOutlined,
   KeyOutlined,
 } from "@ant-design/icons-vue";
-import CenterCardLayout from "../components/layouts/center-card-layout.vue";
-import { useRegisterForm } from "../composable/useAuthForm";
+import CenterCardLayout from "@/components/layouts/center-card-layout.vue";
+import { useRegisterForm } from "@/composable/useAuthForm";
 
 export default {
   name: "RegisterPage",
@@ -126,7 +126,7 @@ export default {
 </script>
 
 <style lang="less" scoped>
-@import url("../less/color.less");
+@import url("@/less/color.less");
 
 .page-register__form {
   min-width: 360px;

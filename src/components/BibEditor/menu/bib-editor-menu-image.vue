@@ -38,15 +38,15 @@
 <script setup lang="ts">
 import { inject } from 'vue';
 import Icon, { DesktopOutlined, GlobalOutlined } from '@ant-design/icons-vue';
-import insertImageIcon from '../icons/insert-image-icon.vue';
+import insertImageIcon from '@/icons/insert-image-icon.vue';
 import { templateRef } from '@vueuse/core';
-import { fusions } from '../../../fusions';
+import { fusions } from '@/fusions';
 import {
   usePayloadFromToken,
   cosImageURLPrefix,
   cosImageUploadLoadingKey,
   multiplePartFormContentType
-} from '../../../utils';
+} from '@/utils';
 import { message } from 'ant-design-vue';
 import { trKeyInsertImage } from '../trKeys';
 import { EditorSchema } from '../editor-schema';

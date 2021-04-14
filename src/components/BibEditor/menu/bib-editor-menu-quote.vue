@@ -17,7 +17,7 @@
 import { inject, ref, onMounted } from 'vue';
 import { EditorSchema } from '../editor-schema';
 import Icon from "@ant-design/icons-vue";
-import QuoteNodeIcon from '../icons/quote-node-icon.vue';
+import QuoteNodeIcon from '@/icons/quote-node-icon.vue';
 import type { EditorComposable } from "../typings";
 import { findParentNode } from 'prosemirror-utils';
 

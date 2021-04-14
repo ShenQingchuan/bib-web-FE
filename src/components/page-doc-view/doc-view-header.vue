@@ -38,10 +38,10 @@
     </div>
 
     <div class="flex-row anis-center p-r-48">
-      <a-tooltip :title="stared ? '已收藏' : '收藏'">
+      <a-tooltip :title="thumbsUped ? '已收藏' : '收藏'">
         <star
-          :theme="stared ? 'filled' : 'outline'"
-          :fill="stared ? '#ffc60a' : undefined"
+          :theme="thumbsUped ? 'filled' : 'outline'"
+          :fill="thumbsUped ? '#ffc60a' : undefined"
           size="20"
           class="iconpark m-r-20 cursor-ptr"
           @click="handleStar"
@@ -52,7 +52,7 @@
         <people-plus theme="outline" :size="20" class="iconpark m-r-20 cursor-ptr" />
       </a-tooltip>
       <a-button class="m-lr-10">分享阅读</a-button>
-      <a-button class="m-lr-10" type="primary">编辑</a-button>
+      <a-button class="m-lr-10" type="primary" @click="$router.push(`${$route.path}/edit`)">编辑</a-button>
     </div>
   </div>
 </template>
@@ -67,13 +67,13 @@ const props = defineProps<{
 }>()
 
 // @States:
-const stared = ref(props.docData?.stared || false);
+const thumbsUped = ref(props.docData?.thumbsUped || false);
 
-// @LifeCycels:
+// @LifeCycles:
 
 // @Methods:
 const handleStar = () => {
-  stared.value = !stared.value;
+  thumbsUped.value = !thumbsUped.value;
 
   // TODO: debounce 提交 “收藏” 请求
 }

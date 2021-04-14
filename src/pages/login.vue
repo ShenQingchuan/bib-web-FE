@@ -89,8 +89,8 @@ import {
   LockOutlined,
   UserOutlined,
 } from "@ant-design/icons-vue";
-import { useLoginForm, LoginFormType } from "../composable/useAuthForm";
-import CenterCardLayout from "../components/layouts/center-card-layout.vue";
+import { useLoginForm, LoginFormType } from "@/composable/useAuthForm";
+import CenterCardLayout from "@/components/layouts/center-card-layout.vue";
 
 export default {
   name: "login-page",

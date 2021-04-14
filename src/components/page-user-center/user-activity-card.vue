@@ -103,7 +103,7 @@ import { defineProps } from "vue";
 import { GoodTwo, WritingFluently, Rss, People } from '@icon-park/vue-next';
 import * as dayjs from 'dayjs';
 import * as relativeTime from 'dayjs/plugin/relativeTime';
-import type { UserActivity } from '../../models'
+import type { UserActivity } from '@/models'
 import 'dayjs/locale/zh-cn'
 dayjs.extend(relativeTime);
 

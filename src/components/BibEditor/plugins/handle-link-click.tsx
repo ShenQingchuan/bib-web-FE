@@ -1,4 +1,4 @@
-import getMarkAttributes from '@/helpers/get-mark-attributes';
+import getMarkAttributes from '../helpers/get-mark-attributes';
 import { Plugin, PluginKey } from 'prosemirror-state';
 import { Modal, Form, Input } from 'ant-design-vue';
 import { Node, Mark } from 'prosemirror-model';

@@ -4,7 +4,6 @@
     :style="{
       paddingLeft: `${(item.level - 1) * 12}px`
     }"
-    :ref="insertRef"
     :data-toc-index="index"
   >
     <div
@@ -36,7 +35,6 @@ defineProps<{
 // @States:
 const activeIndexKey = inject<Ref<string>>('doc-side-toc__active-index')!;
 const updateIndexKey = inject<(indexKey: string) => void>('update:doc-side-toc__active-index')!;
-const insertRef = inject<(el: any) => void>('push:doc-side-toc__item-ref');
 
 // @Methods:
 </script>

@@ -53,7 +53,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
+import { provide, readonly, ref } from "vue";
 import { templateRef } from "@vueuse/core";
 import { useRoute } from 'vue-router';
 import { ThumbsUp } from '@icon-park/vue-next';
@@ -85,6 +85,9 @@ const commentContent = ref('');
 const thumbsUped = ref(false);
 const thumbsUpedCount = ref(0);
 const replyTo = ref<DocumentComment<UserSimpleDTO> | null>(null);
+const headingRefs = ref<HTMLHeadingElement[]>([]);
+
+provide('doc-view-heading-refs', readonly(headingRefs));
 
 // @LifeCycles:
 (async () => {
@@ -109,6 +112,11 @@ const replyTo = ref<DocumentComment<UserSimpleDTO> | null>(null);
     x.initEditor(docViewRef.value);
 
     loadingDocData.value = false;
+    headingRefs.value = Array.from(
+      docViewRef.value!.querySelectorAll(
+        'h1,h2,h3,h4,h5'
+      ) as NodeListOf<HTMLHeadingElement>
+    );
   }
 })();
 

@@ -31,66 +31,52 @@ const createRoute = (
   };
 };
 
-const dynamicViewsModules = import.meta.glob('./pages/**/*.{vue,tsx}');
-
-const routes: Array<RouteRecordRaw> = [
-  createRoute('/', dynamicViewsModules['./pages/landing.vue'], '欢迎'),
+let routes: Array<RouteRecordRaw> = [
+  createRoute('/', () => import('./pages/landing.vue'), '欢迎'),
   createRoute(
     '/dashboard',
-    dynamicViewsModules['./pages/dashboard/layout.vue'],
+    () => import('./pages/dashboard/layout.vue'),
     '工作台',
     {
       requiredAuth: true
     },
     [
-      createRoute(
-        '',
-        dynamicViewsModules['./pages/dashboard/index.vue'],
-        '工作台'
-      ),
+      createRoute('', () => import('./pages/dashboard/index.vue'), '工作台'),
       createRoute(
         'collections',
-        dynamicViewsModules['./pages/dashboard/collections.vue'],
+        () => import('./pages/dashboard/collections.vue'),
         '收藏'
       ),
       createRoute(
         'recycles',
-        dynamicViewsModules['./pages/dashboard/recycles.vue'],
+        () => import('./pages/dashboard/recycles.vue'),
         '回收站'
       )
     ]
   ),
-  createRoute('/login', dynamicViewsModules['./pages/login.vue'], '登录'),
-  createRoute('/register', dynamicViewsModules['./pages/register.vue'], '注册'),
+  createRoute('/login', () => import('./pages/login.vue'), '登录'),
+  createRoute('/register', () => import('./pages/register.vue'), '注册'),
   createRoute(
     '/password-retrieve',
-    dynamicViewsModules['./pages/password-retrieve.vue'],
+    () => import('./pages/password-retrieve.vue'),
     '找回密码'
   ),
   createRoute(
     '/user/:userName',
-    dynamicViewsModules['./pages/user-center.vue'],
+    () => import('./pages/user-center.vue'),
     '个人中心'
   ),
   createRoute(
     '/user-settings',
-    dynamicViewsModules['./pages/user-settings.vue'],
+    () => import('./pages/user-settings.vue'),
     '账户设置',
     {
       requiredAuth: true
     }
   ),
   createRoute(
-    '/editor-playground',
-    dynamicViewsModules['./pages/editor-playground.vue'],
-    '编辑器预览',
-    {
-      requiredAuth: true
-    }
-  ),
-  createRoute(
     '/doc/:docId',
-    dynamicViewsModules['./pages/document/view.vue'],
+    () => import('./pages/document/view.vue'),
     '查看文档',
     {
       requiredAuth: true
@@ -98,18 +84,33 @@ const routes: Array<RouteRecordRaw> = [
   ),
   createRoute(
     '/doc/:docId/edit',
-    dynamicViewsModules['./pages/document/edit.vue'],
-    '编辑文档'
-  ),
-
-  // 其余无法找到的都重定向到 not-found
-  createRoute(
-    '/not-found',
-    dynamicViewsModules['./pages/not-found.vue'],
-    '404'
-  ),
-  { path: '/:pathMatch(.*)*', redirect: '/not-found' }
+    () => import('./pages/document/edit.vue'),
+    '编辑文档',
+    {
+      requiredAuth: true
+    }
+  )
 ];
+
+// 开发环境下开启的一些 path，如 editor-playground
+if (process.env.NODE_ENV === 'development') {
+  routes = routes.concat([
+    createRoute(
+      '/editor-playground',
+      () => import('./pages/editor-playground.vue'),
+      '编辑器预览',
+      {
+        requiredAuth: true
+      }
+    )
+  ]);
+}
+
+// 其余无法找到的都重定向到 not-found
+routes = routes.concat([
+  createRoute('/not-found', () => import('./pages/not-found.vue'), '404'),
+  { path: '/:pathMatch(.*)*', redirect: '/not-found' }
+]);
 
 const router = createRouter({
   history: createWebHistory(),

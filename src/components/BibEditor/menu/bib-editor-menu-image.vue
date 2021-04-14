@@ -38,7 +38,7 @@
 <script setup lang="ts">
 import { inject } from 'vue';
 import Icon, { DesktopOutlined, GlobalOutlined } from '@ant-design/icons-vue';
-import insertImageIcon from '@/icons/insert-image-icon.vue';
+import insertImageIcon from '../icons/insert-image-icon.vue';
 import { templateRef } from '@vueuse/core';
 import { fusions } from '@/fusions';
 import {
@@ -99,7 +99,7 @@ const onLocalImageInput = () => {
 </script>
 
 <style lang="less" scoped>
-@import "../../../less/color.less";
+@import "@/less/color.less";
 @import "./menu-btn-common.less";
 .bib-editor-menu-item {
   &__image-btn {

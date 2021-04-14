@@ -58,15 +58,15 @@ import { templateRef } from "@vueuse/core";
 import { useRoute } from 'vue-router';
 import { ThumbsUp } from '@icon-park/vue-next';
 import { mocker } from '@/fusions';
-import { useEditor } from "../../components/BibEditor/composable/useEditor";
-import { useTableOfContents, decodeContentJSON } from '@/components/BibEditor/composable/useTableOfContents';
-import { usePayloadFromToken, userDetailsStorageRef } from "../../utils";
+import { useEditor } from "@/components/BibEditor/composable/useEditor";
+import { useTableOfContents } from '@/components/BibEditor/composable/useTableOfContents';
+import { usePayloadFromToken, userDetailsStorageRef } from "@/utils";
 import DocViewHeader from '@/components/page-doc-view/doc-view-header.vue';
 import DocComment from '@/components/page-doc-view/doc-comment.vue';
 import DocSideToc from '@/components/DocSideToc/doc-side-toc.vue';
 import * as us from 'underscore';
-import type { DocumentComment, DocumentViewData, UserSimpleDTO } from "../../models";
-import type { DocTableOfContentsUnit } from "../../components/BibEditor/typings";
+import type { DocumentComment, DocumentViewData, UserSimpleDTO } from "@/models";
+import type { DocTableOfContentsUnit } from "@/components/BibEditor/typings";
 
 // @States:
 const route = useRoute();
@@ -101,7 +101,7 @@ provide('doc-view-heading-refs', readonly(headingRefs));
     thumbsUped.value = docData.value!.thumbsUped;
     thumbsUpedCount.value = docData.value!.thumbUpUsers.length;
 
-    tableOfContentsData.value = useTableOfContents(decodeContentJSON(docData.value!.content));
+    tableOfContentsData.value = useTableOfContents(docData.value!.content);
 
     const x = useEditor({
       initContent: docData.value!.content,

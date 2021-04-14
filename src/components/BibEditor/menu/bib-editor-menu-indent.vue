@@ -30,7 +30,7 @@ const updateIndent = (t: '+' | '-') => {
 </script>
 
 <style lang="less" scoped>
-@import "../../../less/color.less";
+@import "@/less/color.less";
 @import "./menu-btn-common.less";
 
 .bib-editor-menu-item__indent-btn {

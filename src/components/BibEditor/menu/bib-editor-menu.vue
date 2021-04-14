@@ -1,7 +1,13 @@
 <template>
-  <div class="bib-menu flex-row jyct-center anis-center p-10" :class="{
-    fixed: props.fixed
-  }">
+  <div
+    class="bib-editor-menu flex-row jyct-center anis-center p-10"
+    :class="{
+      fixed: props.fixed
+    }"
+    :style="{
+      top
+    }"
+  >
     <bib-menu-heading />
     <bib-menu-font-size />
     <bib-menu-text-color />
@@ -29,6 +35,7 @@
 <script setup lang="ts">
 import { defineProps, onMounted, provide, ref } from "vue";
 import { BoldOutlined, ItalicOutlined, StrikethroughOutlined, UnderlineOutlined } from "@ant-design/icons-vue";
+import { EditorSchema } from "../editor-schema";
 import * as pmutils from 'prosemirror-utils';
 import Icon from "@ant-design/icons-vue";
 import CodeMarkIcon from "../icons/code-mark-icon.vue";
@@ -50,7 +57,6 @@ import BibMenuVideo from './bib-editor-menu-video.vue';
 import BibMenuInsertTable from './bib-editor-menu-insert-table.vue';
 import BibMenuTableKits from './bib-editor-menu-table-kits.vue';
 import type { EditorToggleCategories, EditorComposable } from "../typings";
-import { EditorSchema } from "../editor-schema";
 
 const createMarkMenuItem = (mark: EditorToggleCategories, icon: any) => ({ mark, icon });
 const marksGroup = [
@@ -65,7 +71,8 @@ const marksGroup = [
 
 const props = defineProps<{
   editorCompose: EditorComposable;
-  fixed?: boolean
+  fixed?: boolean;
+  top?: string;
 }>();
 provide("editorCompose", props.editorCompose);
 
@@ -84,7 +91,7 @@ onMounted(() => {
 </script>
 
 <style lang="less">
-.bib-menu {
+.bib-editor-menu {
   white-space: nowrap;
   overflow: auto;
   background-color: #fff;

@@ -17,7 +17,7 @@
 <script setup lang="ts">
 import { inject, defineProps, ref, onMounted } from "vue";
 import type { EditorComposable, EditorToggleCategories } from "../typings";
-import us from "underscore";
+import * as us from "underscore";
 import { EditorSchema } from "../editor-schema";
 
 const props = defineProps<{

@@ -91,7 +91,7 @@ const toggleHeaderLevel = (it: DisplayLevelEnumItem) => {
 </script>
 
 <style lang="less" scoped>
-@import "../../../less/color.less";
+@import "@/less/color.less";
 .bib-editor-menu-item {
   &__display-level-label {
     &,

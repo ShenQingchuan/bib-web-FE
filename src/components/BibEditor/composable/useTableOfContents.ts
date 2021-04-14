@@ -4,11 +4,16 @@ import {
   DocTableOfContentsUnit
 } from '../typings';
 
+const decodeContentJSON = (content: string): DocContentElement => {
+  return JSON.parse(content) as DocContentElement;
+};
 /** 获取 doc 文档的目录 */
 export const useTableOfContents = (
-  doc: DocContentElement
+  _doc: string | DocContentElement
 ): DocTableOfContentsUnit[] => {
   const headings: DocHeading[] = [];
+  let doc: DocContentElement =
+    typeof _doc === 'string' ? decodeContentJSON(_doc) : _doc;
 
   const getHeadingBlock = (content: DocContentElement[]) => {
     content.forEach((e) => {
@@ -61,8 +66,4 @@ export const useTableOfContents = (
   }
 
   return toc;
-};
-
-export const decodeContentJSON = (content: string): DocContentElement => {
-  return JSON.parse(content) as DocContentElement;
 };

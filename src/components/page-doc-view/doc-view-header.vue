@@ -52,7 +52,7 @@
         <people-plus theme="outline" :size="20" class="iconpark m-r-20 cursor-ptr" />
       </a-tooltip>
       <a-button class="m-lr-10">分享阅读</a-button>
-      <a-button class="m-lr-10" type="primary" @click="$router.push(`${$route.path}/edit`)">编辑</a-button>
+      <a-button class="m-lr-10" type="primary" @click="onDocumentEdit">编辑</a-button>
     </div>
   </div>
 </template>
@@ -60,14 +60,18 @@
 <script setup lang="ts">
 import { defineProps, ref } from 'vue';
 import { Lock, PeoplePlus, Star } from '@icon-park/vue-next';
-import type { DocumentViewData } from '../../models';
+import { useRoute, useRouter } from 'vue-router';
+import { useGlobalStore } from '@/store';
+import type { DocumentViewData } from '@/models';
 
 const props = defineProps<{
   docData?: DocumentViewData,
 }>()
 
 // @States:
+const router = useRouter(), route = useRoute();
 const thumbsUped = ref(props.docData?.thumbsUped || false);
+const globalStore = useGlobalStore();
 
 // @LifeCycles:
 
@@ -76,6 +80,10 @@ const handleStar = () => {
   thumbsUped.value = !thumbsUped.value;
 
   // TODO: debounce 提交 “收藏” 请求
+}
+const onDocumentEdit = () => {
+  globalStore.editDocumentParam = props.docData;
+  router.push(`${route.path}/edit`);
 }
 </script>
 

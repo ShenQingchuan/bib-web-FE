@@ -66,7 +66,7 @@ const toggleFontSize = (size: number) => {
 </script>
 
 <style lang="less" scoped>
-@import "../../../less/color.less";
+@import "@/less/color.less";
 .bib-editor-menu-item {
   &__font-size {
     &,

@@ -81,7 +81,7 @@ function createInitDoc(schema: Schema, initContent: string) {
   }
 }
 
-function isList(node: Node, schema: Schema) {
+function isListNodeType(node: Node, schema: Schema) {
   return (
     node.type === schema.nodes.bullet_list ||
     node.type === schema.nodes.ordered_list ||
@@ -385,9 +385,9 @@ export function useEditor(options: BibEditorOptions) {
     if (!range) {
       return;
     }
-    const parentList = pmutils.findParentNode((node) => isList(node, schema))(
-      selection
-    );
+    const parentList = pmutils.findParentNode((node) =>
+      isListNodeType(node, schema)
+    )(selection);
     if (range.depth >= 1 && parentList && range.depth - parentList.depth <= 1) {
       // turn-off this kind of list when it's already active
       if (parentList.node.type === listType) {
@@ -397,7 +397,7 @@ export function useEditor(options: BibEditorOptions) {
 
       // if editor can switch list type between the two
       // ( ol <-> ul )
-      if (isList(parentList.node, schema) && dispatch) {
+      if (isListNodeType(parentList.node, schema) && dispatch) {
         if (listType.validContent(parentList.node.content)) {
           tr.setNodeMarkup(parentList.pos, listType);
           tr.setMeta('trKey', trKeyList);

@@ -189,10 +189,11 @@ export function useLoginForm() {
 
 export function useRegisterForm() {
   const router = useRouter();
+  const route = useRoute();
 
   // @States:
   const registerForm = reactive({
-    userName: '',
+    userName: route.params.userName ?? '',
     userEmail: '',
     userPhone: '',
     phoneVerify: '',
@@ -302,7 +303,12 @@ export function useRegisterForm() {
           );
           if (res.data.responseOk) {
             message.success($content('注册成功！'));
-            router.push('/login');
+            router.push({
+              path: '/login',
+              params: {
+                userName: registerForm.userName
+              }
+            });
           }
         })
         .catch(() => {

@@ -5,7 +5,7 @@ import {
 } from '../typings';
 
 /** 获取 doc 文档的目录 */
-const getTableOfContents = (
+export const useTableOfContents = (
   doc: DocContentElement
 ): DocTableOfContentsUnit[] => {
   const headings: DocHeading[] = [];
@@ -63,4 +63,6 @@ const getTableOfContents = (
   return toc;
 };
 
-export default getTableOfContents;
+export const decodeContentJSON = (content: string): DocContentElement => {
+  return JSON.parse(content) as DocContentElement;
+};

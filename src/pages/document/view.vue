@@ -2,6 +2,8 @@
   <div class="page-document-view__wrapper flex-col">
     <doc-view-header :doc-data="docData" />
 
+    <doc-side-toc :toc="tableOfContentsData" />
+
     <!-- 通过 readonly ProseMirror 加载出文档 -->
     <div class="page-document-view__content">
       <a-skeleton class="m-t-40" active v-if="loadingDocData" :paragraph="{ rows: 20 }" />
@@ -57,11 +59,14 @@ import { useRoute } from 'vue-router';
 import { ThumbsUp } from '@icon-park/vue-next';
 import { mocker } from '../../fusions';
 import { useEditor } from "../../components/BibEditor/composable/useEditor";
+import { useTableOfContents, decodeContentJSON } from '../../components/BibEditor/composable/useTableOfContents';
 import { usePayloadFromToken, userDetailsStorageRef } from "../../utils";
 import DocViewHeader from '../../components/page-doc-view/doc-view-header.vue';
 import DocComment from '../../components/page-doc-view/doc-comment.vue';
+import DocSideToc from '../../components/DocSideToc/doc-side-toc.vue';
 import * as us from 'underscore';
 import type { DocumentComment, DocumentViewData, UserSimpleDTO } from "../../models";
+import type { DocTableOfContentsUnit } from "../../components/BibEditor/typings";
 
 // @States:
 const route = useRoute();
@@ -71,6 +76,7 @@ const loadingDocData = ref(false);
 const docViewRef = templateRef('docViewRef');
 const userTokenPayload = usePayloadFromToken();
 const commentInputer = templateRef<HTMLInputElement>('commentInputer');
+const tableOfContentsData = ref<DocTableOfContentsUnit[]>([]);
 
 // @States:
 const docData = ref<DocumentViewData>();
@@ -91,6 +97,8 @@ const replyTo = ref<DocumentComment<UserSimpleDTO> | null>(null);
     comments.value = docData.value!.comments;
     thumbsUped.value = docData.value!.thumbsUped;
     thumbsUpedCount.value = docData.value!.thumbUpUsers.length;
+
+    tableOfContentsData.value = useTableOfContents(decodeContentJSON(docData.value!.content));
 
     const x = useEditor({
       initContent: docData.value!.content,

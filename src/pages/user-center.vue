@@ -6,9 +6,8 @@
       <!-- 基本资料 -->
       <a-card class="basic-info-card flex-col anis-center">
         <a-avatar
-          v-show="userDetails.avatarURL.length > 0"
           class="user-avatar"
-          :src="userDetails.avatarURL"
+          :src="userDetails.avatarURL || '/assets/svg/user-avatar__default.svg'"
         ></a-avatar>
         <h3 class="text-center m-tb-16">{{ userName }}</h3>
         <div class="counter-wrapper w-p100 m-t-6 m-b-32 flex-row jyct-center anis-center">
@@ -109,6 +108,7 @@ import { useRoute } from 'vue-router';
 import { EnvironmentOutlined, ProfileOutlined } from "@ant-design/icons-vue";
 import { LocalTwo } from '@icon-park/vue-next';
 import { fusions, mocker } from "../fusions";
+import { userDetailsStorageRef } from '../utils'
 import CommonHeader from "../components/page-header/common-header.vue";
 import UserActivityCard from '../components/page-user-center/user-activity-card.vue';
 import type { Organization, UserActivity } from '../models'
@@ -135,6 +135,7 @@ let userName = route.params['userName'] as string;
     userDetails.introduce = introduce;
     userDetails.address = address;
     userDetails.profession = profession;
+    userDetailsStorageRef.value = userDetails;
   }
 })();
 

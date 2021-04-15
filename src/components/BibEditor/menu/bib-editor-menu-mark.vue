@@ -16,7 +16,7 @@
 
 <script setup lang="ts">
 import { inject, defineProps, ref, onMounted } from "vue";
-import type { EditorComposable, EditorToggleCategories } from "../typings";
+import type { EditorInstance, EditorToggleCategories } from "../typings";
 import * as us from "underscore";
 import { EditorSchema } from "../editor-schema";
 
@@ -25,14 +25,14 @@ const props = defineProps<{
 }>();
 
 const isActive = ref(false);
-const editorCompose = inject<EditorComposable>("editorCompose");
+const editorInstance = inject<EditorInstance>("editorInstance");
 const toggleTo = ref<"on" | "off">("on");
 const needUpdate = ref(false);
 const excludes = EditorSchema.marks[props.mark].spec.excludes;
 
 // @LifeCycles:
 onMounted(() => {
-  editorCompose?.onEditorDispatched((tr, meta) => {
+  editorInstance?.onEditorDispatched((tr, meta) => {
     if (excludes) {
       const storedMarksNames = tr.storedMarks?.map(m => m.type.name);
       for (let ex of excludes.split(" ")) {
@@ -43,9 +43,9 @@ onMounted(() => {
       }
     }
     if (meta?.needUpdate?.value || tr.selectionSet) {
-      const { $from, $to, empty } = editorCompose.view.value.state.selection;
+      const { $from, $to, empty } = editorInstance.view.value.state.selection;
       const storedMarks =
-        editorCompose.view.value.state.storedMarks
+        editorInstance.view.value.state.storedMarks
         || tr.storedMarks
         || [];
       let concated = storedMarks.concat($from.marks());
@@ -59,7 +59,7 @@ onMounted(() => {
 const toggleFn = () => {
   toggleTo.value = isActive.value ? "off" : "on";
   needUpdate.value = true;
-  editorCompose?.toggleMark(props.mark);
+  editorInstance?.toggleMark(props.mark);
   needUpdate.value = false;
   // magic: 由于必须设置 inclusive 属性为 true 保证 Mark 状态下输入连续性
   // 但有了 inclusive 关闭该 Mark 后会仍然显示处于该 Mark 中，但输入后续内容不会再带

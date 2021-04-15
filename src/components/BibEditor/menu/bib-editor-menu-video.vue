@@ -10,7 +10,7 @@
             class="bib-editor-menu-item__video-dropdown-overlay-item p-tb-4 p-lr-6 m-tb-4"
             v-for="t in videoTypes"
             :key="t.label"
-            @click="editorCompose?.insertVideo(t.icon, t.label)"
+            @click="editorInstance?.insertVideo(t.icon, t.label)"
           >
             <img :src="t.icon" :alt="t.label" width="20" />
             <span class="m-l-6 fs-12">{{ t.label }}</span>
@@ -24,7 +24,7 @@
 <script setup lang="ts">
 import { inject } from 'vue';
 import { Video } from '@icon-park/vue-next';
-import type { EditorComposable } from '../typings';
+import type { EditorInstance } from '../typings';
 
 const videoTypes = [
   { icon: '/assets/svg/editor__video-bilibili.svg', label: '哔哩哔哩视频' },
@@ -35,7 +35,7 @@ const videoTypes = [
 ]
 
 // @States:
-const editorCompose = inject<EditorComposable>("editorCompose");
+const editorInstance = inject<EditorInstance>("editorInstance");
 
 // @LifeCycels:
 

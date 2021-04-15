@@ -20,7 +20,7 @@
 <script setup lang="ts">
 import { inject, onMounted, ref } from "vue";
 import { AlignLeftOutlined, AlignCenterOutlined, AlignRightOutlined } from "@ant-design/icons-vue";
-import type { EditorComposable } from "../typings";
+import type { EditorInstance } from "../typings";
 import { findParentNode } from "prosemirror-utils";
 
 const alignOptions = [
@@ -30,13 +30,13 @@ const alignOptions = [
 ]
 
 // @States: 
-const editorCompose = inject<EditorComposable>("editorCompose");
+const editorInstance = inject<EditorInstance>("editorInstance");
 const activeAlign = ref<"none" | "left" | "center" | "right">("none");
 
 // @LifeCycles: 
 onMounted(() => {
-  editorCompose?.onEditorDispatched(() => {
-    const { selection } = editorCompose.view.value.state;
+  editorInstance?.onEditorDispatched(() => {
+    const { selection } = editorInstance.view.value.state;
     const parentHasAlign = findParentNode(node => !!node.attrs.textAlign)(selection);
     if (parentHasAlign) {
       activeAlign.value = parentHasAlign.node.attrs.textAlign;
@@ -50,7 +50,7 @@ onMounted(() => {
 
 // @Methods: 
 const toggleAlignFn = (direction: string) => {
-  editorCompose?.toggleAlign(direction);
+  editorInstance?.toggleAlign(direction);
 }
 </script>
 

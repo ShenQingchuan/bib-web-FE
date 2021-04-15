@@ -20,16 +20,16 @@ import { LinkOutlined } from "@ant-design/icons-vue";
 import { EditorSchema } from '../editor-schema';
 import { showUpdateLinkModal, updateLinkWithPos } from '../plugins/handle-link-click';
 import { Modal } from 'ant-design-vue';
-import type { EditorComposable } from "../typings";
+import type { EditorInstance } from "../typings";
 
 // @States:
 const isActive = ref(false);
-const editorCompose = inject<EditorComposable>("editorCompose");
+const editorInstance = inject<EditorInstance>("editorInstance");
 
 // @LifeCycles:
 onMounted(() => {
-  editorCompose?.onEditorDispatched((tr) => {
-    editorCompose.applyForNodesAtCursor((node) => {
+  editorInstance?.onEditorDispatched((tr) => {
+    editorInstance.applyForNodesAtCursor((node) => {
       if (node.type === EditorSchema.nodes.text) {
         let markTypes = node.marks.map(m => m.type)
         if (tr.storedMarks) {
@@ -45,7 +45,7 @@ onMounted(() => {
 
 // @Methods:
 const toggleLinkMark = () => {
-  const view = editorCompose!.view.value;
+  const view = editorInstance!.view.value;
   const { doc, selection: { from, to }, tr } = view.state;
 
   if (isActive.value) {

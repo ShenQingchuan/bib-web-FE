@@ -141,7 +141,7 @@ export function useEditor(options: BibEditorOptions) {
     const yFragment = ydoc.getXmlFragment(options.docName);
     const credential = options.credential;
     plugins = plugins.concat([
-      ySyncPlugin(yFragment),
+      ySyncPlugin(ydoc.getXmlFragment(options.docName)),
       // @ts-ignore :: 此处该库类型定义存疑
       yCursorPlugin(provider.awareness, {
         cursorBuilder: (user) => {
@@ -189,7 +189,7 @@ export function useEditor(options: BibEditorOptions) {
     });
   }
 
-  /** 通过 ref hook 初始化 EditorView */
+  /** 初始化 EditorView 方法（可通过 ref hook） */
   const initEditor = (el: any) => {
     editorView.value = new EditorView(el as HTMLDivElement, {
       state: EditorState.create({
@@ -226,6 +226,9 @@ export function useEditor(options: BibEditorOptions) {
         return mathSerializer.serializeSlice(slice);
       }
     });
+
+    // onMounted Hook
+    options.onMounted?.(editorView.value);
   };
 
   /** 将文档 doc 输出为 JSON 字符串 */
@@ -522,7 +525,7 @@ export function useEditor(options: BibEditorOptions) {
     }
   };
 
-  const editorCompose: EditorComposable = {
+  const editorInstance: EditorInstance = {
     view: editorView,
     options,
     toggleHeading,
@@ -547,7 +550,7 @@ export function useEditor(options: BibEditorOptions) {
 
   return {
     initEditor,
-    editorCompose,
-    onlineOtherUsers
-  };
+    editorInstance,
+    onlineOtherUsers,
+  } as EditorComposition;
 }

@@ -1,5 +1,5 @@
 <template>
-  <bib-editor-menu :editor-compose="editorCompose" fixed />
+  <bib-editor-menu :editor-instance="editorInstance" fixed />
   <div class="flex-row jyct-center anis-center p-lr-6 demo-utils">
     <a-button class="m-lr-10" @click="logDocJSON">输出 Doc JSON</a-button>
     <a-button class="m-lr-10" @click="logSelectionNodesBetween">输出 Selection Nodes Between</a-button>
@@ -10,7 +10,7 @@
     ref="bibEditorRef"
     class="demo"
     :init-editor-ref="initEditor"
-    :editor-compose="editorCompose"
+    :editor-instance="editorInstance"
   />
 </template>
 <script setup lang="ts">
@@ -25,30 +25,30 @@ import type { DocContentElement } from '@/components/BibEditor/typings';
 // @States:
 const bibEditorRef = templateRef('bibEditorRef');
 const credential = usePayloadFromToken()!;
-const { editorCompose, initEditor, onlineOtherUsers } = useEditor({
+const { editorInstance, initEditor, onlineOtherUsers } = useEditor({
   initContent: '',
   docName: 'Playground',
   credential,
 });
 const logDocJSON = () => {
-  console.log(editorCompose.view.value.state.doc.toJSON());
+  console.log(editorInstance.view.value.state.doc.toJSON());
 };
 const logSelectionNodesBetween = () => {
-  const { selection } = editorCompose.view.value.state;
+  const { selection } = editorInstance.view.value.state;
   const { from, to, empty } = selection;
   if (empty) return;
   console.log(
-    editorCompose.view.value.state.doc.nodesBetween(from, to, (node) => {
+    editorInstance.view.value.state.doc.nodesBetween(from, to, (node) => {
       console.log('[ node ]', node);
     })
   );
 };
 const logTextContentAbstract = () => {
-  const abstract = editorCompose.view.value.state.doc.textContent.slice(0, 150);
+  const abstract = editorInstance.view.value.state.doc.textContent.slice(0, 150);
   console.log(abstract);
 }
 const logTableOfContents = () => {
-  const toc = useTableOfContents(editorCompose.view.value.state.doc.toJSON() as DocContentElement);
+  const toc = useTableOfContents(editorInstance.view.value.state.doc.toJSON() as DocContentElement);
   console.log(JSON.stringify(toc, null, 2));
 }
 </script>

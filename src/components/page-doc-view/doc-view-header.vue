@@ -1,7 +1,7 @@
 <template>
-  <div class="page-document-view__header flex-row anis-center jyct-btwn">
-    <div class="flex-row anis-center p-l-24 p-r-16 p-tb-14">
-      <a href="/">
+  <div class="page-document-view__header flex-row anis-center jyct-btwn p-10">
+    <div class="flex-row anis-center p-l-24 p-r-16">
+      <a v-show="!editing" href="/">
         <img src="/assets/img/Icon-png-logo.png" alt="header-logo" height="48" class="m-r-24" />
       </a>
       <a-breadcrumb v-if="docData">
@@ -37,22 +37,25 @@
       </a-breadcrumb>
     </div>
 
-    <div class="flex-row anis-center p-r-48">
-      <a-tooltip :title="thumbsUped ? '已收藏' : '收藏'">
-        <star
-          :theme="thumbsUped ? 'filled' : 'outline'"
-          :fill="thumbsUped ? '#ffc60a' : undefined"
-          size="20"
-          class="iconpark m-r-20 cursor-ptr"
-          @click="handleStar"
-        />
-      </a-tooltip>
+    <div class="flex-row anis-center p-r-24">
+      <template v-show="!editing">
+        <a-tooltip :title="thumbsUped ? '已收藏' : '收藏'">
+          <star
+            :theme="thumbsUped ? 'filled' : 'outline'"
+            :fill="thumbsUped ? '#ffc60a' : undefined"
+            size="20"
+            class="iconpark m-r-20 cursor-ptr"
+            @click="handleStar"
+          />
+        </a-tooltip>
+      </template>
 
       <a-tooltip title="添加协作用户">
         <people-plus theme="outline" :size="20" class="iconpark m-r-20 cursor-ptr" />
       </a-tooltip>
-      <a-button class="m-lr-10">分享阅读</a-button>
-      <a-button class="m-lr-10" type="primary" @click="onDocumentEdit">编辑</a-button>
+      <a-button class="m-lr-10" v-show="!editing">分享阅读</a-button>
+      <a-button class="m-lr-10" v-if="!editing" type="primary" @click="onDocumentEdit">编辑</a-button>
+      <a-button class="m-lr-10" v-else @click="onDocumentEdit">保存提交</a-button>
     </div>
   </div>
 </template>
@@ -65,6 +68,7 @@ import { useGlobalStore } from '@/store';
 import type { DocumentViewData } from '@/models';
 
 const props = defineProps<{
+  editing?: boolean;
   docData?: DocumentViewData,
 }>()
 
@@ -79,7 +83,7 @@ const globalStore = useGlobalStore();
 const handleStar = () => {
   thumbsUped.value = !thumbsUped.value;
 
-  // TODO: debounce 提交 “收藏” 请求
+  // TODO: debounce 提交 “收藏文章” 请求
 }
 const onDocumentEdit = () => {
   globalStore.editDocumentParam = props.docData;

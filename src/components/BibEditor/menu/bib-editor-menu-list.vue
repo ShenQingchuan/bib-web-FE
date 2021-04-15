@@ -27,10 +27,10 @@ import {
   CheckSquareOutlined
 } from '@ant-design/icons-vue';
 import { findParentNode } from "prosemirror-utils";
-import type { EditorComposable } from "../typings";
+import type { EditorInstance } from "../typings";
 
 // @States:
-const editorCompose = inject<EditorComposable>("editorCompose");
+const editorInstance = inject<EditorInstance>("editorInstance");
 const { bullet_list, ordered_list, task_list, list_item, task_item } = EditorSchema.nodes;
 const listMenuEnums = [
   { name: 'ordered_list', icon: OrderedListOutlined, listType: ordered_list, itemType: list_item },
@@ -41,10 +41,10 @@ const activeList = ref("none");
 
 // @LifeCycles:
 onMounted(() => {
-  editorCompose?.onEditorDispatched(() => {
-    editorCompose.applyForNodesAtCursor((currentNode) => {
+  editorInstance?.onEditorDispatched(() => {
+    editorInstance.applyForNodesAtCursor((currentNode) => {
       const hasListTypeParent = findParentNode(node => listTypeNames.includes(node.type.name))(
-        editorCompose.view.value.state.selection
+        editorInstance.view.value.state.selection
       )
       if (listTypeNames.includes(currentNode.type.name)) {
         activeList.value = currentNode.type.name;
@@ -58,8 +58,8 @@ onMounted(() => {
 
 // @Methods:
 const toggleListType = (listType: NodeType, itemType: NodeType) => {
-  editorCompose?.toggleList(listType, itemType);
-  editorCompose?.focus();
+  editorInstance?.toggleList(listType, itemType);
+  editorInstance?.focus();
   activeList.value = listType.name;
 }
 </script>

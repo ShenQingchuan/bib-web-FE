@@ -4,16 +4,16 @@
 
 <script setup lang="ts">
 import { defineProps, onUnmounted } from "vue";
-import type { EditorComposable } from "./typings";
+import type { EditorInstance } from "./typings";
 
 const props = defineProps<{
-  editorCompose: EditorComposable;
+  editorInstance: EditorInstance;
   initEditorRef: (el: any) => void
 }>();
 
 // 卸载编辑器
 onUnmounted(() => {
-  props.editorCompose.view.value.destroy();
+  props.editorInstance.view.value.destroy();
 })
 </script>
 

@@ -32,19 +32,19 @@
 <script setup lang="ts">
 import { ref, inject } from 'vue';
 import { InsertTable } from '@icon-park/vue-next';
-import type { EditorComposable } from '../typings';
+import type { EditorInstance } from '../typings';
 
 // @States:
 const gridVisible = ref(false);
 const rowsCount = ref(0);
 const colsCount = ref(0);
-const editorCompose = inject<EditorComposable>('editorCompose');
+const editorInstance = inject<EditorInstance>('editorInstance');
 
 // @LifeCycels:
 
 // @Methods:
 const handleClickGrid = () => {
-  editorCompose?.insertTable(rowsCount.value, colsCount.value);
+  editorInstance?.insertTable(rowsCount.value, colsCount.value);
 }
 </script>
 

@@ -29,7 +29,7 @@
 import { ref, inject, onMounted } from 'vue';
 import { CaretDownOutlined, CheckOutlined } from "@ant-design/icons-vue";
 import { EditorSchema } from "../editor-schema"
-import type { EditorComposable } from "../typings";
+import type { EditorInstance } from "../typings";
 
 const fontSizePoints = [12, 13, 14, 15, 16, 19, 22, 24, 29, 32, 40, 48];
 const fsMarkType = EditorSchema.marks.fontSizeMark;
@@ -37,12 +37,12 @@ const defaultFontSize = 14;
 
 // @States:
 const fontSizeDisplay = ref(defaultFontSize);
-const editorCompose = inject<EditorComposable>("editorCompose");
+const editorInstance = inject<EditorInstance>("editorInstance");
 
 // @LifeCycels:
 onMounted(() => {
-  editorCompose?.onEditorDispatched((tr) => {
-    editorCompose.applyForNodesAtCursor((node) => {
+  editorInstance?.onEditorDispatched((tr) => {
+    editorInstance.applyForNodesAtCursor((node) => {
       if (node.isText) {
         if (node.marks.map(m => m.type).includes(fsMarkType)) {
           const mark = node.marks.find(m => m.type === fsMarkType)!;
@@ -60,7 +60,7 @@ onMounted(() => {
 
 // @Methods:
 const toggleFontSize = (size: number) => {
-  editorCompose?.toggleFontSize(size);
+  editorInstance?.toggleFontSize(size);
   fontSizeDisplay.value = size;
 }
 </script>

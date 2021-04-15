@@ -53,13 +53,13 @@
 import { ref, inject, onMounted, computed } from 'vue';
 import { DownOutlined } from '@ant-design/icons-vue';
 import { EditorSchema } from "../editor-schema"
-import type { EditorComposable } from "../typings";
+import type { EditorInstance } from "../typings";
 
 const defaultColor = '#000000'
 // @States:
 const pickedColor = ref(defaultColor);
 const pickerVisible = ref(false);
-const editorCompose = inject<EditorComposable>("editorCompose");
+const editorInstance = inject<EditorInstance>("editorInstance");
 const updating = ref(false);
 const showColorForSvg = computed(() =>
   pickedColor.value === '#00000000'
@@ -69,8 +69,8 @@ const showColorForSvg = computed(() =>
 
 // @lifeCycles:
 onMounted(() => {
-  editorCompose?.onEditorDispatched((tr) => {
-    editorCompose.applyForNodesAtCursor((node) => {
+  editorInstance?.onEditorDispatched((tr) => {
+    editorInstance.applyForNodesAtCursor((node) => {
       if (!tr.getMeta("pointer") && node.isText) {
         const coloredMarkType = EditorSchema.marks.colored;
 
@@ -91,14 +91,14 @@ onMounted(() => {
 // @Methods:
 const onColorChange = (newColor: string) => {
   updating.value = true;
-  editorCompose?.toggleTextColor(
+  editorInstance?.toggleTextColor(
     parseInt(newColor.slice(7)) !== 0
       ? newColor
       : defaultColor
   );
   updating.value = false;
   pickerVisible.value = false;
-  editorCompose?.focus();
+  editorInstance?.focus();
 }
 </script>
 

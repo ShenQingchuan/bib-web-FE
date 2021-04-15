@@ -50,17 +50,17 @@ import {
 import { message } from 'ant-design-vue';
 import { trKeyInsertImage } from '../trKeys';
 import { EditorSchema } from '../editor-schema';
-import type { EditorComposable, InsertImageType } from '../typings';
+import type { EditorInstance, InsertImageType } from '../typings';
 
 // @States:
-const editorCompose = inject<EditorComposable>("editorCompose");
+const editorInstance = inject<EditorInstance>("editorInstance");
 const inputRef = templateRef<HTMLInputElement>('localImageInputer');
 
 // @LifeCycles:
 
 // @Methds:
 const insertImage = (insertType: InsertImageType) => {
-  editorCompose?.insertImage(insertType);
+  editorInstance?.insertImage(insertType);
 }
 const onLocalImageInput = () => {
   const tokenPayload = usePayloadFromToken();
@@ -87,12 +87,12 @@ const onLocalImageInput = () => {
       const r: { key: string, putObjectResult: any } = res.data.data.uploadResults[0];
       const src = `${cosImageURLPrefix}${r.key}`;
 
-      const { tr } = editorCompose!.view.value.state;
+      const { tr } = editorInstance!.view.value.state;
       tr.replaceSelectionWith(
         EditorSchema.nodes.image.create({ src })
       )
       tr.setMeta('trKey', trKeyInsertImage);
-      editorCompose!.view.value.dispatch(tr);
+      editorInstance!.view.value.dispatch(tr);
     })
   }
 }

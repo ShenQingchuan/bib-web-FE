@@ -1,6 +1,6 @@
 <template>
   <div
-    class="doc-side-toc__item cursor-ptr"
+    class="doc-side-toc__item"
     :style="{
       paddingLeft: `${(item.level - 1) * 12}px`
     }"
@@ -43,6 +43,8 @@ const updateIndexKey = inject<(indexKey: string) => void>('update:doc-side-toc__
 @import "../../less/color.less";
 
 .doc-side-toc__item {
+  cursor: default;
+
   &-title.active {
     border-left: 2px solid @primary-color;
     color: @primary-color;

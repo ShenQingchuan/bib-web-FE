@@ -5,7 +5,7 @@
     <doc-side-toc :toc="tableOfContentsData" />
 
     <!-- 通过 readonly ProseMirror 加载出文档 -->
-    <div class="page-document-view__content">
+    <div class="page-document-view__content m-t-80 m-lr-auto">
       <a-skeleton class="m-t-40" active v-if="loadingDocData" :paragraph="{ rows: 20 }" />
       <div v-show="!loadingDocData" ref="docViewRef"></div>
     </div>
@@ -105,7 +105,7 @@ provide('doc-view-heading-refs', readonly(headingRefs));
 
     const x = useEditor({
       initContent: docData.value!.content,
-      docName: `doc-${docData.value!.id}-${docData.value!.title}`,
+      docName: `bib-doc-${docData.value!.id}`,
       readonly: true,
       credential
     });
@@ -167,7 +167,6 @@ const onSubmitComment = () => {
 @import "../../less/shared.less";
 .page-document-view__content {
   width: 60vw;
-  margin: 60px auto 0 auto;
 }
 
 .page-document-view__meta-section {

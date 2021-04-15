@@ -18,17 +18,17 @@ import { inject, ref, onMounted } from 'vue';
 import { EditorSchema } from '../editor-schema';
 import Icon from "@ant-design/icons-vue";
 import QuoteNodeIcon from '../icons/quote-node-icon.vue';
-import type { EditorComposable } from "../typings";
+import type { EditorInstance } from "../typings";
 import { findParentNode } from 'prosemirror-utils';
 
 // @States:
 const isActive = ref(false);
-const editorCompose = inject<EditorComposable>("editorCompose");
+const editorInstance = inject<EditorInstance>("editorInstance");
 
 // @Lifecycles:
 onMounted(() => {
-  editorCompose?.onEditorDispatched(() => {
-    const { selection } = editorCompose.view.value.state;
+  editorInstance?.onEditorDispatched(() => {
+    const { selection } = editorInstance.view.value.state;
     isActive.value = !!findParentNode(
       node => node.type === EditorSchema.nodes.blockquote
     )(selection);
@@ -37,7 +37,7 @@ onMounted(() => {
 
 // @Methods:
 const toggleQuoteNode = () => {
-  editorCompose?.toggleQuoteBlock();
+  editorInstance?.toggleQuoteBlock();
 }
 </script>
 

@@ -9,14 +9,14 @@
 <script setup lang="ts">
 import { inject } from 'vue';
 import { MinusOutlined } from "@ant-design/icons-vue";
-import type { EditorComposable } from "../typings";
+import type { EditorInstance } from "../typings";
 
 // @States:
-const editorCompose = inject<EditorComposable>("editorCompose");
+const editorInstance = inject<EditorInstance>("editorInstance");
 
 // @Methods:
 const insertHrLine = () => {
-  editorCompose?.insertHorizontalRuleLine();
+  editorInstance?.insertHorizontalRuleLine();
 }
 </script>
 

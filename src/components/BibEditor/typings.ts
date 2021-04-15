@@ -2,7 +2,7 @@ import { EditorState, Transaction } from 'prosemirror-state';
 import { Node, Schema, NodeType } from 'prosemirror-model';
 import { EditorView } from 'prosemirror-view';
 import { Ref } from 'vue';
-import { UserTokenPayload } from 'utils/user-token-validation';
+import { UserTokenPayload } from '@/utils/user-token-validation';
 
 export interface BibEditorOptions {
   initContent: string;
@@ -10,6 +10,7 @@ export interface BibEditorOptions {
   credential: UserTokenPayload; // Bib 编辑器默认协同，要求必须提供用户凭证
   placeholder?: string;
   readonly?: boolean;
+  onMounted?: (view: EditorView) => void;
 }
 
 export type EditorToggleMethodReturns = (
@@ -29,7 +30,7 @@ export interface DispatchHook {
   (tr: Transaction, meta?: Record<string, any>): void;
   hookMeta?: Record<string, any>;
 }
-export interface EditorComposable {
+export interface EditorInstance {
   view: Ref<EditorView>;
   options: BibEditorOptions;
   toJSON: () => {
@@ -52,6 +53,12 @@ export interface EditorComposable {
   execTableCommand: (cmdName: TableCommand) => void;
   onEditorDispatched: (fn: DispatchHook, meta?: Record<string, any>) => void;
   applyForNodesAtCursor: (fn: (node: Node, pos: number) => void) => void;
+}
+
+export interface EditorComposition {
+  initEditor: (el: any) => void;
+  editorInstance: EditorInstance;
+  onlineOtherUsers: Ref<OnlineUser[]>;
 }
 
 export type InsertImageType = 'local' | 'online';

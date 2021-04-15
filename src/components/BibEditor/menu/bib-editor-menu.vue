@@ -33,10 +33,8 @@
 </template>
 
 <script setup lang="ts">
-import { defineProps, onMounted, provide, ref } from "vue";
+import { defineProps, provide, ref } from "vue";
 import { BoldOutlined, ItalicOutlined, StrikethroughOutlined, UnderlineOutlined } from "@ant-design/icons-vue";
-import { EditorSchema } from "../editor-schema";
-import * as pmutils from 'prosemirror-utils';
 import Icon from "@ant-design/icons-vue";
 import CodeMarkIcon from "../icons/code-mark-icon.vue";
 import SuperScriptIcon from "../icons/superscript-mark-icon.vue";
@@ -56,7 +54,7 @@ import BibMenuIndent from './bib-editor-menu-indent.vue';
 import BibMenuVideo from './bib-editor-menu-video.vue';
 import BibMenuInsertTable from './bib-editor-menu-insert-table.vue';
 import BibMenuTableKits from './bib-editor-menu-table-kits.vue';
-import type { EditorToggleCategories, EditorComposable } from "../typings";
+import type { EditorToggleCategories, EditorInstance } from "../typings";
 
 const createMarkMenuItem = (mark: EditorToggleCategories, icon: any) => ({ mark, icon });
 const marksGroup = [
@@ -70,24 +68,16 @@ const marksGroup = [
 ]
 
 const props = defineProps<{
-  editorCompose: EditorComposable;
+  editorInstance: EditorInstance;
   fixed?: boolean;
   top?: string;
 }>();
-provide("editorCompose", props.editorCompose);
+provide("editorInstance", props.editorInstance);
 
 const isInTable = ref(false);
-
-onMounted(() => {
-  props.editorCompose.onEditorDispatched((tr) => {
-    isInTable.value = !!pmutils.findParentNode((node) => [
-      EditorSchema.nodes.table,
-      EditorSchema.nodes.table_row,
-      EditorSchema.nodes.table_cell,
-      EditorSchema.nodes.table_header
-    ].includes(node.type))(tr.selection);
-  });
-})
+provide('update:bib-editor-table-mode', (val: boolean) => {
+  isInTable.value = val;
+});
 </script>
 
 <style lang="less">

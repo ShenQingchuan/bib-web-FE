@@ -36,7 +36,7 @@ import { setBlockType } from 'prosemirror-commands';
 import { EditorSchema } from "../editor-schema";
 import { trKeyHeading } from '../trKeys';
 import { findParentNode } from "prosemirror-utils";
-import type { EditorComposable } from "../typings";
+import type { EditorInstance } from "../typings";
 
 type DisplayLevelEnumItem = { label: string, fs?: number, attrs?: { level: number } };
 const DisplayLevelEnum: Record<string, DisplayLevelEnumItem> = {
@@ -55,17 +55,17 @@ const displayText = computed(() => {
     ? DisplayLevelEnum.PLAIN.label
     : DisplayLevelEnum[`H${displayLevel.value}`].label);
 });
-const editorCompose = inject<EditorComposable>("editorCompose");
+const editorInstance = inject<EditorInstance>("editorInstance")!;
 
 // @LifeCycles:
 onMounted(() => {
-  editorCompose?.onEditorDispatched((tr) => {
+  editorInstance.onEditorDispatched((tr) => {
     if (tr.getMeta('trKey') === trKeyHeading) {
       displayLevel.value = tr.getMeta("level");
       return;
     }
 
-    const { selection } = editorCompose.view.value.state;
+    const { selection } = editorInstance.view.value.state;
     const heading = findParentNode(node => node.type === EditorSchema.nodes.heading)(selection);
     if (heading) {
       displayLevel.value = heading.node.attrs.level;
@@ -79,12 +79,12 @@ onMounted(() => {
 const toggleHeaderLevel = (it: DisplayLevelEnumItem) => {
   if (!it.fs && !it.attrs) { // 切换为正文
     setBlockType(EditorSchema.nodes.paragraph)(
-      editorCompose!.view.value.state,
-      editorCompose!.view.value.dispatch
+      editorInstance!.view.value.state,
+      editorInstance!.view.value.dispatch
     );
     displayLevel.value = 0;
   } else {
-    editorCompose?.toggleHeading(it.attrs!);
+    editorInstance?.toggleHeading(it.attrs!);
     displayLevel.value = it.attrs!.level;
   }
 }

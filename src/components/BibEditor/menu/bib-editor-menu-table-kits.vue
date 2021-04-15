@@ -51,23 +51,37 @@
 </template>
 
 <script setup lang="ts">
-import { inject } from 'vue';
+import { inject, onMounted } from 'vue';
 import { MergeCells, SplitCells } from '@icon-park/vue-next';
+import { EditorSchema } from "../editor-schema";
 import Icon from '@ant-design/icons-vue';
 import IconInsertColBefore from '../icons/editor__insert-col-after.vue';
 import IconInsertColAfter from '../icons/editor__insert-row-after.vue';
 import IconInsertRowBefore from '../icons/editor__insert-row-before.vue';
 import IconInsertRowAfter from '../icons/editor__insert-col-before.vue';
-import type { EditorComposable, TableCommand } from '../typings';
+import * as pmutils from 'prosemirror-utils';
+import type { EditorInstance, TableCommand } from '../typings';
 
 // @States:
-const editorCompose = inject<EditorComposable>('editorCompose');
+const editorInstance = inject<EditorInstance>('editorInstance');
+const switchToTableMode = inject<(val: boolean) => void>('update:bib-editor-table-mode')!;
 
 // @LifeCycels:
+onMounted(() => {
+  editorInstance?.onEditorDispatched((tr) => {
+    const isInTable = !!pmutils.findParentNode((node) => [
+      EditorSchema.nodes.table,
+      EditorSchema.nodes.table_row,
+      EditorSchema.nodes.table_cell,
+      EditorSchema.nodes.table_header
+    ].includes(node.type))(tr.selection);
+    isInTable && switchToTableMode(isInTable);
+  });
+})
 
 // @Methods:
 const execTableCommand = (cmdName: TableCommand) => {
-  editorCompose?.execTableCommand(cmdName);
+  editorInstance?.execTableCommand(cmdName);
 }
 </script>
 

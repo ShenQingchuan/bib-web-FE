@@ -1,16 +1,16 @@
 <template>
   <div class="page-document-view__wrapper flex-col">
-    <doc-view-header :doc-data="docData" />
+    <doc-view-header :view-data="viewData" />
 
     <doc-side-toc :toc="tableOfContentsData" />
 
     <!-- 通过 readonly ProseMirror 加载出文档 -->
     <div class="page-document-view__content m-t-80 m-lr-auto">
-      <a-skeleton class="m-t-40" active v-if="loadingDocData" :paragraph="{ rows: 20 }" />
-      <div v-show="!loadingDocData" ref="docViewRef"></div>
+      <a-skeleton class="m-t-40" active v-if="loadingviewData" :paragraph="{ rows: 20 }" />
+      <div v-show="!loadingviewData" ref="docViewRef"></div>
     </div>
 
-    <div v-if="!loadingDocData" class="page-document-view__meta-section m-t-32 m-b-64">
+    <div v-if="!loadingviewData" class="page-document-view__meta-section m-t-32 m-b-64">
       <!-- 点赞 -->
       <div
         class="page-document-view__thumbs-up-btn flex-row jyct-center anis-center m-lr-auto"
@@ -72,14 +72,14 @@ import type { DocTableOfContentsUnit } from "@/components/BibEditor/typings";
 const route = useRoute();
 const docId = route.params.docId as string;
 const credential = usePayloadFromToken()!;
-const loadingDocData = ref(false);
+const loadingviewData = ref(false);
 const docViewRef = templateRef('docViewRef');
 const userTokenPayload = usePayloadFromToken();
 const commentInputer = templateRef<HTMLInputElement>('commentInputer');
 const tableOfContentsData = ref<DocTableOfContentsUnit[]>([]);
 
 // @States:
-const docData = ref<DocumentViewData>();
+const viewData = ref<DocumentViewData>();
 const comments = ref<DocumentComment<UserSimpleDTO>[]>([]);
 const commentContent = ref('');
 const thumbsUped = ref(false);
@@ -91,32 +91,32 @@ provide('doc-view-heading-refs', readonly(headingRefs));
 
 // @LifeCycles:
 (async () => {
-  loadingDocData.value = true;
+  loadingviewData.value = true;
   const resp = await mocker.get(`/document/${docId}`);
   if (resp.data.responseOk) {
-    docData.value = resp.data.data;
+    viewData.value = resp.data.data;
 
     // 存储一部分组件在本地使用渲染用的、有离线需求的数据
-    comments.value = docData.value!.comments;
-    thumbsUped.value = docData.value!.thumbsUped;
-    thumbsUpedCount.value = docData.value!.thumbUpUsers.length;
+    comments.value = viewData.value!.comments;
+    thumbsUped.value = viewData.value!.thumbsUped;
+    thumbsUpedCount.value = viewData.value!.thumbUpUsers.length;
 
-    tableOfContentsData.value = useTableOfContents(docData.value!.content);
-
-    const x = useEditor({
-      initContent: docData.value!.content,
-      docName: `bib-doc-${docData.value!.id}`,
+    const editorComposition = useEditor({
+      docName: `bib-doc-id${viewData.value!.id}`,
       readonly: true,
       credential
     });
-    x.initEditor(docViewRef.value);
+    const { view } = editorComposition.initEditor(docViewRef.value);
+    tableOfContentsData.value = useTableOfContents(
+      JSON.stringify(view.state.doc.toJSON())
+    )
 
-    loadingDocData.value = false;
+    loadingviewData.value = false;
 
     // 加载完成后 
 
     // 将文章标题替换到 Tab 
-    document.title = `${docData.value!.title} ｜查看文档 · Bib`
+    document.title = `${viewData.value!.title} ｜查看文档 · Bib`
 
     // 读取文章所有 headings
     headingRefs.value = Array.from(

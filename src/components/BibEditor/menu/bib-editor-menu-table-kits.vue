@@ -63,12 +63,12 @@ import * as pmutils from 'prosemirror-utils';
 import type { EditorInstance, TableCommand } from '../typings';
 
 // @States:
-const editorInstance = inject<EditorInstance>('editorInstance');
+const editorInstance = inject<EditorInstance>('editorInstance')!;
 const switchToTableMode = inject<(val: boolean) => void>('update:bib-editor-table-mode')!;
 
 // @LifeCycels:
 onMounted(() => {
-  editorInstance?.onEditorDispatched((tr) => {
+  editorInstance.onEditorDispatched((tr) => {
     const isInTable = !!pmutils.findParentNode((node) => [
       EditorSchema.nodes.table,
       EditorSchema.nodes.table_row,

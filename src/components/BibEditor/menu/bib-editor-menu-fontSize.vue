@@ -37,11 +37,11 @@ const defaultFontSize = 14;
 
 // @States:
 const fontSizeDisplay = ref(defaultFontSize);
-const editorInstance = inject<EditorInstance>("editorInstance");
+const editorInstance = inject<EditorInstance>("editorInstance")!;
 
 // @LifeCycels:
 onMounted(() => {
-  editorInstance?.onEditorDispatched((tr) => {
+  editorInstance.onEditorDispatched((tr) => {
     editorInstance.applyForNodesAtCursor((node) => {
       if (node.isText) {
         if (node.marks.map(m => m.type).includes(fsMarkType)) {

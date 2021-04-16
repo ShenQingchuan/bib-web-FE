@@ -30,7 +30,7 @@ import { findParentNode } from "prosemirror-utils";
 import type { EditorInstance } from "../typings";
 
 // @States:
-const editorInstance = inject<EditorInstance>("editorInstance");
+const editorInstance = inject<EditorInstance>("editorInstance")!;
 const { bullet_list, ordered_list, task_list, list_item, task_item } = EditorSchema.nodes;
 const listMenuEnums = [
   { name: 'ordered_list', icon: OrderedListOutlined, listType: ordered_list, itemType: list_item },
@@ -41,10 +41,10 @@ const activeList = ref("none");
 
 // @LifeCycles:
 onMounted(() => {
-  editorInstance?.onEditorDispatched(() => {
+  editorInstance.onEditorDispatched(() => {
     editorInstance.applyForNodesAtCursor((currentNode) => {
       const hasListTypeParent = findParentNode(node => listTypeNames.includes(node.type.name))(
-        editorInstance.view.value.state.selection
+        editorInstance.view.state.selection
       )
       if (listTypeNames.includes(currentNode.type.name)) {
         activeList.value = currentNode.type.name;

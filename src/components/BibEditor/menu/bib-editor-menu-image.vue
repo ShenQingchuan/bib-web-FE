@@ -53,7 +53,7 @@ import { EditorSchema } from '../editor-schema';
 import type { EditorInstance, InsertImageType } from '../typings';
 
 // @States:
-const editorInstance = inject<EditorInstance>("editorInstance");
+const editorInstance = inject<EditorInstance>("editorInstance")!;
 const inputRef = templateRef<HTMLInputElement>('localImageInputer');
 
 // @LifeCycles:
@@ -87,12 +87,12 @@ const onLocalImageInput = () => {
       const r: { key: string, putObjectResult: any } = res.data.data.uploadResults[0];
       const src = `${cosImageURLPrefix}${r.key}`;
 
-      const { tr } = editorInstance!.view.value.state;
+      const { tr } = editorInstance.view.state;
       tr.replaceSelectionWith(
         EditorSchema.nodes.image.create({ src })
       )
       tr.setMeta('trKey', trKeyInsertImage);
-      editorInstance!.view.value.dispatch(tr);
+      editorInstance.view.dispatch(tr);
     })
   }
 }

@@ -3140,11 +3140,6 @@ vue@^3.0.0, vue@^3.0.5:
     "@vue/runtime-dom" "3.0.5"
     "@vue/shared" "3.0.5"
 
-vuex@^4.0.0-rc.2:
-  version "4.0.0-rc.2"
-  resolved "https://registry.npmjs.org/vuex/-/vuex-4.0.0-rc.2.tgz#3681c84eb6f5171b039edaa17cc78105e20724f3"
-  integrity sha512-HCPzYGea1xL7fMpDoMiHKujC1Bi/HM9LS5ML0Kv55zQtZJvOl0Lq7eWvJoen+SI4Lf7p9V5AqcVsoLPXNBywjg==
-
 w3c-keyname@^2.2.0:
   version "2.2.4"
   resolved "https://registry.npmjs.org/w3c-keyname/-/w3c-keyname-2.2.4.tgz#4ade6916f6290224cdbd1db8ac49eab03d0eef6b"
@@ -3276,9 +3271,9 @@ yargs@^16.0.0:
     y18n "^5.0.5"
     yargs-parser "^20.2.2"
 
-yjs@^13.5.2:
-  version "13.5.2"
-  resolved "https://registry.npmjs.org/yjs/-/yjs-13.5.2.tgz#b518be0df84164591f4cc774aa24468d288e0e75"
-  integrity sha512-X5vscuAhQIYf77xuNeJSlEiQZq0aUVtvs3x2X3//ZGpDqcWiR3D0H1XMDfEnNzdTMzuhfDBMMxSl70klD+0OXw==
+yjs@^13.5.5:
+  version "13.5.5"
+  resolved "https://registry.npmjs.org/yjs/-/yjs-13.5.5.tgz#8a52a7354006e04a54dc62c9ffbbd7c606e20ded"
+  integrity sha512-sbE4G+bSP0jw71aJ9Hqi5UxOTy8JGkObIaCSpY6krRoNqssPCWq05rqV9PQcuMqcrHD3twzko92fVaF1S3id/Q==
   dependencies:
     lib0 "^0.2.38"

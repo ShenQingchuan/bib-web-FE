@@ -59,7 +59,7 @@ const defaultColor = '#000000'
 // @States:
 const pickedColor = ref(defaultColor);
 const pickerVisible = ref(false);
-const editorInstance = inject<EditorInstance>("editorInstance");
+const editorInstance = inject<EditorInstance>("editorInstance")!;
 const updating = ref(false);
 const showColorForSvg = computed(() =>
   pickedColor.value === '#00000000'
@@ -69,7 +69,7 @@ const showColorForSvg = computed(() =>
 
 // @lifeCycles:
 onMounted(() => {
-  editorInstance?.onEditorDispatched((tr) => {
+  editorInstance.onEditorDispatched((tr) => {
     editorInstance.applyForNodesAtCursor((node) => {
       if (!tr.getMeta("pointer") && node.isText) {
         const coloredMarkType = EditorSchema.marks.colored;

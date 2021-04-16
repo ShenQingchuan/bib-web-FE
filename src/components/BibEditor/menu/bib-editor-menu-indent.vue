@@ -19,7 +19,7 @@ import { MenuUnfoldOutlined, MenuFoldOutlined } from '@ant-design/icons-vue';
 import type { EditorInstance } from '../typings';
 
 // @States:
-const editorInstance = inject<EditorInstance>("editorInstance");
+const editorInstance = inject<EditorInstance>("editorInstance")!;
 
 // @LifeCycels:
 

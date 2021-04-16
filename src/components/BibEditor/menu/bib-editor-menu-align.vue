@@ -30,13 +30,13 @@ const alignOptions = [
 ]
 
 // @States: 
-const editorInstance = inject<EditorInstance>("editorInstance");
+const editorInstance = inject<EditorInstance>("editorInstance")!;
 const activeAlign = ref<"none" | "left" | "center" | "right">("none");
 
 // @LifeCycles: 
 onMounted(() => {
-  editorInstance?.onEditorDispatched(() => {
-    const { selection } = editorInstance.view.value.state;
+  editorInstance.onEditorDispatched(() => {
+    const { selection } = editorInstance.view.state;
     const parentHasAlign = findParentNode(node => !!node.attrs.textAlign)(selection);
     if (parentHasAlign) {
       activeAlign.value = parentHasAlign.node.attrs.textAlign;

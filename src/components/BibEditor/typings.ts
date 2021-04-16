@@ -5,12 +5,11 @@ import { Ref } from 'vue';
 import { UserTokenPayload } from '@/utils/user-token-validation';
 
 export interface BibEditorOptions {
-  initContent: string;
   docName: string;
   credential: UserTokenPayload; // Bib 编辑器默认协同，要求必须提供用户凭证
   placeholder?: string;
   readonly?: boolean;
-  onMounted?: (view: EditorView) => void;
+  onViewCreated?: (view: EditorView) => void;
 }
 
 export type EditorToggleMethodReturns = (
@@ -31,7 +30,8 @@ export interface DispatchHook {
   hookMeta?: Record<string, any>;
 }
 export interface EditorInstance {
-  view: Ref<EditorView>;
+  view: EditorView;
+  dispatchHooks: DispatchHook[];
   options: BibEditorOptions;
   toJSON: () => {
     [key: string]: any;
@@ -56,9 +56,9 @@ export interface EditorInstance {
 }
 
 export interface EditorComposition {
-  initEditor: (el: any) => void;
-  editorInstance: EditorInstance;
+  initEditor: (el: any) => EditorInstance;
   onlineOtherUsers: Ref<OnlineUser[]>;
+  cursorColor: Ref<string>;
 }
 
 export type InsertImageType = 'local' | 'online';

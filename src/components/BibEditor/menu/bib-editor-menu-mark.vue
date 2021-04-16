@@ -1,12 +1,8 @@
 <template>
-  <div
-    class="bib-editor-menu-item__wrapper m-lr-4"
-    :class="{
+  <div class="bib-editor-menu-item__wrapper m-lr-4" @click="toggleFn">
+    <a-button class="bib-editor-menu-item__btn" :class="{
       active: isActive
-    }"
-    @click="toggleFn"
-  >
-    <a-button class="bib-editor-menu-item__btn" type="link">
+    }" type="link">
       <template #icon>
         <slot></slot>
       </template>
@@ -25,14 +21,14 @@ const props = defineProps<{
 }>();
 
 const isActive = ref(false);
-const editorInstance = inject<EditorInstance>("editorInstance");
+const editorInstance = inject<EditorInstance>("editorInstance")!;
 const toggleTo = ref<"on" | "off">("on");
 const needUpdate = ref(false);
 const excludes = EditorSchema.marks[props.mark].spec.excludes;
 
 // @LifeCycles:
 onMounted(() => {
-  editorInstance?.onEditorDispatched((tr, meta) => {
+  editorInstance.onEditorDispatched((tr, meta) => {
     if (excludes) {
       const storedMarksNames = tr.storedMarks?.map(m => m.type.name);
       for (let ex of excludes.split(" ")) {
@@ -43,9 +39,9 @@ onMounted(() => {
       }
     }
     if (meta?.needUpdate?.value || tr.selectionSet) {
-      const { $from, $to, empty } = editorInstance.view.value.state.selection;
+      const { $from, $to, empty } = editorInstance.view.state.selection;
       const storedMarks =
-        editorInstance.view.value.state.storedMarks
+        editorInstance.view.state.storedMarks
         || tr.storedMarks
         || [];
       let concated = storedMarks.concat($from.marks());
@@ -72,7 +68,7 @@ const toggleFn = () => {
 </script>
 
 <style lang="less" scoped>
-@import "../../../less/color.less";
+@import "@/less/color.less";
 @import "./menu-btn-common.less";
 .bib-editor-menu-item__btn {
   .menu-btn-common;

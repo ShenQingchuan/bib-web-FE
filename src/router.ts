@@ -94,16 +94,7 @@ let routes: Array<RouteRecordRaw> = [
 
 // 开发环境下开启的一些 path，如 editor-playground
 if (process.env.NODE_ENV === 'development') {
-  routes = routes.concat([
-    createRoute(
-      '/editor-playground',
-      () => import('./pages/editor-playground.vue'),
-      '编辑器预览',
-      {
-        requiredAuth: true
-      }
-    )
-  ]);
+  routes = routes.concat([]);
 }
 
 // 其余无法找到的都重定向到 not-found

@@ -35,7 +35,7 @@ const videoTypes = [
 ]
 
 // @States:
-const editorInstance = inject<EditorInstance>("editorInstance");
+const editorInstance = inject<EditorInstance>("editorInstance")!;
 
 // @LifeCycels:
 

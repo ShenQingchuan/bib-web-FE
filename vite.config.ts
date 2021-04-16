@@ -13,7 +13,6 @@ export default defineConfig({
       '@ant-design/icons-vue',
       'underscore',
       '@vueuse/core',
-      'vuex',
       'vue-router',
       'jsonwebtoken'
     ]

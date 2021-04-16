@@ -65,7 +65,7 @@ onMounted(() => {
       return;
     }
 
-    const { selection } = editorInstance.view.value.state;
+    const { selection } = editorInstance.view.state;
     const heading = findParentNode(node => node.type === EditorSchema.nodes.heading)(selection);
     if (heading) {
       displayLevel.value = heading.node.attrs.level;
@@ -79,8 +79,8 @@ onMounted(() => {
 const toggleHeaderLevel = (it: DisplayLevelEnumItem) => {
   if (!it.fs && !it.attrs) { // 切换为正文
     setBlockType(EditorSchema.nodes.paragraph)(
-      editorInstance!.view.value.state,
-      editorInstance!.view.value.dispatch
+      editorInstance!.view.state,
+      editorInstance!.view.dispatch
     );
     displayLevel.value = 0;
   } else {

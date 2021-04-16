@@ -23,12 +23,12 @@ import { findParentNode } from 'prosemirror-utils';
 
 // @States:
 const isActive = ref(false);
-const editorInstance = inject<EditorInstance>("editorInstance");
+const editorInstance = inject<EditorInstance>("editorInstance")!;
 
 // @Lifecycles:
 onMounted(() => {
-  editorInstance?.onEditorDispatched(() => {
-    const { selection } = editorInstance.view.value.state;
+  editorInstance.onEditorDispatched(() => {
+    const { selection } = editorInstance.view.state;
     isActive.value = !!findParentNode(
       node => node.type === EditorSchema.nodes.blockquote
     )(selection);

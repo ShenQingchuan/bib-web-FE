@@ -38,7 +38,6 @@ export interface DocumentViewData {
   id: number;
   title: string;
   contentAbstract: string;
-  content: string;
   creator: UserSimpleDTO;
   thumbUpUsers: UserSimpleDTO[];
   collaborators: UserSimpleDTO[];

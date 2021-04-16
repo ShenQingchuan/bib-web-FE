@@ -1,42 +1,70 @@
 <template>
-  <bib-editor-menu :editor-compose="editorCompose" fixed />
+  <doc-view-header :view-data="viewData" editing />
 
-  <bib-editor
-    ref="bibEditorRef"
-    class="page-doc-edit__bib-editor"
-    :init-editor-ref="initEditor"
-    :editor-compose="editorCompose"
-  />
+  <bib-editor-menu v-if="editorViewMounted" :editor-instance="editorInstance" fixed top="66px" />
+
+  <div class="page-doc-edit__bib-editor-wrapper">
+    <input
+      class="page-doc-edit__title-inputer p-lr-60 p-t-36 fs-32 fw-700"
+      v-model="docTitle"
+      type="text"
+      placeholder="请输入文章标题..."
+    />
+    <div class="page-doc-edit__bib-editor" :ref="initEditorViewRef"></div>
+  </div>
 </template>
 
 <script setup lang="ts">
-import { useGlobalStore } from '@/store';
-import { templateRef } from "@vueuse/core";
+import { ref, shallowRef } from 'vue';
+import { useRoute } from 'vue-router';
 import { usePayloadFromToken } from "@/utils";
 import { useEditor } from "@/components/BibEditor/composable/useEditor";
-import BibEditor from '@/components/BibEditor/bib-editor.vue';
+import DocViewHeader from '@/components/page-doc-view/doc-view-header.vue';
 import BibEditorMenu from '@/components/BibEditor/menu/bib-editor-menu.vue';
+import type { EditorInstance } from '@/components/BibEditor/typings';
+import type { DocumentViewData } from '@/models';
+import { mocker } from '@/fusions';
+
+const route = useRoute();
+const credential = usePayloadFromToken()!;
 
 // @States:
-const globalStore = useGlobalStore();
-const bibEditorRef = templateRef('bibEditorRef');
-const credential = usePayloadFromToken()!;
-const { editorCompose, initEditor, onlineOtherUsers } = useEditor({
-  initContent: '',
-  docName: globalStore.editDocumentParam?.title || `${new Date().getTime()}`,
+const docTitle = ref('');
+const editorViewMounted = ref(false);
+const viewData = ref<DocumentViewData>();
+
+// 初始化 editor view
+const { initEditor } = useEditor({
+  docName: `bib-doc-id${route.params.docId}`,
   credential,
 });
+let editorInstance = shallowRef({} as EditorInstance);
 
+// @Methods:
+const initEditorViewRef = (el: any) => {
+  editorInstance.value = initEditor(el)
+  editorViewMounted.value = true;
+}
 
+(async () => {
+  const resp = await mocker.get(`/document/${route.params.docId}`);
+  if (resp.data.responseOk) {
+    viewData.value = resp.data.data;
+  }
+})();
 </script>
 
 <style lang="less" scoped>
-.page-doc-edit__bib-editor {
+.page-doc-edit__bib-editor-wrapper {
   width: 874px;
   border: 1px solid #e8e8e8;
   box-shadow: 0 2px 8px #73737314;
 
   // for view-port vertical length extending:
-  margin: 140px auto 60px auto;
+  margin: 180px auto 60px auto;
+}
+.page-doc-edit__title-inputer {
+  outline: none;
+  border: none;
 }
 </style>

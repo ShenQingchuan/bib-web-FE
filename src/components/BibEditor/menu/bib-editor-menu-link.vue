@@ -24,11 +24,11 @@ import type { EditorInstance } from "../typings";
 
 // @States:
 const isActive = ref(false);
-const editorInstance = inject<EditorInstance>("editorInstance");
+const editorInstance = inject<EditorInstance>("editorInstance")!;
 
 // @LifeCycles:
 onMounted(() => {
-  editorInstance?.onEditorDispatched((tr) => {
+  editorInstance.onEditorDispatched((tr) => {
     editorInstance.applyForNodesAtCursor((node) => {
       if (node.type === EditorSchema.nodes.text) {
         let markTypes = node.marks.map(m => m.type)
@@ -45,7 +45,7 @@ onMounted(() => {
 
 // @Methods:
 const toggleLinkMark = () => {
-  const view = editorInstance!.view.value;
+  const view = editorInstance.view;
   const { doc, selection: { from, to }, tr } = view.state;
 
   if (isActive.value) {

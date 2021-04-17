@@ -38,6 +38,7 @@
                 src="/assets/svg/dashboard__doc-edit.svg"
                 alt="doc-edit"
                 class="dashboard-page__doc-list-item-edit-icon m-l-12"
+                @click="$router.push(`/doc/${doc.id}/edit`)"
               />
             </a-tooltip>
 

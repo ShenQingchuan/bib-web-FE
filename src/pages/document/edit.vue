@@ -5,8 +5,9 @@
 
   <div class="page-doc-edit__bib-editor-wrapper">
     <input
+      v-if="viewData"
       class="page-doc-edit__title-inputer p-lr-60 p-t-36 fs-32 fw-700"
-      v-model="docTitle"
+      v-model="viewData.title"
       type="text"
       placeholder="请输入文章标题..."
     />
@@ -18,11 +19,12 @@
 import { ref, shallowRef, nextTick } from 'vue';
 import { useRoute } from 'vue-router';
 import { usePayloadFromToken } from "@/utils";
-import { mocker } from '@/fusions';
+import { fusions } from '@/fusions';
 import { editingDocViewData } from './editing-doc-storage-ref';
 import { useEditor } from "@/components/BibEditor/composable/useEditor";
 import DocViewHeader from '@/components/page-doc-view/doc-view-header.vue';
 import BibEditorMenu from '@/components/BibEditor/menu/bib-editor-menu.vue';
+import * as us from 'underscore';
 import type { EditorInstance } from '@/components/BibEditor/typings';
 import type { DocumentViewData } from '@/models';
 
@@ -30,7 +32,6 @@ const route = useRoute();
 const credential = usePayloadFromToken()!;
 
 // @States:
-const docTitle = ref('');
 const editorViewMounted = ref(false);
 const viewData = ref<DocumentViewData>();
 
@@ -47,14 +48,14 @@ const initEditorViewRef = (el: any) => {
   editorViewMounted.value = true;
 }
 
-if (editingDocViewData.value?.id) {
-  viewData.value = editingDocViewData.value;
+if (!us.isEmpty(editingDocViewData.value)) {
+  viewData.value = editingDocViewData.value!;
   nextTick(() => {
     editingDocViewData.value = null;
   })
 } else {
   (async () => {
-    const resp = await mocker.get(`/document/${route.params.docId}`);
+    const resp = await fusions.get(`/docs/${route.params.docId}`);
     if (resp.data.responseOk) {
       viewData.value = resp.data.data;
     }

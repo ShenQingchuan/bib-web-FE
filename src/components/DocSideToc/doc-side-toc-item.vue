@@ -7,11 +7,11 @@
     :data-toc-index="index"
   >
     <div
-      class="doc-side-toc__item-title p-tb-6 m-b-2 fs-12 p-l-6"
+      class="doc-side-toc__item-title p-tb-6 m-b-2 fs-12 p-lr-6"
       :class="{
         'active': activeIndexKey === index
       }"
-      @click="updateIndexKey(index)"
+      @click.self="updateIndexKey(index)"
     >{{ item.title }}</div>
     <doc-side-toc-item
       v-for="(child, i) in item.children"
@@ -43,7 +43,7 @@ const updateIndexKey = inject<(indexKey: string) => void>('update:doc-side-toc__
 @import "../../less/color.less";
 
 .doc-side-toc__item {
-  cursor: default;
+  cursor: pointer;
 
   &-title.active {
     border-left: 2px solid @primary-color;

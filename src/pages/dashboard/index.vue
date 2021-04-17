@@ -3,7 +3,7 @@
     <!-- 最近文档列表 -->
     <div class="dashboard-page__doc-list flex-col flex-1">
       <div class="flex-row anis-center m-b-16">
-        <h2 class="inline m-b-0">最近文档列表</h2>
+        <h2 class="inline m-b-0">文档列表</h2>
         <a-dropdown class="m-l-auto">
           <span class="doc-list-filter__text">
             {{ filterName }}

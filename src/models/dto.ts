@@ -43,7 +43,7 @@ export interface DocumentViewData {
   collaborators: UserSimpleDTO[];
   comments: DocumentComment<UserSimpleDTO>[];
   thumbsUped: boolean;
-  publicView: boolean;
+  publicSharing: boolean;
   inWiki: {
     id: number;
     name: string;

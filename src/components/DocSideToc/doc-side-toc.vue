@@ -1,5 +1,5 @@
 <template>
-  <div :ref="onTocWrapperMounted" class="doc-side-toc__wrapper to-ellipsis p-l-8">
+  <div class="doc-side-toc__wrapper to-ellipsis p-l-8">
     <doc-side-toc-item v-for="(unit, i) in toc" :key="i" :item="unit" :index="`${i}`" />
   </div>
 </template>
@@ -17,7 +17,7 @@ const props = defineProps<{
 // @States:
 const activeItemIndex = ref(props.toc.length > 0 ? '0' : ''); // 默认首个
 const headingRefs = inject<Ref<HTMLHeadingElement[]>>('doc-view-heading-refs')!;
-let tocItemRefs: HTMLElement[] = [];
+const tocItemRefs = inject<Ref<HTMLHeadingElement[]>>('doc-view-toc-items-refs')!;
 
 provide('doc-side-toc__active-index', activeItemIndex);
 provide('update:doc-side-toc__active-index', (indexKey: string) => {
@@ -35,15 +35,10 @@ const onDocumentScroll = () => {
     // 则说明 n-1 的内容已经完全不可见
     // 那么此时导航索引就应该是 n 了
     if (scrollTop >= headingRefs.value[n].offsetTop) {
-      activeItemIndex.value = tocItemRefs[n].dataset.tocIndex!;
+      activeItemIndex.value = tocItemRefs.value[n].dataset.tocIndex!;
     }
   }
 };
-const onTocWrapperMounted = () => {
-  tocItemRefs = Array.from(
-    document.querySelectorAll('.doc-side-toc__item')
-  );
-}
 
 // @LifeCycles:
 onMounted(() => {
@@ -57,11 +52,11 @@ onUnmounted(() => {
 <style lang="less" scoped>
 @import "../../less/color.less";
 .doc-side-toc__wrapper {
+  width: 180px;
   position: fixed;
   z-index: 9;
+  border-left: 2px solid @N300;
   top: 120px;
   left: 40px;
-  border-left: 2px solid @N300;
-  max-width: 180px;
 }
 </style>

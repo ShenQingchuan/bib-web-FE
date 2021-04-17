@@ -32,7 +32,7 @@
 
         <!-- 显示文档标题 -->
         <a-breadcrumb-item>
-          <span class="fs-15 fw-500 text-noselect">{{ viewData.title }}</span>
+          <span class="fs-15 fw-500 text-noselect">{{ viewData.title || '未输入文章标题...' }}</span>
         </a-breadcrumb-item>
       </a-breadcrumb>
     </div>
@@ -44,16 +44,17 @@
       <a-button class="m-lr-10" v-show="!editing">分享阅读</a-button>
 
       <a-button class="m-lr-10" v-if="!editing" type="primary" @click="onDocumentEdit">编辑</a-button>
-      <a-button class="m-lr-10" v-else @click="quitDocumentEdit">退出编辑</a-button>
+      <a-button class="m-lr-10" v-else @click="quitDocumentEdit">保存并退出编辑</a-button>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
 import { defineProps } from 'vue';
-import { Lock, PeoplePlus } from '@icon-park/vue-next';
 import { useRoute, useRouter } from 'vue-router';
-import { editingDocViewData } from '@/pages/document/editing-doc-storage-ref';
+import { Lock, PeoplePlus } from '@icon-park/vue-next';
+import { fusions } from '@/fusions';
+import { editingDocViewData, savedDocViewData } from '@/pages/document/editing-doc-storage-ref';
 import type { DocumentViewData } from '@/models';
 
 const props = defineProps<{
@@ -63,17 +64,30 @@ const props = defineProps<{
 
 // @States:
 const router = useRouter(), route = useRoute();
+const docId = route.params.docId as string;
 
 // @LifeCycles:
 
 // @Methods:
 const onDocumentEdit = () => {
-  editingDocViewData.value = props.viewData ?? null;
+  editingDocViewData.value =
+    props.viewData
+    ?? savedDocViewData.value[docId]
+    ?? null;
   router.push(`${route.path}/edit`);
 }
 const quitDocumentEdit = () => {
-  editingDocViewData.value = null;
-  router.push(route.path.slice(0, -5));
+  const { title, contentAbstract, publicSharing } = props.viewData!;
+  const savingForm = { docId, title, contentAbstract, publicSharing };
+  fusions.put('/docs/meta', savingForm).then(resp => {
+    if (resp.data.responseOk) {
+      savedDocViewData.value[docId] = resp.data.data as DocumentViewData;
+      editingDocViewData.value = null;
+
+      router.push(route.path.slice(0, -5));
+    }
+  });
+
 }
 </script>
 

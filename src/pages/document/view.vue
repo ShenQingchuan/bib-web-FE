@@ -6,11 +6,11 @@
 
     <!-- 通过 readonly ProseMirror 加载出文档 -->
     <div class="page-document-view__content m-t-80 m-lr-auto">
-      <a-skeleton class="m-t-40" active v-if="loadingviewData" :paragraph="{ rows: 20 }" />
-      <div v-show="!loadingviewData" ref="docViewRef"></div>
+      <a-skeleton class="m-t-40" active v-if="loadingViewData" :paragraph="{ rows: 20 }" />
+      <div v-show="!loadingViewData" ref="docViewRef"></div>
     </div>
 
-    <div v-if="!loadingviewData" class="page-document-view__meta-section m-t-32 m-b-64">
+    <div v-if="!loadingViewData" class="page-document-view__meta-section m-t-32 m-b-64">
       <!-- 点赞 -->
       <div
         class="page-document-view__thumbs-up-btn flex-row jyct-center anis-center m-lr-auto"
@@ -53,14 +53,15 @@
 </template>
 
 <script setup lang="ts">
-import { provide, readonly, ref } from "vue";
+import { nextTick, provide, readonly, ref } from "vue";
 import { templateRef } from "@vueuse/core";
 import { useRoute } from 'vue-router';
 import { ThumbsUp } from '@icon-park/vue-next';
-import { fetchDocFromPersistence, mocker } from '@/fusions';
+import { fetchDocFromPersistence, fusions, mocker } from '@/fusions';
 import { useEditor } from "@/components/BibEditor/composable/useEditor";
 import { useTableOfContents } from '@/components/BibEditor/composable/useTableOfContents';
 import { usePayloadFromToken, userDetailsStorageRef } from "@/utils";
+import { savedDocViewData } from "./editing-doc-storage-ref";
 import DocViewHeader from '@/components/page-doc-view/doc-view-header.vue';
 import DocComment from '@/components/page-doc-view/doc-comment.vue';
 import DocSideToc from '@/components/DocSideToc/doc-side-toc.vue';
@@ -72,7 +73,7 @@ import type { DocTableOfContentsUnit } from "@/components/BibEditor/typings";
 const route = useRoute();
 const docId = route.params.docId as string;
 const credential = usePayloadFromToken()!;
-const loadingviewData = ref(false);
+const loadingViewData = ref(false);
 const docViewRef = templateRef('docViewRef');
 const userTokenPayload = usePayloadFromToken();
 const commentInputer = templateRef<HTMLInputElement>('commentInputer');
@@ -86,15 +87,29 @@ const commentContent = ref('');
 const thumbsUped = ref(false);
 const thumbsUpedCount = ref(0);
 const replyTo = ref<DocumentComment<UserSimpleDTO> | null>(null);
+
+// # doc-side-toc
 const headingRefs = ref<HTMLHeadingElement[]>([]);
+const tocItemRefs = ref<HTMLElement[]>([]);
 
 provide('doc-view-heading-refs', readonly(headingRefs));
+provide('doc-view-toc-items-refs', tocItemRefs);
 
 // @LifeCycles:
-loadingviewData.value = true;
+loadingViewData.value = true;
+const fetchViewData = (): any =>
+  us.isEmpty(savedDocViewData.value[docId])
+    ? fusions.get(`/docs/${docId}`)
+    : Promise.resolve({ // mock a structure as AxiosResponse
+      data: {
+        responseOk: true,
+        data: savedDocViewData.value[docId]
+      }
+    });
+
 Promise.all([
   fetchDocFromPersistence(docName),
-  mocker.get(`/document/${docId}`)
+  fetchViewData()
 ]).then(resolves => {
   const [ydocToPmDocJsonStringResp, viewDataResp] = resolves;
   if (ydocToPmDocJsonStringResp.data.responseOk && viewDataResp.data.responseOk) {
@@ -117,19 +132,34 @@ Promise.all([
       JSON.stringify(view.state.doc.toJSON())
     )
 
-    loadingviewData.value = false;
-
-    // 加载完成后 
-
     // 将文章标题替换到 Tab 
     document.title = `${viewData.value!.title} ｜查看文档 · Bib`
 
-    // 读取文章所有 headings
-    headingRefs.value = Array.from(
-      docViewRef.value!.querySelectorAll(
-        'h1,h2,h3,h4,h5'
-      ) as NodeListOf<HTMLHeadingElement>
-    );
+    loadingViewData.value = false;
+
+    // -------- 加载完成后:
+    // nextTick 读取文章所有 headings
+    // why?: 因为此时上一个更新队列中的 reactiveEffect 都已执行完，可以读取稳定的文章视图
+    nextTick(() => {
+      headingRefs.value = Array.from(
+        docViewRef.value!.querySelectorAll(
+          '.ProseMirror h1,h2,h3,h4,h5'
+        ) as NodeListOf<HTMLHeadingElement>
+      );
+      tocItemRefs.value = Array.from(
+        document.querySelectorAll('.doc-side-toc__item')
+      );
+      tocItemRefs.value.forEach((tocItem, i) => {
+        tocItem.onclick = (e) => {
+          const target = headingRefs.value[i];
+          window.scrollTo({
+            top: target.offsetTop - target.clientHeight,
+            behavior: 'smooth'
+          })
+          e.stopPropagation();
+        }
+      })
+    })
   }
 });
 

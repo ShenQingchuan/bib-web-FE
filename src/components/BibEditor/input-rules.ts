@@ -47,7 +47,7 @@ function nodeInputRule(
 // Given a blockquote node type, returns an input rule that turns `"> "`
 // at the start of a textblock into a blockquote.
 export function blockQuoteRule(nodeType: NodeType) {
-  return wrappingInputRule(/^\s*>\s$/, nodeType);
+  return wrappingInputRule(/^\s*[>》]\s$/, nodeType);
 }
 
 // : (NodeType) → InputRule
@@ -55,7 +55,7 @@ export function blockQuoteRule(nodeType: NodeType) {
 // followed by a dot at the start of a textblock into an ordered list.
 export function orderedListRule(nodeType: NodeType) {
   return wrappingInputRule(
-    /^(\d+)\.\s$/,
+    /^(\d+)[\.。]\s$/,
     nodeType,
     (match) => ({ order: +match[1] }),
     (match, node) => node.childCount + node.attrs.order == +match[1]
@@ -71,7 +71,7 @@ export function bulletListRule(nodeType: NodeType) {
 }
 
 export function taskListRule(nodeType: NodeType) {
-  return wrappingInputRule(/^\s*(\[\])\s$/, nodeType);
+  return wrappingInputRule(/^\s*((\[\])|(【】))\s$/, nodeType);
 }
 
 // : (NodeType) → InputRule

@@ -44,7 +44,7 @@ export default defineConfig({
       '/yjs-api': {
         target: 'http://localhost:2048',
         ws: true,
-        changeOrigin: true,
+        // changeOrigin: true,
         rewrite: (path) => path.replace(/^\/yjs-api/, '')
       }
     }

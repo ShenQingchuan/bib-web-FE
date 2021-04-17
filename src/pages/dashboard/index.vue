@@ -64,6 +64,7 @@
             'm-lr-36': item.id === 1,
             'm-r-4': item.id === 2
           }"
+          @click="item.onclick"
         >
           <img :src="item.icon" width="24" height="24" />
           <span class="m-t-10 to-ellipsis text-noselect">{{ item.text }}</span>
@@ -74,41 +75,19 @@
 </template>
 
 <script lang="ts">
-import { mocker } from "../../fusions";
+import { fusions, mocker } from "../../fusions";
 import { defineComponent, ref, onMounted, computed } from "vue";
+import { useRouter } from "vue-router";
+import { usePayloadFromToken } from "@/utils";
+import { DownOutlined } from "@ant-design/icons-vue"
+import { DocListItemArchiveType } from './common';
 import DocBelongBreadcrumb from "./doc-belong-breadcrumb.vue";
 import * as dayjs from "dayjs";
 import 'dayjs/locale/zh-cn' // 导入本地化语言
-import { DownOutlined } from "@ant-design/icons-vue"
-import { DocListItemArchiveType } from './common';
 import type { DocListItem, DocFilter } from "./common";
+import type { DocumentViewData } from "@/models";
 
 dayjs.locale('zh-cn');
-
-const filters: DocFilter[] = [
-  { archiveType: -1, text: '所有' },
-  { archiveType: DocListItemArchiveType.UserOnly, text: '个人空间' },
-  { archiveType: DocListItemArchiveType.UserWiki, text: '个人知识库' },
-  { archiveType: DocListItemArchiveType.OrgOnly, text: '团队空间' },
-  { archiveType: DocListItemArchiveType.OrgWiki, text: '团队知识库' }
-];
-const NewActionList = [
-  {
-    id: 0,
-    text: "新建文档",
-    icon: "/assets/img/Icon-png-new-doc.png"
-  },
-  {
-    id: 1,
-    text: "新建知识库",
-    icon: "/assets/svg/user-action__new__book.svg"
-  },
-  {
-    id: 2,
-    text: "新建团队",
-    icon: "/assets/svg/user-action__new__org.svg"
-  }
-];
 
 export default defineComponent({
   name: "dashboard-index-subpage",
@@ -121,6 +100,44 @@ export default defineComponent({
     const listLoading = ref(false);
     const filterType = ref(-1);
     const filterName = ref('归属');
+
+    const router = useRouter();
+    const tokenPayload = usePayloadFromToken()!;
+
+    const filters: DocFilter[] = [
+      { archiveType: -1, text: '所有' },
+      { archiveType: DocListItemArchiveType.UserOnly, text: '个人空间' },
+      { archiveType: DocListItemArchiveType.UserWiki, text: '个人知识库' },
+      { archiveType: DocListItemArchiveType.OrgOnly, text: '团队空间' },
+      { archiveType: DocListItemArchiveType.OrgWiki, text: '团队知识库' }
+    ];
+    const NewActionList = [
+      {
+        id: 0,
+        text: "新建文档",
+        icon: "/assets/img/Icon-png-new-doc.png",
+        onclick: () => {
+          fusions.post('/docs/new', {
+            userId: tokenPayload.userId
+          }).then(resp => {
+            if (resp.data.responseOk) {
+              const newDocViewData = resp.data.data as DocumentViewData
+              router.push(`/doc/${newDocViewData.id}/edit`);
+            }
+          })
+        }
+      },
+      {
+        id: 1,
+        text: "新建知识库",
+        icon: "/assets/svg/user-action__new__book.svg",
+      },
+      {
+        id: 2,
+        text: "新建团队",
+        icon: "/assets/svg/user-action__new__org.svg",
+      }
+    ];
 
     onMounted(() => {
       listLoading.value = true;

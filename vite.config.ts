@@ -38,9 +38,14 @@ export default defineConfig({
     proxy: {
       '/api': {
         target: 'http://localhost:9797/',
-        ws: true,
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/api/, '')
+      },
+      '/yjs-api': {
+        target: 'http://localhost:2048',
+        ws: true,
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/yjs-api/, '')
       }
     }
   }

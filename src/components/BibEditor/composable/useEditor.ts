@@ -117,6 +117,7 @@ export function useEditor(options: BibEditorOptions) {
 
   /** 初始化 EditorView 方法（可通过 ref hook） */
   const initEditor = (el: any) => {
+    let initState: EditorState;
     let plugins = [
       history(),
       buildInputRules(EditorSchema),
@@ -141,6 +142,8 @@ export function useEditor(options: BibEditorOptions) {
       handleLinkClick,
       mathPlugin,
     ];
+
+    // 编辑模式 启用协同相关插件
     if (!options.readonly) {
       let ydoc = new Y.Doc();
       // Y.js 协同配置：
@@ -198,12 +201,21 @@ export function useEditor(options: BibEditorOptions) {
         name: credential?.userName,
         uid: credential?.userId
       });
-    }
-    const view = new EditorView(el as HTMLDivElement, {
-      state: EditorState.create({
+
+      initState = EditorState.create({
         schema: EditorSchema,
         plugins
-      }),
+      });
+    } else {
+      initState = EditorState.create({
+        doc: Node.fromJSON(EditorSchema, JSON.parse(options.contentForViewRender!)),
+        schema: EditorSchema,
+        plugins
+      });
+    }
+
+    const view = new EditorView(el as HTMLDivElement, {
+      state: initState,
       dispatchTransaction(tr) {
         try {
           const newState = view.state.apply(tr);

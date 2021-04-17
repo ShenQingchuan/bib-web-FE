@@ -57,7 +57,7 @@ import { provide, readonly, ref } from "vue";
 import { templateRef } from "@vueuse/core";
 import { useRoute } from 'vue-router';
 import { ThumbsUp } from '@icon-park/vue-next';
-import { mocker } from '@/fusions';
+import { fetchDocFromPersistence, mocker } from '@/fusions';
 import { useEditor } from "@/components/BibEditor/composable/useEditor";
 import { useTableOfContents } from '@/components/BibEditor/composable/useTableOfContents';
 import { usePayloadFromToken, userDetailsStorageRef } from "@/utils";
@@ -77,6 +77,7 @@ const docViewRef = templateRef('docViewRef');
 const userTokenPayload = usePayloadFromToken();
 const commentInputer = templateRef<HTMLInputElement>('commentInputer');
 const tableOfContentsData = ref<DocTableOfContentsUnit[]>([]);
+const docName = `bib-doc-id${docId}`;
 
 // @States:
 const viewData = ref<DocumentViewData>();
@@ -90,11 +91,15 @@ const headingRefs = ref<HTMLHeadingElement[]>([]);
 provide('doc-view-heading-refs', readonly(headingRefs));
 
 // @LifeCycles:
-(async () => {
-  loadingviewData.value = true;
-  const resp = await mocker.get(`/document/${docId}`);
-  if (resp.data.responseOk) {
-    viewData.value = resp.data.data;
+loadingviewData.value = true;
+Promise.all([
+  fetchDocFromPersistence(docName),
+  mocker.get(`/document/${docId}`)
+]).then(resolves => {
+  const [ydocToPmDocJsonStringResp, viewDataResp] = resolves;
+  if (ydocToPmDocJsonStringResp.data.responseOk && viewDataResp.data.responseOk) {
+    viewData.value = viewDataResp.data.data;
+    const ydocToPmDocJsonString = ydocToPmDocJsonStringResp.data.data;
 
     // 存储一部分组件在本地使用渲染用的、有离线需求的数据
     comments.value = viewData.value!.comments;
@@ -102,11 +107,12 @@ provide('doc-view-heading-refs', readonly(headingRefs));
     thumbsUpedCount.value = viewData.value!.thumbUpUsers.length;
 
     const editorComposition = useEditor({
+      contentForViewRender: ydocToPmDocJsonString,
       docName: `bib-doc-id${viewData.value!.id}`,
       readonly: true,
       credential
     });
-    const { view } = editorComposition.initEditor(docViewRef.value);
+    const { view } = editorComposition.initEditor(docViewRef.value); // fetch response must after vue component mounted
     tableOfContentsData.value = useTableOfContents(
       JSON.stringify(view.state.doc.toJSON())
     )
@@ -125,7 +131,7 @@ provide('doc-view-heading-refs', readonly(headingRefs));
       ) as NodeListOf<HTMLHeadingElement>
     );
   }
-})();
+});
 
 // @Methods:
 const onReplyTo = (replyToPayload: DocumentComment<UserSimpleDTO>) => {

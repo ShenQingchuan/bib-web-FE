@@ -31,7 +31,7 @@ export const requestInterceptorCallback = (config: AxiosRequestConfig) => {
   return config;
 };
 export const requestInterceptorErrCallback = (error: any) => {
-  message.error(`错误：${error}`);
+  message.error(`请求错误：${error}`);
   Promise.reject(error);
 };
 

@@ -7,9 +7,10 @@ export type BibTokenPayload = {
   sub: string; // 用户名
   uid: number; // 用户 id
   avatarURL: string; // 用户头像地址
+  role: string; // 权限级别
 };
 
-export default function decode(token: string): BibTokenPayload {
+export default function decode(token: string) {
   const [, data] = token.split('.');
 
   const json = decodeURIComponent(
@@ -20,5 +21,5 @@ export default function decode(token: string): BibTokenPayload {
       .join('')
   );
 
-  return JSON.parse(json);
+  return JSON.parse(json) as BibTokenPayload;
 }

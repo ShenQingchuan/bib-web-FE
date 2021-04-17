@@ -1,7 +1,7 @@
 <template>
   <doc-view-header :view-data="viewData" editing />
 
-  <bib-editor-menu v-if="editorViewMounted" :editor-instance="editorInstance" fixed top="66px" />
+  <bib-editor-menu v-if="editorViewMounted" :editor-instance="editorInstance" fixed top="65px" />
 
   <div class="page-doc-edit__bib-editor-wrapper">
     <input
@@ -15,15 +15,16 @@
 </template>
 
 <script setup lang="ts">
-import { ref, shallowRef } from 'vue';
+import { ref, shallowRef, nextTick } from 'vue';
 import { useRoute } from 'vue-router';
 import { usePayloadFromToken } from "@/utils";
+import { mocker } from '@/fusions';
+import { editingDocViewData } from './editing-doc-storage-ref';
 import { useEditor } from "@/components/BibEditor/composable/useEditor";
 import DocViewHeader from '@/components/page-doc-view/doc-view-header.vue';
 import BibEditorMenu from '@/components/BibEditor/menu/bib-editor-menu.vue';
 import type { EditorInstance } from '@/components/BibEditor/typings';
 import type { DocumentViewData } from '@/models';
-import { mocker } from '@/fusions';
 
 const route = useRoute();
 const credential = usePayloadFromToken()!;
@@ -46,12 +47,19 @@ const initEditorViewRef = (el: any) => {
   editorViewMounted.value = true;
 }
 
-(async () => {
-  const resp = await mocker.get(`/document/${route.params.docId}`);
-  if (resp.data.responseOk) {
-    viewData.value = resp.data.data;
-  }
-})();
+if (editingDocViewData.value?.id) {
+  viewData.value = editingDocViewData.value;
+  nextTick(() => {
+    editingDocViewData.value = null;
+  })
+} else {
+  (async () => {
+    const resp = await mocker.get(`/document/${route.params.docId}`);
+    if (resp.data.responseOk) {
+      viewData.value = resp.data.data;
+    }
+  })();
+}
 </script>
 
 <style lang="less" scoped>

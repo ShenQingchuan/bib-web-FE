@@ -52,7 +52,6 @@ export interface Document {
   creator: UserAccount;
   thumbUpUsers: UserAccount[];
   collaborators: UserAccount[];
-  starUsers: UserAccount[];
   inWiki: Wiki | null;
   comments: DocumentComment[];
   createTime: Date | number;

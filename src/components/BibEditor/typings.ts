@@ -9,6 +9,7 @@ export interface BibEditorOptions {
   credential: UserTokenPayload; // Bib 编辑器默认协同，要求必须提供用户凭证
   placeholder?: string;
   readonly?: boolean;
+  contentForViewRender?: string;
   onViewCreated?: (view: EditorView) => void;
 }
 

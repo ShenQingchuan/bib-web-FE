@@ -25,7 +25,7 @@
               theme="filled"
               size="14"
               class="page-document-view__header-breadcrumb-lock iconpark m-l-10"
-              v-show="viewData.inWiki.private"
+              v-show="viewData.inWiki.isPrivate"
             />
           </a-tooltip>
         </a-breadcrumb-item>
@@ -44,7 +44,7 @@
       <a-button class="m-lr-10" v-show="!editing">分享阅读</a-button>
 
       <a-button class="m-lr-10" v-if="!editing" type="primary" @click="onDocumentEdit">编辑</a-button>
-      <a-button class="m-lr-10" v-else>保存提交</a-button>
+      <a-button class="m-lr-10" v-else @click="quitDocumentEdit">退出编辑</a-button>
     </div>
   </div>
 </template>
@@ -68,8 +68,12 @@ const router = useRouter(), route = useRoute();
 
 // @Methods:
 const onDocumentEdit = () => {
-  editingDocViewData.value = props.viewData;
+  editingDocViewData.value = props.viewData ?? null;
   router.push(`${route.path}/edit`);
+}
+const quitDocumentEdit = () => {
+  editingDocViewData.value = null;
+  router.push(route.path.slice(0, -5));
 }
 </script>
 

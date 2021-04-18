@@ -1,37 +1,28 @@
 import { DocumentComment, UserAccount } from './entity';
 
-export interface LikedDoc {
+export interface DocSimpleDto {
   id: number;
   title: string;
-  creator: UserAccount;
+  contentAbstract: string;
+  creator: UserSimpleDTO;
+  publishedOnWiki: boolean;
+  wikiName: string | null;
 }
-
-export interface FocusedWiki {
+export interface WikiSimpleDto {
   id: number;
   name: string;
   description: string;
   focusCount: number;
 }
-
-export interface FocusedUser extends UserAccount {
-  followerCount: number;
-}
-
-export interface PublishedDoc {
-  id: number;
-  title: string;
-  contentAbstract: string;
-  publishedOnWiki: boolean;
-  wikiId?: number;
-}
-
 export interface UserSimpleDTO {
   uid: number;
   userName: string;
   userDetails: {
     id?: number;
     avatarURL: string;
+    introduce: string;
   };
+  followersCount: number;
 }
 
 export interface DocumentViewData {
@@ -49,4 +40,18 @@ export interface DocumentViewData {
     name: string;
     isPrivate: boolean;
   };
+}
+
+export type UserActivityType =
+  | 'THUMBS_UP_DOC'
+  | 'FOCUS_USER'
+  | 'FOCUS_WIKI'
+  | 'CREATE_DOC';
+
+export type UserActivityData = DocSimpleDto | WikiSimpleDto | UserSimpleDTO;
+
+export interface UserActivity {
+  createTime: number;
+  activityType: UserActivityType;
+  activityData: UserActivityData;
 }

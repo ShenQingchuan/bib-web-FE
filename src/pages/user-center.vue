@@ -20,13 +20,18 @@
             <div class="label-text">关注</div>
           </div>
         </div>
+
+        <!-- 不是自己的就显示关注按钮 -->
         <a-button
+          v-if="isMe"
           class="m-b-20"
           block
           @click="$router.push({
             path: '/user-settings#profile',
           })"
         >编辑资料</a-button>
+        <a-button v-else class="m-b-20" block>关注</a-button>
+
         <div class="w-p100 m-tb-6 text-left">
           <div class="flex-row anis-center m-tb-16">
             <EnvironmentOutlined />
@@ -89,14 +94,17 @@
           <a-spin tip="加载用户动态中..."></a-spin>
         </div>
         <a-timeline v-else>
-          <user-activity-card v-for="act in activities" :key="act.activityTime" :activity="act" />
-          <a-timeline-item>
+          <user-activity-card v-for="act in activities" :key="act.createTime" :activity="act" />
+          <a-timeline-item v-show="page === pageTotal">
             <template #dot>
               <local-two theme="outline" size="16" />
             </template>
             <span class="user-center__activity-nomoredot-text m-t-6">找不到更早的动态了，就让以前随风而逝吧…</span>
           </a-timeline-item>
         </a-timeline>
+        <div class="flex-row jyct-center anis-center" v-show="page < pageTotal">
+          <a-button @click="fetchUserActivity">加载更多</a-button>
+        </div>
       </a-card>
     </a-col>
   </a-row>
@@ -108,10 +116,11 @@ import { useRoute } from 'vue-router';
 import { EnvironmentOutlined, ProfileOutlined } from "@ant-design/icons-vue";
 import { LocalTwo } from '@icon-park/vue-next';
 import { fusions, mocker } from "@/fusions";
-import { userDetailsStorageRef } from '@/utils'
+import { usePayloadFromToken, userDetailsStorageRef } from '@/utils'
 import CommonHeader from "@/components/page-header/common-header.vue";
 import UserActivityCard from '@/components/page-user-center/user-activity-card.vue';
 import type { Organization, UserActivity } from '@/models'
+import { message } from "ant-design-vue";
 
 const userDetails = reactive({
   avatarURL: "",
@@ -121,10 +130,14 @@ const userDetails = reactive({
   fansCount: 0,
   subscribeCount: 0,
 });
+const route = useRoute();
+const userName = route.params['userName'] as string;
+const isMe = usePayloadFromToken()?.userName === userName || false;
 const joinedOrgs = ref<Organization[]>([]);
 const activities = ref<UserActivity[]>([]);
-const route = useRoute();
-let userName = route.params['userName'] as string;
+const loadingUserActivities = ref(false);
+const page = ref(0);
+const pageTotal = ref(0);
 
 // 获取 用户详细信息
 (async () => {
@@ -148,15 +161,25 @@ let userName = route.params['userName'] as string;
 })();
 
 // 获取 用户的动态
-const loadingUserActivities = ref(false);
-(async () => {
-  loadingUserActivities.value = true;
-  const UserActivitiesRes = await mocker.get(`/user/activities?userName=${userName}`);
-  if (UserActivitiesRes.data.responseOk) {
-    activities.value = UserActivitiesRes.data.data;
-    loadingUserActivities.value = false;
+const fetchUserActivity = async () => {
+  if (page.value > 0) {
+    message.loading({ key: 'fetch-user-activity', content: '获取更多用户动态中...' });
+  } else {
+    loadingUserActivities.value = true;
   }
-})();
+  const UserActivitiesRes = await mocker.get(`/activities/?userName=${userName}&pageNum=${page.value + 1}`);
+  if (UserActivitiesRes.data.responseOk) {
+    activities.value.push(...UserActivitiesRes.data.data.activities);
+
+    if (page.value === 0) {
+      pageTotal.value = UserActivitiesRes.data.data.pageTotal;
+      loadingUserActivities.value = false;
+    }
+    message.destroy();
+    page.value += 1;
+  }
+}
+fetchUserActivity();
 </script>
 
 <style lang="less">

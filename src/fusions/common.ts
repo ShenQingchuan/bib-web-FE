@@ -30,13 +30,13 @@ export const requestInterceptorCallback = (config: AxiosRequestConfig) => {
   return config;
 };
 export const requestInterceptorErrCallback = (error: any) => {
-  message.error(`请求错误：${error}`);
+  message.error(`请求错误！${error || ''}`);
   Promise.reject(error);
 };
 
 export const responseInterceptorCallback = (response: AxiosResponse<any>) => {
   if (!response.data.responseOk && !response.data.silence) {
-    message.error(`请求失败 - ${response.data.message}`);
+    message.error(`请求失败！ ${response.data.message || ''}`);
   }
   return Promise.resolve(response);
 };

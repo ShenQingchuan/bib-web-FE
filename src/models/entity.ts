@@ -1,5 +1,3 @@
-import { UserSimpleDTO } from './dto';
-
 export interface UserAccount {
   uid: number;
   userName: string;

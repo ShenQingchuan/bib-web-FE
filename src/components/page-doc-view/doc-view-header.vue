@@ -90,7 +90,7 @@ const quitDocumentEdit = () => {
   position: fixed;
   top: 0;
   width: 100vw;
-  z-index: 2;
+  z-index: 9;
   border-bottom: 1px solid @N200;
 }
 .page-document-view__header-breadcrumb {

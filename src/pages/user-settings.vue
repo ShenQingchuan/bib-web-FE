@@ -91,7 +91,7 @@ import { ref, reactive } from 'vue';
 import { multiplePartFormContentType, userDetailsStorageRef } from "../utils";
 import { UploadOne } from '@icon-park/vue-next';
 import { templateRef } from '@vueuse/core';
-import CommonHeader from '@/components/page-header/common-header.vue';
+import CommonHeader from '@/components/view-header/common-header.vue';
 import { message } from 'ant-design-vue';
 import { fusions } from '@/fusions';
 import { cosImageUploadLoadingKey, usePayloadFromToken, cosImageURLPrefix } from '@/utils'

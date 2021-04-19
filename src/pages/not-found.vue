@@ -9,7 +9,7 @@
 </template>
 
 <script lang="ts">
-import CommonHeader from "@/components/page-header/common-header.vue";
+import CommonHeader from "@/components/view-header/common-header.vue";
 
 export default {
   name: "not-found-page",

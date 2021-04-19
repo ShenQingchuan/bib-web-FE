@@ -46,7 +46,8 @@ export enum UserActivityType {
   THUMBS_UP_DOC = 'THUMBS_UP_DOC',
   FOCUS_USER = 'FOCUS_USER',
   FOCUS_WIKI = 'FOCUS_WIKI',
-  CREATE_DOC = 'CREATE_DOC'
+  CREATE_DOC = 'CREATE_DOC',
+  CREATE_WIKI = 'CREATE_WIKI'
 }
 
 export type UserActivityData = DocSimpleDto | WikiSimpleDto | UserSimpleDTO;

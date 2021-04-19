@@ -1,5 +1,5 @@
 <template>
-  <center-card-layout>
+  <center-small-card-layout>
     <template #center>
       <div class="center-container w-p100">
         <h2 class="text-center fw-400" v-if="step < 2">找回密码</h2>
@@ -79,7 +79,7 @@
         >{{ step < 2 ? "下一步" : "立即登录" }}</a-button>
       </div>
     </template>
-  </center-card-layout>
+  </center-small-card-layout>
 </template>
 
 <script setup lang="ts">
@@ -93,7 +93,7 @@ import {
   CheckCircleFilled,
 } from "@ant-design/icons-vue";
 import TouchVerifyCode from "@/components/TouchVerifyCode/index.vue";
-import CenterCardLayout from "@/components/layouts/center-card-layout.vue";
+import CenterSmallCardLayout from "@/components/layouts/center-small-card-layout.vue";
 import {
   EMAIL_REGEXP,
   PASSWORD_REGEXP,

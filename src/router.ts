@@ -89,12 +89,17 @@ let routes: Array<RouteRecordRaw> = [
     {
       requiredAuth: true
     }
-  )
+  ),
+  createRoute('/wiki/new', () => import('./pages/wiki/new.vue'), '新建知识库', {
+    requiredAuth: true
+  })
 ];
 
-// 开发环境下开启的一些 path，如 editor-playground
+// 开发环境下开启的一些 path
 if (process.env.NODE_ENV === 'development') {
-  routes = routes.concat([]);
+  routes = routes.concat([
+    /** todo */
+  ]);
 }
 
 // 其余无法找到的都重定向到 not-found

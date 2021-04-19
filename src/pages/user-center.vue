@@ -117,7 +117,7 @@ import { EnvironmentOutlined, ProfileOutlined } from "@ant-design/icons-vue";
 import { LocalTwo } from '@icon-park/vue-next';
 import { fusions } from "@/fusions";
 import { usePayloadFromToken, userDetailsStorageRef } from '@/utils'
-import CommonHeader from "@/components/page-header/common-header.vue";
+import CommonHeader from "@/components/view-header/common-header.vue";
 import UserActivityCard from '@/components/page-user-center/user-activity-card.vue';
 import type { Organization, UserActivity } from '@/models'
 import { message } from "ant-design-vue";

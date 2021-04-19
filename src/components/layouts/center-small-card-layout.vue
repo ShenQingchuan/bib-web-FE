@@ -1,6 +1,6 @@
 <template>
-  <div class="flex-col vc center-card-layout__out-wrapper">
-    <div class="flex-col vc center-card-layout__container">
+  <div class="flex-col vc center-small-card-layout__out-wrapper">
+    <div class="flex-col vc center-small-card-layout__container">
       <img
         src="/assets/img/Icon-png-logo-raw.png"
         alt="login page logo"
@@ -12,7 +12,7 @@
           alt="login page title"
           height="38"
         />
-        <div class="center-card-layout__subtitle">
+        <div class="center-small-card-layout__subtitle">
           开源的云端知识库
         </div>
       </template>
@@ -26,25 +26,22 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent } from "vue";
+<script setup lang="ts">
+import { defineProps } from "vue";
 
-export default defineComponent({
-  name: "CenterCardLayout",
-  props: {
-    noTitle: Boolean,
-  },
-});
+defineProps<{
+  noTitle?: boolean
+}>();
 </script>
 
 <style lang="less" scoped>
-@import url("../../less/color.less");
+@import url("@/less/color.less");
 
-.center-card-layout__out-wrapper {
+.center-small-card-layout__out-wrapper {
   background-color: @N50;
   min-height: 100vh;
 
-  .center-card-layout__container {
+  .center-small-card-layout__container {
     width: 500px;
     background: @N00;
     box-shadow: 0 5px 10px @N50;
@@ -61,7 +58,7 @@ export default defineComponent({
       margin: 0 0 4px 0;
     }
 
-    .center-card-layout__subtitle {
+    .center-small-card-layout__subtitle {
       font-weight: 300;
       font-size: 20px;
       margin-bottom: 20px;

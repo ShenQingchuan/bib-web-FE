@@ -1,5 +1,5 @@
 <template>
-  <center-card-layout>
+  <center-small-card-layout>
     <template #center>
       <a-form
         class="page-register__form"
@@ -91,7 +91,7 @@
         <a href="/login" class="page-login-register__footer-actions-item">已有账号？立即登录</a>
       </div>
     </template>
-  </center-card-layout>
+  </center-small-card-layout>
 </template>
 
 <script lang="ts">
@@ -103,13 +103,13 @@ import {
   ReloadOutlined,
   KeyOutlined,
 } from "@ant-design/icons-vue";
-import CenterCardLayout from "@/components/layouts/center-card-layout.vue";
+import CenterSmallCardLayout from "@/components/layouts/center-small-card-layout.vue";
 import { useRegisterForm } from "@/composable/useAuthForm";
 
 export default {
   name: "RegisterPage",
   components: {
-    CenterCardLayout,
+    CenterSmallCardLayout,
     MailOutlined,
     LockOutlined,
     UserOutlined,

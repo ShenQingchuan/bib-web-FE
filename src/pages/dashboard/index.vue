@@ -47,6 +47,9 @@
               <span class="create-time">{{ formatTime(doc.createTime) }}</span>
             </div>
           </div>
+          <div class="w-p100 flex-row anis-center jyct-center">
+            <a-button v-if="docListPage !== docListPageTotal" @click="fetchDocList">加载更多</a-button>
+          </div>
         </template>
       </a-skeleton>
     </div>
@@ -82,12 +85,12 @@ import { useRouter } from "vue-router";
 import { usePayloadFromToken } from "@/utils";
 import { DownOutlined } from "@ant-design/icons-vue"
 import { DocListItemArchiveType } from './common';
+import { message } from "ant-design-vue";
 import DocBelongBreadcrumb from "./doc-belong-breadcrumb.vue";
 import * as dayjs from "dayjs";
 import 'dayjs/locale/zh-cn' // 导入本地化语言
 import type { DocListItem, DocFilter } from "./common";
 import type { DocumentViewData } from "@/models";
-import { message } from "ant-design-vue";
 
 dayjs.locale('zh-cn');
 
@@ -121,7 +124,7 @@ export default defineComponent({
         icon: "/assets/img/Icon-png-new-doc.png",
         onclick: () => {
           message.loading("初始化新文档中，请稍候...");
-          fusions.post('/docs/new', {
+          fusions.post('/docs/', {
             userId: tokenPayload.userId
           }).then(resp => {
             if (resp.data.responseOk) {
@@ -135,6 +138,9 @@ export default defineComponent({
         id: 1,
         text: "新建知识库",
         icon: "/assets/svg/user-action__new__book.svg",
+        onclick: () => {
+          router.push('/wiki/new');
+        }
       },
       {
         id: 2,
@@ -144,7 +150,7 @@ export default defineComponent({
     ];
 
     const fetchDocList = () => {
-      if (docListPage.value > 0) {
+      if (docListPage.value === 0) {
         listLoading.value = true;
       }
       fusions.get(`/docs/myList?userId=${tokenPayload.userId}&pageNum=${docListPage.value}`)
@@ -152,9 +158,9 @@ export default defineComponent({
           docList.value.push(...res.data.data.items);
           if (docListPage.value === 0) {
             docListPageTotal.value = res.data.data.pageTotal;
+            listLoading.value = false;
           }
 
-          listLoading.value = false;
           docListPage.value += 1;
         });
     }
@@ -184,7 +190,10 @@ export default defineComponent({
       filters,
       setFilter,
       filterName,
-      NewActionList
+      NewActionList,
+      docListPage,
+      docListPageTotal,
+      fetchDocList
     };
   }
 });

@@ -1,0 +1,194 @@
+@import './color.less';
+
+@colorPoints: 50, 100, 200, 300, 400, 500, 600, 700, 800, 900;
+@neutralColorsMap: {
+  50: @N50;
+  100: @N100;
+  200: @N200;
+  300: @N300;
+  400: @N400;
+  500: @N500;
+  600: @N600;
+  700: @N700;
+  800: @N800;
+  900: @N900;
+};
+@blueColorsMap: {
+  50: @B50;
+  100: @B100;
+  200: @B200;
+  300: @B300;
+  400: @B400;
+  500: @B500;
+  600: @B600;
+  700: @B700;
+  800: @B800;
+  900: @B900;
+};
+@watheColorsMap: {
+  50: @W50;
+  100: @W100;
+  200: @W200;
+  300: @W300;
+  400: @W400;
+  500: @W500;
+  600: @W600;
+  700: @W700;
+  800: @W800;
+  900: @W900;
+};
+@turqoiseColorsMap: {
+  50: @T50;
+  100: @T100;
+  200: @T200;
+  300: @T300;
+  400: @T400;
+  500: @T500;
+  600: @T600;
+  700: @T700;
+  800: @T800;
+  900: @T900;
+};
+@yellowColorsMap: {
+  50: @Y50;
+  100: @Y100;
+  200: @Y200;
+  300: @Y300;
+  400: @Y400;
+  500: @Y500;
+  600: @Y600;
+  700: @Y700;
+  800: @Y800;
+  900: @Y900;
+};
+@orageColorsMap: {
+  50: @O50;
+  100: @O100;
+  200: @O200;
+  300: @O300;
+  400: @O400;
+  500: @O500;
+  600: @O600;
+  700: @O700;
+  800: @O800;
+  900: @O900;
+};
+@redColorsMap: {
+  50: @R50;
+  100: @R100;
+  200: @R200;
+  300: @R300;
+  400: @R400;
+  500: @R500;
+  600: @R600;
+  700: @R700;
+  800: @R800;
+  900: @R900;
+};
+@carmineColorsMap: {
+  50: @C50;
+  100: @C100;
+  200: @C200;
+  300: @C300;
+  400: @C400;
+  500: @C500;
+  600: @C600;
+  700: @C700;
+  800: @C800;
+  900: @C900;
+};
+@greenColorsMap: {
+  50: @G50;
+  100: @G100;
+  200: @G200;
+  300: @G300;
+  400: @G400;
+  500: @G500;
+  600: @G600;
+  700: @G700;
+  800: @G800;
+  900: @G900;
+};
+@limeColorsMap: {
+  50: @L50;
+  100: @L100;
+  200: @L200;
+  300: @L300;
+  400: @L400;
+  500: @L500;
+  600: @L600;
+  700: @L700;
+  800: @L800;
+  900: @L900;
+};
+@violetColorsMap: {
+  50: @V50;
+  100: @V100;
+  200: @V200;
+  300: @V300;
+  400: @V400;
+  500: @V500;
+  600: @V600;
+  700: @V700;
+  800: @V800;
+  900: @V900;
+};
+@indigoColorsMap: {
+  50: @I50;
+  100: @I100;
+  200: @I200;
+  300: @I300;
+  400: @I400;
+  500: @I500;
+  600: @I600;
+  700: @I700;
+  800: @I800;
+  900: @I900;
+};
+
+.loopNeutralTextColor(@data, @i: 1) when (@i <= length(@data)) {
+  @item: extract(@data, @i);
+
+  .tc-n@{item} {
+    color: @neutralColorsMap[$@item];
+  }
+  .tc-b@{item} {
+    color: @blueColorsMap[$@item];
+  }
+  .tc-w@{item} {
+    color: @watheColorsMap[$@item];
+  }
+  .tc-t@{item} {
+    color: @turqoiseColorsMap[$@item];
+  }
+  .tc-y@{item} {
+    color: @yellowColorsMap[$@item];
+  }
+  .tc-o@{item} {
+    color: @orageColorsMap[$@item];
+  }
+  .tc-r@{item} {
+    color: @redColorsMap[$@item];
+  }
+  .tc-c@{item} {
+    color: @carmineColorsMap[$@item];
+  }
+  .tc-g@{item} {
+    color: @greenColorsMap[$@item];
+  }
+  .tc-l@{item} {
+    color: @limeColorsMap[$@item];
+  }
+  .tc-v@{item} {
+    color: @violetColorsMap[$@item];
+  }
+  .tc-i@{item} {
+    color: @indigoColorsMap[$@item];
+  }
+  .loopNeutralTextColor(@data, @i + 1);
+}
+.loopNeutralTextColor(@colorPoints);
+
+.tc-primary {
+  color: @primary-color;
+}

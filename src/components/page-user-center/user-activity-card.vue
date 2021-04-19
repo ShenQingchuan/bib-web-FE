@@ -21,6 +21,11 @@
         theme="outline"
         size="16"
       />
+      <newlybuild
+        v-else-if="activity.activityType === UserActivityType.CREATE_WIKI"
+        theme="outline"
+        size="16"
+      />
     </template>
     <div class="user-center-activity-card__wrapper flex-col m-l-6">
       <!-- 动态描述 -->
@@ -29,6 +34,7 @@
         <span v-else-if="activity.activityType === UserActivityType.FOCUS_USER">关注了用户</span>
         <span v-else-if="activity.activityType === UserActivityType.FOCUS_WIKI">关注了知识库</span>
         <span v-else-if="activity.activityType === UserActivityType.CREATE_DOC">创建了文档</span>
+        <span v-else-if="activity.activityType === UserActivityType.CREATE_WIKI">创建了知识库</span>
 
         <span class="m-l-auto m-r-16">{{ timeDisplay(activity.createTime) }}</span>
       </div>
@@ -72,7 +78,7 @@
             </div>
             <div
               class="m-l-auto to-ellipsis"
-            >{{ user_dto(activity.activityData).followersCount }} 人关注</div>
+            >{{ user_dto(activity.activityData).followersCount || 0 }} 人关注</div>
           </div>
         </template>
 
@@ -89,7 +95,9 @@
               >{{ wiki_dto(activity.activityData).name }}</a>
               <p class="focus-desc">{{ wiki_dto(activity.activityData).description || '该知识库暂无简介' }}</p>
             </div>
-            <div class="m-l-auto to-ellipsis">{{ wiki_dto(activity.activityData).focusCount }} 人关注</div>
+            <div
+              class="m-l-auto to-ellipsis"
+            >{{ wiki_dto(activity.activityData).focusCount || 0 }} 人关注</div>
           </div>
         </template>
 
@@ -105,6 +113,25 @@
             >{{ doc_dto(activity.activityData).contentAbstract || '该文档还没有摘要...' }}</p>
           </div>
         </template>
+
+        <!-- 关注知识库 -->
+        <template v-else-if="activity.activityType === UserActivityType.CREATE_WIKI">
+          <div
+            class="user-center-activity-card__content-item flex-row anis-center p-16 m-tb-6 brr-10"
+          >
+            <img class="m-r-14" src="/assets/svg/dashboard__wiki-icon.svg" alt="doc" width="24" />
+            <div class="focus-info wiki flex-col m-l-16">
+              <a
+                class="focus-name"
+                :href="`/wiki/${wiki_dto(activity.activityData).id}`"
+              >{{ wiki_dto(activity.activityData).name }}</a>
+              <p class="focus-desc">{{ wiki_dto(activity.activityData).description || '该知识库暂无简介' }}</p>
+            </div>
+            <div
+              class="m-l-auto to-ellipsis"
+            >{{ wiki_dto(activity.activityData).focusCount || 0 }} 人关注</div>
+          </div>
+        </template>
       </div>
     </div>
   </a-timeline-item>
@@ -112,7 +139,7 @@
 
 <script setup lang="ts">
 import { defineProps } from "vue";
-import { GoodTwo, WritingFluently, Rss, People } from '@icon-park/vue-next';
+import { GoodTwo, WritingFluently, Rss, People, Newlybuild } from '@icon-park/vue-next';
 import * as dayjs from 'dayjs';
 import * as relativeTime from 'dayjs/plugin/relativeTime';
 import 'dayjs/locale/zh-cn'

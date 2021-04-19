@@ -1,19 +1,19 @@
 <template>
-  <div class="flex-row vc component-page-header__container">
+  <div class="flex-row vc component-view-header__container">
     <div
-      class="flex-row anis-center component-page-header__inner"
+      class="flex-row anis-center component-view-header__inner"
       :class="{
         'jyct-btwn': !userLogined,
       }"
     >
       <!-- Header Logo -->
-      <div class="flex-row anis-center component-page-header__inner-logo">
+      <div class="flex-row anis-center component-view-header__inner-logo">
         <a href="/">
           <img src="/assets/img/Icon-png-logo.png" alt="header-logo" height="48" />
         </a>
       </div>
       <!-- 搜索框 -->
-      <a-auto-complete v-show="!consice" class="component-page-header__inner-search">
+      <a-auto-complete v-show="!consice" class="component-view-header__inner-search">
         <a-input placeholder="搜索">
           <template #prefix>
             <search-outlined></search-outlined>
@@ -22,10 +22,10 @@
       </a-auto-complete>
 
       <!-- 导航菜单 -->
-      <ul class="flex-row anis-center component-page-header__inner-nav-menu">
+      <ul class="flex-row anis-center component-view-header__inner-nav-menu">
         <template v-for="item in navs" :key="item.name">
           <li
-            class="component-page-header__inner-nav-menu-item"
+            class="component-view-header__inner-nav-menu-item"
             :class="{
               __active: item.href === $route.path,
             }"
@@ -38,13 +38,13 @@
       <!-- 用户操作 -->
       <div
         v-if="userLogined"
-        class="flex-row anis-center component-page-header__inner-user-actions"
+        class="flex-row anis-center component-view-header__inner-user-actions"
       >
         <!-- 已登录用户 - 非简洁模式下可用操作 -->
         <template v-if="!consice">
           <!-- 操作::通知 -->
           <BellOutlined
-            class="component-page-header__inner-user-actions-item"
+            class="component-view-header__inner-user-actions-item"
             @click="$router.push('/notification')"
           />
         </template>
@@ -52,7 +52,7 @@
         <!-- 头像::用户个人相关 / 登录注册按钮 -->
         <a-popover :title="userName">
           <a-avatar
-            class="component-page-header__inner-user-actions-avatar"
+            class="component-view-header__inner-user-actions-avatar"
             :src="userDetailsStorageRef.avatarURL || '/assets/svg/user-avatar__default.svg'"
           ></a-avatar>
           <template #content>
@@ -61,7 +61,7 @@
         </a-popover>
       </div>
       <!-- 未登录状态 -->
-      <div v-else class="flex-row vc component-page-header__login-register">
+      <div v-else class="flex-row vc component-view-header__login-register">
         <a-space>
           <a-button type="primary" @click="$router.push('/login')">登录</a-button>
           <a-button type="default" @click="$router.push('/register')">注册</a-button>
@@ -111,23 +111,20 @@ export default {
 </script>
 
 <style lang="less" scoped>
-.component-page-header__container {
+.component-view-header__container {
   width: 100%;
   height: 69px;
   border-bottom: 1px solid #dee0e3;
   z-index: 2;
   background-color: #fff;
 
-  .component-page-header__inner {
+  .component-view-header__inner {
     padding-left: 16px;
     padding-right: 16px;
     margin: 0 auto;
     width: 96%;
     height: 100%;
 
-    &-logo {
-      min-width: 200px;
-    }
     &-search .ant-input-affix-wrapper {
       max-width: 200px;
       border-radius: 6px;
@@ -192,8 +189,8 @@ export default {
 </style>
 
 <style lang="less">
-.component-page-header__container
-  .component-page-header__inner-search
+.component-view-header__container
+  .component-view-header__inner-search
   .ant-input-affix-wrapper {
   max-width: 200px;
   border-radius: 6px;

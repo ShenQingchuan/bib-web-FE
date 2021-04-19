@@ -1,5 +1,5 @@
 <template>
-  <center-card-layout>
+  <center-small-card-layout>
     <template #center>
       <a-form
         class="page-login__form"
@@ -80,7 +80,7 @@
         <a href="/register" class="page-login-register__footer-actions-item">快速注册</a>
       </div>
     </template>
-  </center-card-layout>
+  </center-small-card-layout>
 </template>
 
 <script lang="ts">
@@ -90,12 +90,12 @@ import {
   UserOutlined,
 } from "@ant-design/icons-vue";
 import { useLoginForm, LoginFormType } from "@/composable/useAuthForm";
-import CenterCardLayout from "@/components/layouts/center-card-layout.vue";
+import CenterSmallCardLayout from "@/components/layouts/center-small-card-layout.vue";
 
 export default {
   name: "login-page",
   components: {
-    CenterCardLayout,
+    CenterSmallCardLayout,
     LockOutlined,
     MailOutlined,
     UserOutlined,

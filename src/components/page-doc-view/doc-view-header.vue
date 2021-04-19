@@ -50,10 +50,9 @@
 </template>
 
 <script setup lang="ts">
-import { defineProps } from 'vue';
+import { defineEmit, defineProps } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { Lock, PeoplePlus } from '@icon-park/vue-next';
-import { fusions } from '@/fusions';
 import { editingDocViewData, savedDocViewData } from '@/pages/document/editing-doc-storage-ref';
 import type { DocumentViewData } from '@/models';
 
@@ -61,6 +60,7 @@ const props = defineProps<{
   editing?: boolean;
   viewData?: DocumentViewData,
 }>()
+const emit = defineEmit(['quit-document-edit']);
 
 // @States:
 const router = useRouter(), route = useRoute();
@@ -77,17 +77,7 @@ const onDocumentEdit = () => {
   router.push(`${route.path}/edit`);
 }
 const quitDocumentEdit = () => {
-  const { title, contentAbstract, publicSharing } = props.viewData!;
-  const savingForm = { docId, title, contentAbstract, publicSharing };
-  fusions.put('/docs/meta', savingForm).then(resp => {
-    if (resp.data.responseOk) {
-      savedDocViewData.value[docId] = resp.data.data as DocumentViewData;
-      editingDocViewData.value = null;
-
-      router.push(route.path.slice(0, -5));
-    }
-  });
-
+  emit('quit-document-edit');
 }
 </script>
 

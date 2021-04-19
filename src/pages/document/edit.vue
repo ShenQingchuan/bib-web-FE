@@ -1,5 +1,5 @@
 <template>
-  <doc-view-header :view-data="viewData" editing />
+  <doc-view-header :view-data="viewData" editing @quit-document-edit="onQuitDocumentEdit" />
 
   <bib-editor-menu v-if="editorViewMounted" :editor-instance="editorInstance" fixed top="65px" />
 
@@ -17,10 +17,10 @@
 
 <script setup lang="ts">
 import { ref, shallowRef, nextTick } from 'vue';
-import { useRoute } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 import { usePayloadFromToken } from "@/utils";
 import { fusions } from '@/fusions';
-import { editingDocViewData } from './editing-doc-storage-ref';
+import { editingDocViewData, savedDocViewData } from './editing-doc-storage-ref';
 import { useEditor } from "@/components/BibEditor/composable/useEditor";
 import DocViewHeader from '@/components/page-doc-view/doc-view-header.vue';
 import BibEditorMenu from '@/components/BibEditor/menu/bib-editor-menu.vue';
@@ -28,7 +28,7 @@ import * as us from 'underscore';
 import type { EditorInstance } from '@/components/BibEditor/typings';
 import type { DocumentViewData } from '@/models';
 
-const route = useRoute();
+const route = useRoute(), router = useRouter();
 const credential = usePayloadFromToken()!;
 
 // @States:
@@ -46,6 +46,27 @@ let editorInstance = shallowRef({} as EditorInstance);
 const initEditorViewRef = (el: any) => {
   editorInstance.value = initEditor(el)
   editorViewMounted.value = true;
+}
+const onQuitDocumentEdit = () => {
+  if (viewData.value) {
+    const { title, publicSharing, contentAbstract: viewDataAbstarct } = viewData.value;
+    const docId = route.params.docId as string;
+    const savingForm = {
+      docId, title,
+      contentAbstract: viewDataAbstarct.length === 0
+        ? editorInstance.value.view.state.doc.textContent.slice(0, 150)
+        : viewDataAbstarct,
+      publicSharing
+    };
+    fusions.put('/docs/meta', savingForm).then(resp => {
+      if (resp.data.responseOk) {
+        savedDocViewData.value[docId] = resp.data.data as DocumentViewData;
+        editingDocViewData.value = null;
+
+        router.push(route.path.slice(0, -5));
+      }
+    });
+  }
 }
 
 if (!us.isEmpty(editingDocViewData.value)) {
@@ -75,5 +96,6 @@ if (!us.isEmpty(editingDocViewData.value)) {
 .page-doc-edit__title-inputer {
   outline: none;
   border: none;
+  width: 100%;
 }
 </style>

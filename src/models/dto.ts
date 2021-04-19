@@ -5,7 +5,7 @@ export interface DocSimpleDto {
   title: string;
   contentAbstract: string;
   creator: UserSimpleDTO;
-  publishedOnWiki: boolean;
+  inWiki: boolean;
   wikiName: string | null;
 }
 export interface WikiSimpleDto {
@@ -42,11 +42,12 @@ export interface DocumentViewData {
   };
 }
 
-export type UserActivityType =
-  | 'THUMBS_UP_DOC'
-  | 'FOCUS_USER'
-  | 'FOCUS_WIKI'
-  | 'CREATE_DOC';
+export enum UserActivityType {
+  THUMBS_UP_DOC = 'THUMBS_UP_DOC',
+  FOCUS_USER = 'FOCUS_USER',
+  FOCUS_WIKI = 'FOCUS_WIKI',
+  CREATE_DOC = 'CREATE_DOC'
+}
 
 export type UserActivityData = DocSimpleDto | WikiSimpleDto | UserSimpleDTO;
 

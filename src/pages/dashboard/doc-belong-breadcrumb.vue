@@ -1,16 +1,9 @@
 <template>
-  <a-breadcrumb class="doc-belong-breadcrumb-wrapper">
-    <a-breadcrumb-item>
-      <a class="doc-belong-breadcrumb-link" :href="`/user/${doc.creatorName}`">{{ doc.creatorName }}</a>
-      <template
-        v-if="doc.archiveType === DocListItemArchiveType.OrgOnly
-        || doc.archiveType === DocListItemArchiveType.OrgWiki"
-      >
-        <a class="doc-belong-breadcrumb-link" :href="`/org/${doc.orgId}`">
-          <span class="m-l-6">@</span>
-          {{ doc.orgName }}
-        </a>
-      </template>
+  <a-breadcrumb class="doc-belong-breadcrumb-wrapper" separator="-">
+    <a-breadcrumb-item v-if="doc.archiveType === DocListItemArchiveType.OrgWiki">
+      <a class="doc-belong-breadcrumb-link" :href="`/org/${doc.orgId}`">
+        <span class="m-l-6">@ {{ doc.orgName }}</span>
+      </a>
     </a-breadcrumb-item>
     <a-breadcrumb-item
       v-if="doc.archiveType == DocListItemArchiveType.UserWiki

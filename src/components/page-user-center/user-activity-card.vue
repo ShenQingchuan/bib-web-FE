@@ -1,11 +1,23 @@
 <template>
   <a-timeline-item>
     <template #dot>
-      <good-two v-if="activity.activityType === 'THUMBS_UP_DOC'" theme="outline" size="16" />
-      <people v-else-if="activity.activityType === 'FOCUS_USER'" theme="outline" size="16" />
-      <rss v-else-if="activity.activityType === 'FOCUS_WIKI'" theme="outline" size="16" />
+      <good-two
+        v-if="activity.activityType === UserActivityType.THUMBS_UP_DOC"
+        theme="outline"
+        size="16"
+      />
+      <people
+        v-else-if="activity.activityType === UserActivityType.FOCUS_USER"
+        theme="outline"
+        size="16"
+      />
+      <rss
+        v-else-if="activity.activityType === UserActivityType.FOCUS_WIKI"
+        theme="outline"
+        size="16"
+      />
       <writing-fluently
-        v-else-if="activity.activityType === 'CREATE_DOC'"
+        v-else-if="activity.activityType === UserActivityType.CREATE_DOC"
         theme="outline"
         size="16"
       />
@@ -13,10 +25,10 @@
     <div class="user-center-activity-card__wrapper flex-col m-l-6">
       <!-- 动态描述 -->
       <div class="user-center-activity-card__title flex-row anis-center">
-        <span v-if="activity.activityType === 'THUMBS_UP_DOC'">点赞了文档</span>
-        <span v-else-if="activity.activityType === 'FOCUS_USER'">关注了用户</span>
-        <span v-else-if="activity.activityType === 'FOCUS_WIKI'">关注了知识库</span>
-        <span v-else-if="activity.activityType === 'CREATE_DOC'">创建了文档</span>
+        <span v-if="activity.activityType === UserActivityType.THUMBS_UP_DOC">点赞了文档</span>
+        <span v-else-if="activity.activityType === UserActivityType.FOCUS_USER">关注了用户</span>
+        <span v-else-if="activity.activityType === UserActivityType.FOCUS_WIKI">关注了知识库</span>
+        <span v-else-if="activity.activityType === UserActivityType.CREATE_DOC">创建了文档</span>
 
         <span class="m-l-auto m-r-16">{{ timeDisplay(activity.createTime) }}</span>
       </div>
@@ -24,7 +36,7 @@
       <!-- 动态内容 -->
       <div class="user-center-activity-card__content m-t-6">
         <!-- 点赞文档 -->
-        <template v-if="activity.activityType === 'THUMBS_UP_DOC'">
+        <template v-if="activity.activityType === UserActivityType.THUMBS_UP_DOC">
           <div
             class="user-center-activity-card__content-item flex-row anis-center p-16 m-tb-6 brr-10"
           >
@@ -41,7 +53,7 @@
         </template>
 
         <!-- 关注用户 -->
-        <template v-else-if="activity.activityType === 'FOCUS_USER'">
+        <template v-else-if="activity.activityType === UserActivityType.FOCUS_USER">
           <div
             class="user-center-activity-card__content-item flex-row anis-center p-16 m-tb-6 brr-10"
           >
@@ -65,7 +77,7 @@
         </template>
 
         <!-- 关注知识库 -->
-        <template v-else-if="activity.activityType === 'FOCUS_WIKI'">
+        <template v-else-if="activity.activityType === UserActivityType.FOCUS_WIKI">
           <div
             class="user-center-activity-card__content-item flex-row anis-center p-16 m-tb-6 brr-10"
           >
@@ -82,7 +94,7 @@
         </template>
 
         <!-- 发表文章 -->
-        <template v-else-if="activity.activityType === 'CREATE_DOC'">
+        <template v-else-if="activity.activityType === UserActivityType.CREATE_DOC">
           <div class="user-center-activity-card__content-item flex-col p-16 m-tb-6 brr-10">
             <a
               class="fs-18 fw-500 publish-doc-title m-b-12"
@@ -105,6 +117,7 @@ import * as dayjs from 'dayjs';
 import * as relativeTime from 'dayjs/plugin/relativeTime';
 import 'dayjs/locale/zh-cn'
 dayjs.extend(relativeTime);
+import { UserActivityType } from "@/models";
 import type {
   DocSimpleDto,
   UserActivity,

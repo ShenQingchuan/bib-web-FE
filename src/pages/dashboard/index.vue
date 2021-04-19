@@ -3,7 +3,7 @@
     <!-- 最近文档列表 -->
     <div class="dashboard-page__doc-list flex-col flex-1">
       <div class="flex-row anis-center m-b-16">
-        <h2 class="inline m-b-0">文档列表</h2>
+        <h2 class="inline m-b-0">我的文档</h2>
         <a-dropdown class="m-l-auto">
           <span class="doc-list-filter__text">
             {{ filterName }}
@@ -21,7 +21,7 @@
         </a-dropdown>
       </div>
       <a-skeleton active :loading="listLoading">
-        <a-empty v-if="filteredDocList.length === 0" />
+        <a-empty v-if="filteredDocList.length === 0" description="暂时还没有文档..." />
         <template v-else>
           <div
             v-for="doc in filteredDocList"
@@ -76,7 +76,7 @@
 </template>
 
 <script lang="ts">
-import { fusions, mocker } from "../../fusions";
+import { fusions } from "../../fusions";
 import { defineComponent, ref, onMounted, computed } from "vue";
 import { useRouter } from "vue-router";
 import { usePayloadFromToken } from "@/utils";
@@ -87,6 +87,7 @@ import * as dayjs from "dayjs";
 import 'dayjs/locale/zh-cn' // 导入本地化语言
 import type { DocListItem, DocFilter } from "./common";
 import type { DocumentViewData } from "@/models";
+import { message } from "ant-design-vue";
 
 dayjs.locale('zh-cn');
 
@@ -101,6 +102,8 @@ export default defineComponent({
     const listLoading = ref(false);
     const filterType = ref(-1);
     const filterName = ref('归属');
+    const docListPage = ref(0);
+    const docListPageTotal = ref(0);
 
     const router = useRouter();
     const tokenPayload = usePayloadFromToken()!;
@@ -109,7 +112,6 @@ export default defineComponent({
       { archiveType: -1, text: '所有' },
       { archiveType: DocListItemArchiveType.UserOnly, text: '个人空间' },
       { archiveType: DocListItemArchiveType.UserWiki, text: '个人知识库' },
-      { archiveType: DocListItemArchiveType.OrgOnly, text: '团队空间' },
       { archiveType: DocListItemArchiveType.OrgWiki, text: '团队知识库' }
     ];
     const NewActionList = [
@@ -118,12 +120,13 @@ export default defineComponent({
         text: "新建文档",
         icon: "/assets/img/Icon-png-new-doc.png",
         onclick: () => {
+          message.loading("初始化新文档中，请稍候...");
           fusions.post('/docs/new', {
             userId: tokenPayload.userId
           }).then(resp => {
             if (resp.data.responseOk) {
               const newDocViewData = resp.data.data as DocumentViewData
-              router.push(`/doc/${newDocViewData.id}/edit`);
+              router.push(`/doc/${newDocViewData.id}/edit`).then(() => message.destroy());
             }
           })
         }
@@ -140,16 +143,27 @@ export default defineComponent({
       }
     ];
 
+    const fetchDocList = () => {
+      if (docListPage.value > 0) {
+        listLoading.value = true;
+      }
+      fusions.get(`/docs/myList?userId=${tokenPayload.userId}&pageNum=${docListPage.value}`)
+        .then(res => {
+          docList.value.push(...res.data.data.items);
+          if (docListPage.value === 0) {
+            docListPageTotal.value = res.data.data.pageTotal;
+          }
+
+          listLoading.value = false;
+          docListPage.value += 1;
+        });
+    }
     onMounted(() => {
-      listLoading.value = true;
-      mocker.get('/dashboard/docList').then(res => {
-        docList.value = res.data.data;
-        listLoading.value = false;
-      });
-    })
+      fetchDocList();
+    });
 
     const formatTime = (timestamp: number) => {
-      return dayjs.unix(timestamp).format('YYYY/MM/DD HH:mm:ss');
+      return dayjs(timestamp).format('YYYY/MM/DD HH:mm:ss');
     }
     const filteredDocList = computed(() => {
       if (filterType.value === -1) {

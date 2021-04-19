@@ -115,7 +115,7 @@ import { reactive, ref } from "vue";
 import { useRoute } from 'vue-router';
 import { EnvironmentOutlined, ProfileOutlined } from "@ant-design/icons-vue";
 import { LocalTwo } from '@icon-park/vue-next';
-import { fusions, mocker } from "@/fusions";
+import { fusions } from "@/fusions";
 import { usePayloadFromToken, userDetailsStorageRef } from '@/utils'
 import CommonHeader from "@/components/page-header/common-header.vue";
 import UserActivityCard from '@/components/page-user-center/user-activity-card.vue';
@@ -162,12 +162,12 @@ const pageTotal = ref(0);
 
 // 获取 用户的动态
 const fetchUserActivity = async () => {
-  if (page.value > 0) {
-    message.loading({ key: 'fetch-user-activity', content: '获取更多用户动态中...' });
-  } else {
+  if (page.value === 0) {
     loadingUserActivities.value = true;
+  } else {
+    message.loading({ key: 'fetch-user-activity', content: '获取更多用户动态中...' });
   }
-  const UserActivitiesRes = await mocker.get(`/activities/?userName=${userName}&pageNum=${page.value + 1}`);
+  const UserActivitiesRes = await fusions.get(`/activity/?userName=${userName}&pageNum=${page.value}`);
   if (UserActivitiesRes.data.responseOk) {
     activities.value.push(...UserActivitiesRes.data.data.activities);
 

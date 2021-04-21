@@ -67,7 +67,7 @@ export type UserActivityData =
   | UserSimpleDTO
   | OrgSimpleDTO;
 
-export interface UserActivity {
+export interface UserActivityDto {
   createTime: number;
   activityType: UserActivityType;
   activityData: UserActivityData;

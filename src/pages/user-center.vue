@@ -124,10 +124,10 @@ import { EnvironmentOutlined, ProfileOutlined } from "@ant-design/icons-vue";
 import { LocalTwo } from '@icon-park/vue-next';
 import { fusions } from "@/fusions";
 import { usePayloadFromToken, userDetailsStorageRef } from '@/utils'
+import { message } from "ant-design-vue";
 import CommonHeader from "@/components/view-header/common-header.vue";
 import UserActivityCard from '@/components/page-user-center/user-activity-card.vue';
-import type { Organization, UserActivity } from '@/models'
-import { message } from "ant-design-vue";
+import type { OrgSimpleDTO, UserActivityDto } from '@/models'
 
 const userDetails = reactive({
   avatarURL: "",
@@ -140,8 +140,8 @@ const userDetails = reactive({
 const route = useRoute();
 const userName = route.params['userName'] as string;
 const isMe = usePayloadFromToken()?.userName === userName || false;
-const joinedOrgs = ref<Organization[]>([]);
-const activities = ref<UserActivity[]>([]);
+const joinedOrgs = ref<OrgSimpleDTO[]>([]);
+const activities = ref<UserActivityDto[]>([]);
 const loadingUserActivities = ref(false);
 const page = ref(0);
 const pageTotal = ref(0);

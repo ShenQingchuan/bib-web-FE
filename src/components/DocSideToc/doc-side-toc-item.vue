@@ -2,12 +2,12 @@
   <div
     class="doc-side-toc__item"
     :style="{
-      paddingLeft: `${(item.level - 1) * 12}px`
+      paddingLeft: `${(item.level - 1) * 4}px`
     }"
     :data-toc-index="index"
   >
     <div
-      class="doc-side-toc__item-title p-tb-6 m-b-2 fs-12 p-lr-6"
+      class="doc-side-toc__item-title p-tb-6 m-b-2 fs-12 p-lr-6 to-ellipsis"
       :class="{
         'active': activeIndexKey === index
       }"

@@ -5,7 +5,8 @@ import {
   PASSWORD_REGEXP,
   USERNAME_REGEXP,
   VCODE_REGEXP,
-  tokenStorageRef
+  tokenStorageRef,
+  userDetailsStorageRef
 } from '../utils';
 import { ValidationRule } from 'ant-design-vue/lib/form/Form';
 import { Form, message } from 'ant-design-vue';
@@ -193,7 +194,7 @@ export function useRegisterForm() {
 
   // @States:
   const registerForm = reactive({
-    userName: route.params.userName ?? '',
+    userName: route.query.userName ?? '',
     userEmail: '',
     userPhone: '',
     phoneVerify: '',
@@ -305,7 +306,7 @@ export function useRegisterForm() {
             message.success($content('注册成功！'));
             router.push({
               path: '/login',
-              params: {
+              query: {
                 userName: registerForm.userName
               }
             });
@@ -358,7 +359,10 @@ export function useRegisterForm() {
 }
 
 export function runLogout() {
+  // 清理已存储的 token
   tokenStorageRef.value = null;
+  // @ts-ignore 清理用户详细信息缓存
+  userDetailsStorageRef.value = null;
   const logoutMsgCloser = message.loading('正在退出登录...', 1, () => {
     router.push('/login').then(() => {
       logoutMsgCloser();

@@ -173,14 +173,14 @@ import { UserActivityType } from '@/models';
 import type {
   OrgSimpleDTO,
   DocSimpleDto,
-  UserActivity,
+  UserActivityDto,
   UserActivityData,
   UserSimpleDTO,
   WikiSimpleDto,
 } from "@/models";
 
 defineProps<{
-  activity: UserActivity
+  activity: UserActivityDto
 }>();
 
 const timeDisplay = (timestamp: number) => {

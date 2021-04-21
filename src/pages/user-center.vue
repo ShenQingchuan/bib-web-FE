@@ -68,7 +68,11 @@
         <div class="flex-row anis-center p-6">
           <div v-for="org in joinedOrgs" :key="org.id" class="flex-col anis-center">
             <a :href="`/org/${org.id}`">
-              <a-avatar :size="48" :src="org.avatarURL" class="detail-org-avatar" />
+              <a-avatar
+                :size="48"
+                :src="org.avatarURL || '/assets/svg/org-avatar__default.svg'"
+                class="detail-org-avatar"
+              />
             </a>
             <span class="detail-org-name p-6 fs-12">{{ org.name }}</span>
           </div>
@@ -93,15 +97,18 @@
         >
           <a-spin tip="加载用户动态中..."></a-spin>
         </div>
-        <a-timeline v-else>
-          <user-activity-card v-for="act in activities" :key="act.createTime" :activity="act" />
-          <a-timeline-item v-show="page === pageTotal">
-            <template #dot>
-              <local-two theme="outline" size="16" />
-            </template>
-            <span class="user-center__activity-nomoredot-text m-t-6">找不到更早的动态了，就让以前随风而逝吧…</span>
-          </a-timeline-item>
-        </a-timeline>
+        <template v-else>
+          <a-empty v-if="activities.length === 0" description="暂无动态"></a-empty>
+          <a-timeline v-else>
+            <user-activity-card v-for="act in activities" :key="act.createTime" :activity="act" />
+            <a-timeline-item v-show="page === pageTotal">
+              <template #dot>
+                <local-two theme="outline" size="16" />
+              </template>
+              <span class="user-center__activity-nomoredot-text m-t-6">找不到更早的动态了，就让以前随风而逝吧…</span>
+            </a-timeline-item>
+          </a-timeline>
+        </template>
         <div class="flex-row jyct-center anis-center" v-show="page < pageTotal">
           <a-button @click="fetchUserActivity">加载更多</a-button>
         </div>

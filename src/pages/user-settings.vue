@@ -127,12 +127,12 @@ const onAvatarInput = () => {
         "Content-Type": multiplePartFormContentType,
       }
     }).then((res) => {
+      const r: { key: string, putObjectResult: any } = res.data.data.newAvatar[0];
+      detailsFormData.value.avatarURL = `${cosImageURLPrefix}${r.key}`;
       message.success({
         content: res.data.message,
         key: cosImageUploadLoadingKey
       });
-      const r: { key: string, putObjectResult: any } = res.data.data.newAvatar[0];
-      detailsFormData.value.avatarURL = `${cosImageURLPrefix}${r.key}`;
     })
   }
 }

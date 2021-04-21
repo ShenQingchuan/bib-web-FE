@@ -25,6 +25,16 @@ export interface UserSimpleDTO {
   followersCount: number;
 }
 
+export interface OrgSimpleDTO {
+  id: number;
+  name: string;
+  desc: string;
+  avatarURL: string;
+  creatorId: number;
+  creatorName: string;
+  memberCount: number;
+}
+
 export interface DocumentViewData {
   id: number;
   title: string;
@@ -47,10 +57,15 @@ export enum UserActivityType {
   FOCUS_USER = 'FOCUS_USER',
   FOCUS_WIKI = 'FOCUS_WIKI',
   CREATE_DOC = 'CREATE_DOC',
-  CREATE_WIKI = 'CREATE_WIKI'
+  CREATE_WIKI = 'CREATE_WIKI',
+  CREATE_ORG = 'CREATE_ORG'
 }
 
-export type UserActivityData = DocSimpleDto | WikiSimpleDto | UserSimpleDTO;
+export type UserActivityData =
+  | DocSimpleDto
+  | WikiSimpleDto
+  | UserSimpleDTO
+  | OrgSimpleDTO;
 
 export interface UserActivity {
   createTime: number;

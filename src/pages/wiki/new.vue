@@ -149,18 +149,7 @@ const onCreateWikiFormSubmit = () => {
 </script>
 
 <style lang="less" scoped>
-@import "@/less/color.less";
+@import "@/less/shared.less";
 
-.page-new-wiki__form {
-  border-right: 1px solid @N200;
-}
-.page-new-wiki__illustration {
-  width: 450px;
-  img {
-    width: 300px;
-  }
-}
-.page-new-wiki__selected-scope-option {
-  border: 1px solid @N300;
-}
+.center-big-card-layout-common(wiki);
 </style>

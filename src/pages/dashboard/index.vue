@@ -146,6 +146,9 @@ export default defineComponent({
         id: 2,
         text: "新建团队",
         icon: "/assets/svg/user-action__new__org.svg",
+        onclick: () => {
+          router.push('/org/new');
+        }
       }
     ];
 

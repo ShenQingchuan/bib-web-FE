@@ -92,6 +92,9 @@ let routes: Array<RouteRecordRaw> = [
   ),
   createRoute('/wiki/new', () => import('./pages/wiki/new.vue'), '新建知识库', {
     requiredAuth: true
+  }),
+  createRoute('/org/new', () => import('./pages/org/new.vue'), '新建团队', {
+    requiredAuth: true
   })
 ];
 

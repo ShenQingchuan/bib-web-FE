@@ -1,3 +1,5 @@
+@import './color.less';
+
 // icon-park-icon style fix
 .iconpark-fix() {
   position: relative;
@@ -7,5 +9,20 @@
 .hover-in-primary-color() {
   &:hover {
     color: @primary-color;
+  }
+}
+
+.center-big-card-layout-common(@name) {
+  .page-new-@{name}__form {
+    border-right: 1px solid @N200;
+  }
+  .page-new-@{name}__illustration {
+    width: 450px;
+    img {
+      width: 300px;
+    }
+  }
+  .page-new-@{name}__selected-scope-option {
+    border: 1px solid @N300;
   }
 }

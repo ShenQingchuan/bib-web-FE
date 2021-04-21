@@ -26,7 +26,13 @@
         theme="outline"
         size="16"
       />
+      <Peoples
+        v-else-if="activity.activityType === UserActivityType.CREATE_ORG"
+        theme="outline"
+        size="16"
+      />
     </template>
+
     <div class="user-center-activity-card__wrapper flex-col m-l-6">
       <!-- 动态描述 -->
       <div class="user-center-activity-card__title flex-row anis-center">
@@ -35,6 +41,7 @@
         <span v-else-if="activity.activityType === UserActivityType.FOCUS_WIKI">关注了知识库</span>
         <span v-else-if="activity.activityType === UserActivityType.CREATE_DOC">创建了文档</span>
         <span v-else-if="activity.activityType === UserActivityType.CREATE_WIKI">创建了知识库</span>
+        <span v-else-if="activity.activityType === UserActivityType.CREATE_ORG">创建了团队</span>
 
         <span class="m-l-auto m-r-16">{{ timeDisplay(activity.createTime) }}</span>
       </div>
@@ -132,6 +139,24 @@
             >{{ wiki_dto(activity.activityData).focusCount || 0 }} 人关注</div>
           </div>
         </template>
+
+        <!-- 创建团队 -->
+        <template v-else-if="activity.activityType === UserActivityType.CREATE_ORG">
+          <div
+            class="user-center-activity-card__content-item flex-row anis-center p-16 m-tb-6 brr-10"
+          >
+            <img
+              class="org-avatar m-r-20"
+              :src="org_dto(activity.activityData).avatarURL || '/assets/svg/org-avatar__default.svg'"
+              alt="团队头像"
+            />
+            <div class="flex-col">
+              <div class="fs-16 fw-500 tc-black">{{ org_dto(activity.activityData).name }}</div>
+              <p class="tc-n500">{{ org_dto(activity.activityData).desc || '该团队暂时还没有简介...' }}</p>
+            </div>
+            <div class="tc-n500 m-l-auto">{{ org_dto(activity.activityData).memberCount || 0 }} 名成员</div>
+          </div>
+        </template>
       </div>
     </div>
   </a-timeline-item>
@@ -139,19 +164,20 @@
 
 <script setup lang="ts">
 import { defineProps } from "vue";
-import { GoodTwo, WritingFluently, Rss, People, Newlybuild } from '@icon-park/vue-next';
+import { GoodTwo, WritingFluently, Rss, People, Newlybuild, Peoples } from '@icon-park/vue-next';
 import * as dayjs from 'dayjs';
 import * as relativeTime from 'dayjs/plugin/relativeTime';
 import 'dayjs/locale/zh-cn'
 dayjs.extend(relativeTime);
-import { UserActivityType } from "@/models";
+import { UserActivityType } from '@/models';
 import type {
+  OrgSimpleDTO,
   DocSimpleDto,
   UserActivity,
   UserActivityData,
   UserSimpleDTO,
-  WikiSimpleDto
-} from '@/models'
+  WikiSimpleDto,
+} from "@/models";
 
 defineProps<{
   activity: UserActivity
@@ -164,6 +190,7 @@ const timeDisplay = (timestamp: number) => {
 const doc_dto = (data: UserActivityData) => data as DocSimpleDto;
 const user_dto = (data: UserActivityData) => data as UserSimpleDTO;
 const wiki_dto = (data: UserActivityData) => data as WikiSimpleDto;
+const org_dto = (data: UserActivityData) => data as OrgSimpleDTO;
 </script>
 
 <style lang="less" scoped>
@@ -196,5 +223,11 @@ const wiki_dto = (data: UserActivityData) => data as WikiSimpleDto;
   margin-top: 8px;
   margin-bottom: 0;
   color: #8c8c8c;
+}
+
+.org-avatar {
+  width: 50px;
+  height: 50px;
+  border-radius: 100%;
 }
 </style>

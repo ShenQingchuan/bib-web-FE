@@ -7,7 +7,7 @@
       }"
     >
       <!-- Header Logo -->
-      <div class="flex-row anis-center component-view-header__inner-logo">
+      <div class="flex-row anis-center component-view-header__inner-logo m-r-24">
         <a href="/">
           <img src="/assets/img/Icon-png-logo.png" alt="header-logo" height="48" />
         </a>

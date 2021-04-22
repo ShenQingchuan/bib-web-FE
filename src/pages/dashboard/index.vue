@@ -130,6 +130,7 @@ export default defineComponent({
       fusions.get(`/docs/myList?userId=${tokenPayload.userId}&pageNum=${docListPage.value}`)
         .then(res => {
           docList.value.push(...res.data.data.items);
+          docList.value.sort((a, b) => b.updateTime - a.updateTime);
           if (docListPage.value === 0) {
             docListPageTotal.value = res.data.data.pageTotal;
             listLoading.value = false;

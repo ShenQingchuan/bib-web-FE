@@ -15,7 +15,8 @@ export interface DocListItem {
   title: string; // 文档标题
   creatorId: number; // 文档创建者的 uid
   creatorName: string; // 文档创建者的 userName
-  createTime: number; // 文档创建时间（秒级时间戳）
+  createTime: number; // 文档创建时间戳
+  updateTime: number; // 文档更新时间戳
   editable: boolean;
   archiveType: DocListItemArchiveType;
   orgId: number | null;

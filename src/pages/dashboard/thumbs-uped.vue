@@ -1,7 +1,7 @@
 <template>
-  <div class="dashboard-page__collections-doc-list-wrapper flex-row anis-center p-12">
+  <div class="dashboard-page__thumbs-uped-doc-list-wrapper flex-row anis-center p-12">
     <!-- 最近文档列表 -->
-    <div class="dashboard-page__collections-doc-list flex-col flex-1">
+    <div class="dashboard-page__thumbs-uped-doc-list flex-col flex-1">
       <div class="flex-row anis-center m-b-16">
         <h2 class="inline m-b-0">点赞过的文档</h2>
         <a-dropdown class="m-l-auto">
@@ -75,6 +75,7 @@ const fetchDocList = () => {
   fusions.get(`/docs/thumbsUpedList?userId=${tokenPayload.userId}&pageNum=${docListPage.value}`)
     .then(res => {
       docList.value.push(...res.data.data.items);
+      docList.value.sort((a, b) => b.updateTime - a.updateTime);
       if (docListPage.value === 0) {
         docListPageTotal.value = res.data.data.pageTotal;
         listLoading.value = false;
@@ -89,4 +90,7 @@ onMounted(() => {
 </script>
 
 <style lang="less" scoped>
+.dashboard-page__thumbs-uped-doc-list {
+  max-width: 1024px;
+}
 </style>

@@ -5,14 +5,14 @@
     </a-layout-header>
     <a-layout>
       <a-layout-sider class="page-dashboard__side-navigator flex-col p-tb-24 p-lr-8" width="256px">
-        <side-navigator-item link="/dashboard" label="工作台">
+        <side-navigator-item link="/dashboard" label="近期参与">
           <template #icon>
             <LaptopOutlined class="m-r-8" />
           </template>
         </side-navigator-item>
-        <side-navigator-item link="/dashboard/collections" label="收藏">
+        <side-navigator-item link="/dashboard/thumbs-uped" label="点赞过的">
           <template #icon>
-            <StarOutlined class="m-r-8" />
+            <ThumbsUp class="m-r-8 iconpark" />
           </template>
         </side-navigator-item>
         <side-navigator-item link="/dashboard/recycles" label="回收站">
@@ -39,14 +39,14 @@
 </template>
 
 <script setup lang="ts">
-import { LaptopOutlined, StarOutlined, DeleteOutlined } from "@ant-design/icons-vue"
+import { LaptopOutlined, DeleteOutlined } from "@ant-design/icons-vue"
 import CommonHeader from "@/components/view-header/common-header.vue";
 import SideNavigatorItem from "./side-navigator-item.vue"
-import { BookOne } from '@icon-park/vue-next'
+import { BookOne, ThumbsUp } from '@icon-park/vue-next'
 </script>
 
 <style lang="less" scoped>
-@import "../../less/color.less";
+@import "@/less/color.less";
 .page-dashboard {
   &__container {
     min-height: 100vh;

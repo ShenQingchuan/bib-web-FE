@@ -143,8 +143,12 @@ Promise.all([
     nextTick(() => {
       headingRefs.value = Array.from(
         docViewRef.value!.querySelectorAll(
-          '.ProseMirror h1,h2,h3,h4,h5'
+          '.ProseMirror h1,h2,h3,h4,h5,h6'
         ) as NodeListOf<HTMLHeadingElement>
+      );
+      console.log('[ headingRefs.value ]', headingRefs.value);
+      headingRefs.value.forEach(h => console.log(
+        `header: ${h.textContent} , offsetTop: ${h.offsetTop}, scrollTop: ${h.scrollTop}, clientHeight: ${h.clientHeight}`)
       );
       tocItemRefs.value = Array.from(
         document.querySelectorAll('.doc-side-toc__item')

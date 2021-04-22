@@ -11,7 +11,7 @@ import type { Ref } from 'vue';
 import type { DocTableOfContentsUnit } from '@/components/BibEditor/typings';
 
 const props = defineProps<{
-  toc: DocTableOfContentsUnit[]
+  toc: DocTableOfContentsUnit[],
 }>();
 
 // @States:
@@ -34,7 +34,7 @@ const onDocumentScroll = () => {
     // 如果 scrollTop 大于或等于索引 n 元素的 offsetTop
     // 则说明 n-1 的内容已经完全不可见
     // 那么此时导航索引就应该是 n 了
-    if (scrollTop >= headingRefs.value[n].offsetTop) {
+    if (scrollTop >= headingRefs.value[n].offsetTop - headingRefs.value[n].clientHeight) {
       activeItemIndex.value = tocItemRefs.value[n].dataset.tocIndex!;
     }
   }
@@ -52,7 +52,7 @@ onUnmounted(() => {
 <style lang="less" scoped>
 @import "../../less/color.less";
 .doc-side-toc__wrapper {
-  width: 180px;
+  width: 170px;
   position: fixed;
   z-index: 9;
   border-left: 2px solid @N300;

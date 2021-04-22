@@ -23,3 +23,10 @@ export interface DocListItem {
   wikiId: number | null;
   wikiName: string | null;
 }
+
+export const filters: DocFilter[] = [
+  { text: '所有' },
+  { archiveType: DocListItemArchiveType.UserOnly, text: '个人空间' },
+  { archiveType: DocListItemArchiveType.UserWiki, text: '个人知识库' },
+  { archiveType: DocListItemArchiveType.OrgWiki, text: '团队知识库' }
+];

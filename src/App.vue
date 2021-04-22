@@ -1,11 +1,6 @@
 <template>
   <a-config-provider :locale="zhCN">
-    <router-view v-slot="{ Component, route }">
-      <keep-alive v-if="route.meta.keepalive">
-        <component :is="Component" />
-      </keep-alive>
-      <component :is="Component" v-else />
-    </router-view>
+    <router-view />
   </a-config-provider>
 </template>
 

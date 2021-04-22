@@ -44,8 +44,8 @@ let routes: Array<RouteRecordRaw> = [
     [
       createRoute('', () => import('./pages/dashboard/index.vue'), '工作台'),
       createRoute(
-        'collections',
-        () => import('./pages/dashboard/collections.vue'),
+        'thumbs-uped',
+        () => import('./pages/dashboard/thumbs-uped.vue'),
         '收藏',
         { keepalive: true }
       ),
@@ -125,9 +125,10 @@ const router = createRouter({
   routes
 });
 router.beforeEach(async (to, from, next) => {
-  console.log(
-    `[Vue Router]: 正在从 ${from.fullPath} --> 前往 --> ${to.fullPath}`
-  );
+  process.env.NODE_ENV === 'development' &&
+    console.log(
+      `[Vue Router]: 正在从 ${from.fullPath} --> 前往 --> ${to.fullPath}`
+    );
   // 更换页面标题
   document.title = to.meta?.title || DEFAULT_ROUTE_TITILE;
   // 首页 / 若已登录重定向至工作台

@@ -1,11 +1,11 @@
 <template>
-  <div class="dashboard-page__doc-list-wrapper flex-row anis-center p-12">
+  <div class="dashboard-page__index-index-doc-list-wrapper flex-row anis-center p-12">
     <!-- 最近文档列表 -->
-    <div class="dashboard-page__doc-list flex-col flex-1">
+    <div class="dashboard-page__index-index-doc-list flex-col flex-1">
       <div class="flex-row anis-center m-b-16">
         <h2 class="inline m-b-0">近期参与文档</h2>
         <a-dropdown class="m-l-auto">
-          <span class="doc-list-filter__text">
+          <span class="doc-list-filter__text cursor-ptr tc-n500">
             {{ filterName }}
             <DownOutlined />
           </span>
@@ -23,35 +23,7 @@
       <a-skeleton active :loading="listLoading">
         <a-empty v-if="filteredDocList.length === 0" description="暂时还没有文档..." />
         <template v-else>
-          <div
-            v-for="doc in filteredDocList"
-            :key="doc.createTime"
-            class="dashboard-page__doc-list-item flex-row anis-center p-tb-14 p-lr-10"
-          >
-            <img src="/assets/svg/dashboard__doc-icon.svg" width="24" height="24" />
-            <a
-              class="dashboard-page__doc-list-item-title m-l-24 fs-14"
-              :href="`/doc/${doc.id}`"
-            >{{ doc.title }}</a>
-            <a-tooltip placement="top" title="编辑" v-if="doc.editable">
-              <img
-                src="/assets/svg/dashboard__doc-edit.svg"
-                alt="doc-edit"
-                class="dashboard-page__doc-list-item-edit-icon m-l-12"
-                @click="$router.push(`/doc/${doc.id}/edit`)"
-              />
-            </a-tooltip>
-            <a-tooltip placement="top" title="只读" v-else>
-              <eyes
-                class="dashboard-page__doc-list-item-edit-icon m-l-12 fs-16 tc-n500 iconpark-fix"
-              />
-            </a-tooltip>
-
-            <div class="dashboard-page__doc-list-item-meta-info flex-row anis-center m-r-12">
-              <doc-belong-breadcrumb class="belong m-r-24 inline-block" :doc="doc" />
-              <span class="create-time">{{ formatTime(doc.createTime) }}</span>
-            </div>
-          </div>
+          <doc-list-item-view v-for="doc in filteredDocList" :key="doc.createTime" :doc-item="doc" />
           <div class="w-p100 flex-row anis-center jyct-center">
             <a-button v-if="docListPage !== docListPageTotal" @click="fetchDocList">加载更多</a-button>
           </div>
@@ -60,14 +32,14 @@
     </div>
 
     <!-- 新建 -->
-    <div class="dashboard-page__new-wrapper ansf-start flex-col m-l-48">
+    <div class="dashboard-page__index-new-wrapper ansf-start flex-col m-l-48">
       <h3 class="m-t-6">新建</h3>
       <a-divider class="m-tb-2" />
-      <div class="dashboard-page__new flex-row anis-center p-tb-12">
+      <div class="dashboard-page__index-new flex-row anis-center p-tb-12">
         <div
           v-for="item in NewActionList"
           :key="item.text"
-          class="dashboard-page__new-item flex-col anis-center"
+          class="cursor-ptr tc-n500 flex-col anis-center"
           :class="{
             'm-l-4': item.id === 0,
             'm-lr-36': item.id === 1,
@@ -87,15 +59,14 @@
 import { fusions } from "../../fusions";
 import { defineComponent, ref, onMounted, computed } from "vue";
 import { useRouter } from "vue-router";
+import { DownOutlined } from "@ant-design/icons-vue";
 import { usePayloadFromToken } from "@/utils";
-import { DownOutlined } from "@ant-design/icons-vue"
-import { Eyes } from '@icon-park/vue-next'
-import { DocListItemArchiveType } from './common';
+import { DocListItemArchiveType, filters } from '@/components/page-dashboard/common';
 import { message } from "ant-design-vue";
-import DocBelongBreadcrumb from "./doc-belong-breadcrumb.vue";
+import DocListItemView from '@/components/page-dashboard/doc-list-item.vue';
 import * as dayjs from "dayjs";
 import 'dayjs/locale/zh-cn' // 导入本地化语言
-import type { DocListItem, DocFilter } from "./common";
+import type { DocListItem, DocFilter } from "@/components/page-dashboard/common";
 import type { DocumentViewData } from "@/models";
 
 dayjs.locale('zh-cn');
@@ -103,9 +74,8 @@ dayjs.locale('zh-cn');
 export default defineComponent({
   name: "dashboard-index-subpage",
   components: {
-    DocBelongBreadcrumb,
+    DocListItemView,
     DownOutlined,
-    Eyes
   },
   setup() {
     const docList = ref<DocListItem[]>([]);
@@ -118,12 +88,6 @@ export default defineComponent({
     const router = useRouter();
     const tokenPayload = usePayloadFromToken()!;
 
-    const filters: DocFilter[] = [
-      { text: '所有' },
-      { archiveType: DocListItemArchiveType.UserOnly, text: '个人空间' },
-      { archiveType: DocListItemArchiveType.UserWiki, text: '个人知识库' },
-      { archiveType: DocListItemArchiveType.OrgWiki, text: '团队知识库' }
-    ];
     const NewActionList = [
       {
         id: 0,
@@ -178,24 +142,20 @@ export default defineComponent({
       fetchDocList();
     });
 
-    const formatTime = (timestamp: number) => {
-      return dayjs(timestamp).format('YYYY/MM/DD HH:mm:ss');
-    }
     const filteredDocList = computed(() => {
       if (!filterType.value) {
         return docList.value
       }
       return docList.value.filter(doc => doc.archiveType === filterType.value)
-    })
+    });
     const setFilter = (f: DocFilter) => {
       filterType.value = f.archiveType;
       filterName.value = f.text;
-    }
+    };
 
     return {
       filteredDocList,
       listLoading,
-      formatTime,
       filterType,
       filters,
       setFilter,
@@ -210,64 +170,5 @@ export default defineComponent({
 </script>
 
 <style lang="less" scoped>
-@import "../../less/color.less";
-.dashboard-page__doc-list-wrapper {
-  .dashboard-page__doc-list {
-    &-item {
-      border-top: 1px solid #80808012;
-      user-select: none;
-
-      &:last-child {
-        border-bottom: 1px solid #80808012;
-      }
-
-      &:hover {
-        background-color: #fafafa;
-        border-radius: 6px;
-
-        .dashboard-page__doc-list-item-edit-icon {
-          visibility: visible;
-        }
-      }
-    }
-  }
-}
-
-.dashboard-page__doc-list-item-meta-info {
-  margin-left: auto;
-  color: @N500;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.dashboard-page__doc-list-item-title {
-  color: @N800;
-  max-width: 220px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-
-  &:hover {
-    color: @primary-color;
-  }
-}
-
-.dashboard-page__doc-list-item-edit-icon {
-  width: 16px;
-  height: 16px;
-  visibility: hidden;
-  cursor: pointer;
-
-  &.iconpark-fix {
-    position: relative;
-    top: -2px;
-  }
-}
-
-.doc-list-filter__text,
-.dashboard-page__new-item {
-  cursor: pointer;
-  color: @N500;
-}
+@import "@/less/color.less";
 </style>

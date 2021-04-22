@@ -102,7 +102,7 @@ export default {
         { name: "工作台", href: "/dashboard" },
         { name: "发现", href: "/expolore" },
         { name: "反馈", href: "/feedback" },
-        { name: "开源", href: "/opensource" },
+        { name: "开源", href: "https://github.com/KahraLab/bib-web-FE" },
       ],
       userName,
       userLogined,

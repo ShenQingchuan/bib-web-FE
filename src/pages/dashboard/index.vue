@@ -33,12 +33,17 @@
               class="dashboard-page__doc-list-item-title m-l-24 fs-14"
               :href="`/doc/${doc.id}`"
             >{{ doc.title }}</a>
-            <a-tooltip placement="top" title="编辑">
+            <a-tooltip placement="top" title="编辑" v-if="doc.editable">
               <img
                 src="/assets/svg/dashboard__doc-edit.svg"
                 alt="doc-edit"
                 class="dashboard-page__doc-list-item-edit-icon m-l-12"
                 @click="$router.push(`/doc/${doc.id}/edit`)"
+              />
+            </a-tooltip>
+            <a-tooltip placement="top" title="只读" v-else>
+              <eyes
+                class="dashboard-page__doc-list-item-edit-icon m-l-12 fs-16 tc-n500 iconpark-fix"
               />
             </a-tooltip>
 
@@ -84,6 +89,7 @@ import { defineComponent, ref, onMounted, computed } from "vue";
 import { useRouter } from "vue-router";
 import { usePayloadFromToken } from "@/utils";
 import { DownOutlined } from "@ant-design/icons-vue"
+import { Eyes } from '@icon-park/vue-next'
 import { DocListItemArchiveType } from './common';
 import { message } from "ant-design-vue";
 import DocBelongBreadcrumb from "./doc-belong-breadcrumb.vue";
@@ -98,7 +104,8 @@ export default defineComponent({
   name: "dashboard-index-subpage",
   components: {
     DocBelongBreadcrumb,
-    DownOutlined
+    DownOutlined,
+    Eyes
   },
   setup() {
     const docList = ref<DocListItem[]>([]);
@@ -251,6 +258,11 @@ export default defineComponent({
   height: 16px;
   visibility: hidden;
   cursor: pointer;
+
+  &.iconpark-fix {
+    position: relative;
+    top: -2px;
+  }
 }
 
 .doc-list-filter__text,

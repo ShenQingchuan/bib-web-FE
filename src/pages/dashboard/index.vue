@@ -1,7 +1,7 @@
 <template>
-  <div class="dashboard-page__index-index-doc-list-wrapper flex-row anis-center p-12">
+  <div class="page-dashboard__index-index-doc-list-wrapper flex-row anis-center p-12">
     <!-- 最近文档列表 -->
-    <div class="dashboard-page__index-index-doc-list flex-col flex-1">
+    <div class="page-dashboard__index-index-doc-list flex-col flex-1">
       <div class="flex-row anis-center m-b-16">
         <h2 class="inline m-b-0">近期参与文档</h2>
         <a-dropdown class="m-l-auto">
@@ -13,7 +13,7 @@
             <a-menu>
               <a-menu-item
                 v-for="f in filters"
-                :key="f.archiveType"
+                :key="f.archiveType || '-'"
                 @click="setFilter(f)"
               >{{ f.text }}</a-menu-item>
             </a-menu>
@@ -32,10 +32,10 @@
     </div>
 
     <!-- 新建 -->
-    <div class="dashboard-page__index-new-wrapper ansf-start flex-col m-l-48">
+    <div class="page-dashboard__index-new-wrapper ansf-start flex-col m-l-48">
       <h3 class="m-t-6">新建</h3>
       <a-divider class="m-tb-2" />
-      <div class="dashboard-page__index-new flex-row anis-center p-tb-12">
+      <div class="page-dashboard__index-new flex-row anis-center p-tb-12">
         <div
           v-for="item in NewActionList"
           :key="item.text"
@@ -61,7 +61,7 @@ import { defineComponent, ref, onMounted, computed } from "vue";
 import { useRouter } from "vue-router";
 import { DownOutlined } from "@ant-design/icons-vue";
 import { usePayloadFromToken } from "@/utils";
-import { DocListItemArchiveType, filters } from '@/components/page-dashboard/common';
+import { DocListItemArchiveType, docListItemFilters as filters } from '@/components/page-dashboard/common';
 import { message } from "ant-design-vue";
 import DocListItemView from '@/components/page-dashboard/doc-list-item.vue';
 import * as dayjs from "dayjs";
@@ -169,7 +169,3 @@ export default defineComponent({
   }
 });
 </script>
-
-<style lang="less" scoped>
-@import "@/less/color.less";
-</style>

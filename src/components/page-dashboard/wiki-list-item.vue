@@ -1,0 +1,52 @@
+<template>
+  <div class="page-dashboard__wiki-list-item p-tb-14 p-l-10 p-r-20 flex-row anis-center">
+    <img src="/assets/svg/dashboard__wiki-icon.svg" width="24" height="24" />
+    <a
+      class="page-dashboard__wiki-list-item-title m-l-24 fs-14"
+      :href="`/wiki/${wiki.id}`"
+    >{{ wiki.name }}</a>
+    <a-tooltip title="私有知识库" v-if="wiki.isPrivate">
+      <Lock theme="filled" class="m-l-14 iconpark tc-n500" />
+    </a-tooltip>
+    <a-tooltip title="团队所属" v-if="wiki.organization">
+      <Peoples theme="filled" class="m-l-10 iconpark tc-n500" />
+    </a-tooltip>
+
+    <span class="m-l-auto tc-n500">最近更新于：{{ formatTime(wiki.updateTime) }}</span>
+    <div class="m-l-20 page-dashboard__wiki-manage cursor-ptr tc-primary">管理</div>
+  </div>
+</template>
+
+<script setup lang="ts">
+import { defineProps } from "vue";
+import { useRouter } from "vue-router";
+import { Lock, Peoples } from '@icon-park/vue-next';
+import type { WikiListItemData } from './common';
+
+import * as dayjs from "dayjs";
+import 'dayjs/locale/zh-cn' // 导入本地化语言
+dayjs.locale('zh-cn');
+
+defineProps<{
+  wiki: WikiListItemData
+}>();
+
+const router = useRouter();
+
+// @States:
+
+// @Methods:
+const formatTime = (timestamp: number) => {
+  return dayjs(timestamp).format('YYYY/MM/DD HH:mm:ss');
+}
+</script>
+
+<style lang="less" scoped>
+@import "./common.less";
+.page-dashboard__wiki-list-item {
+  .list-item;
+}
+.page-dashboard__wiki-list-item-title {
+  .list-item-title;
+}
+</style>

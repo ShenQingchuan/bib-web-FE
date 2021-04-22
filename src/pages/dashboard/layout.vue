@@ -15,14 +15,14 @@
             <ThumbsUp class="m-r-8 iconpark" />
           </template>
         </side-navigator-item>
+        <side-navigator-item link="/dashboard/wikis" label="知识库">
+          <template #icon>
+            <BookOne class="m-r-8 iconpark" />
+          </template>
+        </side-navigator-item>
         <side-navigator-item link="/dashboard/recycles" label="回收站">
           <template #icon>
             <DeleteOutlined class="m-r-8" />
-          </template>
-        </side-navigator-item>
-        <side-navigator-item link="/dashboard/wikis" label="个人知识库">
-          <template #icon>
-            <BookOne class="m-r-8 iconpark" />
           </template>
         </side-navigator-item>
       </a-layout-sider>

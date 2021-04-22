@@ -1,7 +1,7 @@
 <template>
-  <div class="dashboard-page__thumbs-uped-doc-list-wrapper flex-row anis-center p-12">
+  <div class="page-dashboard__thumbs-uped-doc-list-wrapper flex-row anis-center p-12">
     <!-- 最近文档列表 -->
-    <div class="dashboard-page__thumbs-uped-doc-list flex-col flex-1">
+    <div class="page-dashboard__thumbs-uped-doc-list flex-col flex-1">
       <div class="flex-row anis-center m-b-16">
         <h2 class="inline m-b-0">点赞过的文档</h2>
         <a-dropdown class="m-l-auto">
@@ -13,7 +13,7 @@
             <a-menu>
               <a-menu-item
                 v-for="f in filters"
-                :key="f.archiveType"
+                :key="f.archiveType || '-'"
                 @click="setFilter(f)"
               >{{ f.text }}</a-menu-item>
             </a-menu>
@@ -37,7 +37,7 @@
 import { computed, onMounted, ref } from "vue";
 import * as dayjs from "dayjs";
 import 'dayjs/locale/zh-cn' // 导入本地化语言
-import { DocListItemArchiveType, filters } from "@/components/page-dashboard/common";
+import { DocListItemArchiveType, docListItemFilters as filters } from "@/components/page-dashboard/common";
 import { fusions } from "@/fusions";
 import { usePayloadFromToken } from "@/utils";
 import DocListItemView from '@/components/page-dashboard/doc-list-item.vue';
@@ -90,7 +90,7 @@ onMounted(() => {
 </script>
 
 <style lang="less" scoped>
-.dashboard-page__thumbs-uped-doc-list {
+.page-dashboard__thumbs-uped-doc-list {
   max-width: 1024px;
 }
 </style>

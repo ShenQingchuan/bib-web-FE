@@ -1,5 +1,3 @@
-import { DocumentComment, UserAccount } from './entity';
-
 export interface DocSimpleDto {
   id: number;
   title: string;

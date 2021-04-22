@@ -209,7 +209,13 @@ const onSubmitComment = () => {
 @import "../../less/color.less";
 @import "../../less/shared.less";
 .page-document-view__content {
-  width: 60vw;
+  width: 64vw;
+
+  @media screen and (max-width: 1024px) {
+    & {
+      width: 90vw;
+    }
+  }
 }
 
 .page-document-view__meta-section {

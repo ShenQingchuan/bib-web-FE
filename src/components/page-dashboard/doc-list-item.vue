@@ -1,25 +1,25 @@
 <template>
-  <div class="dashboard-page__doc-list-item flex-row anis-center p-tb-14 p-lr-10">
+  <div class="page-dashboard__doc-list-item flex-row anis-center p-tb-14 p-lr-10">
     <img src="/assets/svg/dashboard__doc-icon.svg" width="24" height="24" />
     <a
-      class="dashboard-page__doc-list-item-title m-l-24 fs-14"
+      class="page-dashboard__doc-list-item-title m-l-24 fs-14"
       :href="`/doc/${docItem.id}`"
     >{{ docItem.title }}</a>
     <a-tooltip placement="top" title="编辑" v-if="docItem.editable">
       <img
         src="/assets/svg/dashboard__doc-edit.svg"
         alt="doc-edit"
-        class="dashboard-page__doc-list-item-edit-icon m-l-12"
+        class="page-dashboard__doc-list-item-edit-icon m-l-12"
         @click="$router.push(`/doc/${docItem.id}/edit`)"
       />
     </a-tooltip>
     <a-tooltip placement="top" title="只读" v-else>
-      <eyes class="dashboard-page__doc-list-item-edit-icon m-l-12 fs-16 tc-n500 iconpark-fix" />
+      <eyes class="page-dashboard__doc-list-item-edit-icon m-l-12 fs-16 tc-n500 iconpark-fix" />
     </a-tooltip>
 
-    <div class="dashboard-page__doc-list-item-meta-info flex-row anis-center m-r-12">
+    <div class="page-dashboard__doc-list-item-meta-info flex-row anis-center m-r-12">
       <doc-belong-breadcrumb class="belong m-r-24 inline-block" :doc="docItem" />
-      <span class="create-time">{{ formatTime(docItem.createTime) }}</span>
+      <span class="create-time">最后更新于：{{ formatTime(docItem.updateTime) }}</span>
     </div>
   </div>
 </template>
@@ -46,28 +46,25 @@ const formatTime = (timestamp: number) => {
 
 <style lang="less" scoped>
 @import "@/less/color.less";
+@import "./common.less";
 
-.dashboard-page__doc-list {
+.page-dashboard__doc-list {
   &-item {
-    border-top: 1px solid #80808012;
-    user-select: none;
+    .list-item;
 
     &:last-child {
       border-bottom: 1px solid #80808012;
     }
 
     &:hover {
-      background-color: #fafafa;
-      border-radius: 6px;
-
-      .dashboard-page__doc-list-item-edit-icon {
+      .page-dashboard__doc-list-item-edit-icon {
         visibility: visible;
       }
     }
   }
 }
 
-.dashboard-page__doc-list-item-meta-info {
+.page-dashboard__doc-list-item-meta-info {
   margin-left: auto;
   color: @N500;
   overflow: hidden;
@@ -75,19 +72,11 @@ const formatTime = (timestamp: number) => {
   white-space: nowrap;
 }
 
-.dashboard-page__doc-list-item-title {
-  color: @N800;
-  max-width: 220px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-
-  &:hover {
-    color: @primary-color;
-  }
+.page-dashboard__doc-list-item-title {
+  .list-item-title;
 }
 
-.dashboard-page__doc-list-item-edit-icon {
+.page-dashboard__doc-list-item-edit-icon {
   width: 16px;
   height: 16px;
   visibility: hidden;

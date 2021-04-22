@@ -1,12 +1,12 @@
 /** 归档类型：0 个人创建 1 团队创建 2 个人创建于知识库 3 团队创建于知识库 */
 export enum DocListItemArchiveType {
-  UserOnly = 0,
-  UserWiki = 1,
-  OrgWiki = 2
+  UserOnly = 'USER_ONLY',
+  UserWiki = 'USER_WIKI',
+  OrgWiki = 'ORG_WIKI'
 }
 
 export interface DocFilter {
-  archiveType: number;
+  archiveType?: DocListItemArchiveType;
   text: string;
 }
 

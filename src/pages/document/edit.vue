@@ -76,7 +76,7 @@ if (!us.isEmpty(editingDocViewData.value)) {
   })
 } else {
   (async () => {
-    const resp = await fusions.get(`/docs/${route.params.docId}`);
+    const resp = await fusions.get(`/docs/${route.params.docId}?userId=${credential.userId}`);
     if (resp.data.responseOk) {
       viewData.value = resp.data.data;
     }

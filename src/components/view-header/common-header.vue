@@ -53,7 +53,7 @@
         <a-popover :title="userName">
           <a-avatar
             class="component-view-header__inner-user-actions-avatar"
-            :src="userDetailsStorageRef.avatarURL || '/assets/svg/user-avatar__default.svg'"
+            :src="userAvatarURL || '/assets/svg/user-avatar__default.svg'"
           ></a-avatar>
           <template #content>
             <user-action-avatar-overlay />
@@ -93,7 +93,9 @@ export default {
   },
   setup() {
     const userLogined = isBibUserTokenValid();
-    const userName = usePayloadFromToken()?.userName ?? "";
+    const tokenPayload = usePayloadFromToken()!;
+    const userName = tokenPayload.userName ?? `Bib 用户 - UID ${tokenPayload.userId}`;
+    const userAvatarURL = tokenPayload.avatarURL;
 
     return {
       navs: [
@@ -104,7 +106,7 @@ export default {
       ],
       userName,
       userLogined,
-      userDetailsStorageRef
+      userAvatarURL
     };
   },
 };

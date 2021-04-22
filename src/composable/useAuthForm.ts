@@ -1,4 +1,4 @@
-import { computed, reactive, ref } from 'vue';
+import { computed, nextTick, reactive, ref } from 'vue';
 import {
   EMAIL_REGEXP,
   MOBILE_PHONE_REGEXP,
@@ -363,9 +363,12 @@ export function runLogout() {
   tokenStorageRef.value = null;
   // @ts-ignore 清理用户详细信息缓存
   userDetailsStorageRef.value = null;
-  const logoutMsgCloser = message.loading('正在退出登录...', 1, () => {
-    router.push('/login').then(() => {
-      logoutMsgCloser();
+
+  nextTick(() => {
+    const logoutMsgCloser = message.loading('正在退出登录...', 1, () => {
+      router.push('/login').then(() => {
+        logoutMsgCloser();
+      });
     });
   });
 }

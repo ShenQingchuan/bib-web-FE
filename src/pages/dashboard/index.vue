@@ -3,7 +3,7 @@
     <!-- 最近文档列表 -->
     <div class="dashboard-page__doc-list flex-col flex-1">
       <div class="flex-row anis-center m-b-16">
-        <h2 class="inline m-b-0">我的文档</h2>
+        <h2 class="inline m-b-0">近期参与文档</h2>
         <a-dropdown class="m-l-auto">
           <span class="doc-list-filter__text">
             {{ filterName }}
@@ -103,7 +103,7 @@ export default defineComponent({
   setup() {
     const docList = ref<DocListItem[]>([]);
     const listLoading = ref(false);
-    const filterType = ref(-1);
+    const filterType = ref<DocListItemArchiveType>();
     const filterName = ref('归属');
     const docListPage = ref(0);
     const docListPageTotal = ref(0);
@@ -112,7 +112,7 @@ export default defineComponent({
     const tokenPayload = usePayloadFromToken()!;
 
     const filters: DocFilter[] = [
-      { archiveType: -1, text: '所有' },
+      { text: '所有' },
       { archiveType: DocListItemArchiveType.UserOnly, text: '个人空间' },
       { archiveType: DocListItemArchiveType.UserWiki, text: '个人知识库' },
       { archiveType: DocListItemArchiveType.OrgWiki, text: '团队知识库' }
@@ -175,7 +175,7 @@ export default defineComponent({
       return dayjs(timestamp).format('YYYY/MM/DD HH:mm:ss');
     }
     const filteredDocList = computed(() => {
-      if (filterType.value === -1) {
+      if (!filterType.value) {
         return docList.value
       }
       return docList.value.filter(doc => doc.archiveType === filterType.value)

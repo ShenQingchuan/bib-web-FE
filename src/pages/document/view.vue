@@ -17,7 +17,7 @@
         :class="{
           'active': thumbsUped
         }"
-        @click="onStarDocument"
+        @click="onThumbsUpDocument"
       >
         <thumbs-up theme="filled" :size="24" class="iconpark" />
       </div>
@@ -66,7 +66,7 @@ import DocViewHeader from '@/components/page-doc-view/doc-view-header.vue';
 import DocComment from '@/components/page-doc-view/doc-comment.vue';
 import DocSideToc from '@/components/DocSideToc/doc-side-toc.vue';
 import * as us from 'underscore';
-import type { DocumentComment, DocumentViewData, UserSimpleDTO } from "@/models";
+import type { DocumentCommentDTO, DocumentViewData, UserSimpleDTO } from "@/models";
 import type { DocTableOfContentsUnit } from "@/components/BibEditor/typings";
 
 // @States:
@@ -82,11 +82,11 @@ const docName = `bib-doc-id${docId}`;
 
 // @States:
 const viewData = ref<DocumentViewData>();
-const comments = ref<DocumentComment<UserSimpleDTO>[]>([]);
+const comments = ref<DocumentCommentDTO[]>([]);
 const commentContent = ref('');
 const thumbsUped = ref(false);
 const thumbsUpedCount = ref(0);
-const replyTo = ref<DocumentComment<UserSimpleDTO> | null>(null);
+const replyTo = ref<DocumentCommentDTO>();
 
 // # doc-side-toc
 const headingRefs = ref<HTMLHeadingElement[]>([]);
@@ -99,7 +99,7 @@ provide('doc-view-toc-items-refs', tocItemRefs);
 loadingViewData.value = true;
 const fetchViewData = (): any =>
   us.isEmpty(savedDocViewData.value[docId])
-    ? fusions.get(`/docs/${docId}`)
+    ? fusions.get(`/docs/${docId}?userId=${credential.userId}`)
     : Promise.resolve({ // mock a structure as AxiosResponse
       data: {
         responseOk: true,
@@ -164,37 +164,40 @@ Promise.all([
 });
 
 // @Methods:
-const onReplyTo = (replyToPayload: DocumentComment<UserSimpleDTO>) => {
+const onReplyTo = (replyToPayload: DocumentCommentDTO) => {
   replyTo.value = replyToPayload;
   commentInputer.value.focus();
 }
-const onStarDocument = () => {
-  thumbsUped.value = !thumbsUped.value;
-  if (thumbsUped.value) thumbsUpedCount.value += 1; else thumbsUpedCount.value -= 1;
-
-  // TODO: 提交加星收藏请求 - 防抖 immediate
-}
+const onThumbsUpDocument = us.debounce(() => {
+  fusions.put('/docs/thumbsUp', {
+    userId: credential.userId,
+    docId
+  }).then((resp) => {
+    if (resp.data.responseOk) {
+      thumbsUped.value = !thumbsUped.value;
+      if (thumbsUped.value) {
+        thumbsUpedCount.value += 1;
+      } else {
+        thumbsUpedCount.value -= 1;
+      }
+    }
+  })
+}, 2000, true);
 const onSubmitComment = () => {
-  const nowTime = new Date();
-
-  // TODO: 等待替换 - 实际逻辑应该是后端存储完成返回前端再显示
-  comments.value.push({
-    id: NaN,
-    creator: {
-      uid: userTokenPayload!.userId,
-      userName: userTokenPayload!.userName,
-      userDetails: us.pick(userDetailsStorageRef.value, 'avatarURL')
-    },
-    thumbUpUsers: [],
-    replyTo: replyTo.value?.creator || null,
+  fusions.post('/docs/comment', {
     content: commentContent.value,
-    createTime: nowTime,
-    updateTime: nowTime,
-  });
-  // ----- dev
+    docId,
+    creatorId: credential.userId,
+    replyToId: replyTo.value?.id || null
+  }).then((resp) => {
+    if (resp.data.responseOk) {
+      comments.value.push(resp.data.data as DocumentCommentDTO);
 
-  commentContent.value = "";
-  commentInputer.value.blur();
+      commentContent.value = "";
+      commentInputer.value.blur();
+    }
+  })
+
 }
 </script>
 

@@ -20,29 +20,29 @@
             <DeleteOutlined class="m-r-8" />
           </template>
         </side-navigator-item>
+        <side-navigator-item link="/dashboard/wikis" label="个人知识库">
+          <template #icon>
+            <BookOne class="m-r-8 iconpark" />
+          </template>
+        </side-navigator-item>
       </a-layout-sider>
       <a-layout-content class="page-dashboard__content p-lr-32 p-tb-24">
-        <router-view></router-view>
+        <router-view v-slot="{ Component, route }">
+          <keep-alive v-if="route.meta.keepalive">
+            <component :is="Component" />
+          </keep-alive>
+          <component :is="Component" v-else />
+        </router-view>
       </a-layout-content>
     </a-layout>
   </a-layout>
 </template>
 
-<script lang="ts">
+<script setup lang="ts">
 import { LaptopOutlined, StarOutlined, DeleteOutlined } from "@ant-design/icons-vue"
 import CommonHeader from "@/components/view-header/common-header.vue";
 import SideNavigatorItem from "./side-navigator-item.vue"
-
-export default {
-  name: "dashboard-page",
-  components: {
-    LaptopOutlined,
-    StarOutlined,
-    DeleteOutlined,
-    CommonHeader,
-    SideNavigatorItem
-  }
-};
+import { BookOne } from '@icon-park/vue-next'
 </script>
 
 <style lang="less" scoped>

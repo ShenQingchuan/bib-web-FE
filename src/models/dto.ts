@@ -42,7 +42,7 @@ export interface DocumentViewData {
   creator: UserSimpleDTO;
   thumbUpUsers: UserSimpleDTO[];
   collaborators: UserSimpleDTO[];
-  comments: DocumentComment<UserSimpleDTO>[];
+  comments: DocumentCommentDTO[];
   thumbsUped: boolean;
   publicSharing: boolean;
   inWiki: {
@@ -50,6 +50,15 @@ export interface DocumentViewData {
     name: string;
     isPrivate: boolean;
   };
+}
+
+export interface DocumentCommentDTO {
+  id: number;
+  content: string;
+  creator: UserSimpleDTO;
+  replyTo: DocumentCommentDTO | null;
+  createTime: number;
+  thumbsUpCount: number;
 }
 
 export enum UserActivityType {

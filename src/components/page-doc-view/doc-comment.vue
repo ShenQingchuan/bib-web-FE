@@ -23,8 +23,8 @@
       <p>
         <a
           v-if="comment.replyTo"
-          :href="`/user/${comment.replyTo.userName}`"
-        >@{{ comment.replyTo.userName }}</a>
+          :href="`/user/${comment.replyTo.creator.userName}`"
+        >@{{ comment.replyTo.creator.userName }}</a>
         {{ comment.content }}
       </p>
     </template>
@@ -39,7 +39,7 @@
 <script setup lang="ts">
 import { defineProps, ref, computed, defineEmit } from "vue";
 import { LikeFilled, LikeOutlined } from '@ant-design/icons-vue';
-import type { DocumentComment, UserSimpleDTO } from "../../models";
+import type { DocumentCommentDTO } from "../../models";
 
 import * as dayjs from 'dayjs';
 import 'dayjs/locale/zh-cn'
@@ -47,7 +47,7 @@ import * as relativeTime from 'dayjs/plugin/relativeTime';
 dayjs.extend(relativeTime);
 
 const props = defineProps<{
-  comment: DocumentComment<UserSimpleDTO>;
+  comment: DocumentCommentDTO;
 }>();
 
 const emit = defineEmit(['replyTo']);
@@ -55,7 +55,7 @@ const emit = defineEmit(['replyTo']);
 // @States:
 const liked = ref(false);
 const likedCount = computed(() => {
-  let count = props.comment.thumbUpUsers.length;
+  let count = props.comment.thumbsUpCount;
   return liked.value ? count + 1 : count;
 })
 

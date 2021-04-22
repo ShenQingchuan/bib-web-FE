@@ -38,19 +38,28 @@ let routes: Array<RouteRecordRaw> = [
     () => import('./pages/dashboard/layout.vue'),
     '工作台',
     {
-      requiredAuth: true
+      requiredAuth: true,
+      keepalive: true
     },
     [
       createRoute('', () => import('./pages/dashboard/index.vue'), '工作台'),
       createRoute(
         'collections',
         () => import('./pages/dashboard/collections.vue'),
-        '收藏'
+        '收藏',
+        { keepalive: true }
       ),
       createRoute(
         'recycles',
         () => import('./pages/dashboard/recycles.vue'),
-        '回收站'
+        '回收站',
+        { keepalive: true }
+      ),
+      createRoute(
+        'wikis',
+        () => import('./pages/dashboard/wikis.vue'),
+        '个人知识库',
+        { keepalive: true }
       )
     ]
   ),
@@ -123,18 +132,18 @@ router.beforeEach(async (to, from, next) => {
   document.title = to.meta?.title || DEFAULT_ROUTE_TITILE;
   // 首页 / 若已登录重定向至工作台
   const logined = isBibUserTokenValid();
-  if (to.path === '/' && logined) {
-    next('/dashboard');
+
+  if (logined) {
+    if (to.path === '/') next('/dashboard');
+    else if (to.path === '/login')
+      message.warn('您已经登录，若要重新登录请退出当前帐号！');
+    else next();
+  } else {
+    if (to.meta.requiredAuth) {
+      message.warning('请您先登录后再操作！', 2);
+      next('/login');
+    } else next();
   }
-  if (to.path === '/login' && logined) {
-    message.warn('您已经登录，若要重新登录请退出当前帐号！');
-    next('/dashboard');
-  }
-  // 若未登录则重定向至登录页
-  if (to.meta.requiredAuth && !logined) {
-    message.warning('请您先登录后再操作！', 2);
-    next('/login');
-  } else next();
 });
 
 export default router;

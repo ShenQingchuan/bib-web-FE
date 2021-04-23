@@ -41,13 +41,11 @@
         class="flex-row anis-center component-view-header__inner-user-actions"
       >
         <!-- 已登录用户 - 非简洁模式下可用操作 -->
-        <template v-if="!consice">
-          <!-- 操作::通知 -->
-          <BellOutlined
-            class="component-view-header__inner-user-actions-item"
-            @click="$router.push('/notification')"
-          />
-        </template>
+        <!-- 操作::通知 -->
+        <BellOutlined
+          class="component-view-header__inner-user-actions-item"
+          @click="$router.push('/notification')"
+        />
 
         <!-- 头像::用户个人相关 / 登录注册按钮 -->
         <a-popover :title="userName">

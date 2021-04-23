@@ -39,12 +39,8 @@
 <script setup lang="ts">
 import { defineProps, ref, computed, defineEmit } from "vue";
 import { LikeFilled, LikeOutlined } from '@ant-design/icons-vue';
+import { useDayjs } from "@/composable/useDayjs";
 import type { DocumentCommentDTO } from "../../models";
-
-import * as dayjs from 'dayjs';
-import 'dayjs/locale/zh-cn'
-import * as relativeTime from 'dayjs/plugin/relativeTime';
-dayjs.extend(relativeTime);
 
 const props = defineProps<{
   comment: DocumentCommentDTO;
@@ -60,8 +56,8 @@ const likedCount = computed(() => {
 })
 
 // @Methods:
-const displayTimeWithFormat = () => dayjs(props.comment.createTime).locale('zh-cn').format('YYYY-MM-DD HH:mm:ss');
-const displayTimeFromNow = () => dayjs(props.comment.createTime).locale('zh-cn').fromNow();
+const displayTimeWithFormat = () => useDayjs(props.comment.createTime).format('YYYY-MM-DD HH:mm:ss');
+const displayTimeFromNow = () => useDayjs(props.comment.createTime).fromNow();
 const handleHitLike = () => {
   liked.value = !liked.value;
 

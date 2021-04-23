@@ -64,12 +64,8 @@ import { usePayloadFromToken } from "@/utils";
 import { DocListItemArchiveType, docListItemFilters as filters } from '@/components/page-dashboard/common';
 import { message } from "ant-design-vue";
 import DocListItemView from '@/components/page-dashboard/doc-list-item.vue';
-import * as dayjs from "dayjs";
-import 'dayjs/locale/zh-cn' // 导入本地化语言
 import type { DocListItem, DocFilter } from "@/components/page-dashboard/common";
 import type { DocumentViewData } from "@/models";
-
-dayjs.locale('zh-cn');
 
 export default defineComponent({
   name: "dashboard-index-subpage",

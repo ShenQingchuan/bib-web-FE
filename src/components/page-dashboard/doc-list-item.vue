@@ -27,20 +27,19 @@
 <script setup lang="ts">
 import { defineProps } from "vue";
 import { Eyes } from '@icon-park/vue-next';
-import type { DocListItem } from "./common";
+import { useDayjs } from "@/composable/useDayjs";
 import DocBelongBreadcrumb from './doc-belong-breadcrumb.vue';
-
-import * as dayjs from "dayjs";
-import 'dayjs/locale/zh-cn' // 导入本地化语言
-dayjs.locale('zh-cn');
+import type { DocListItem } from "./common";
 
 defineProps<{
   docItem: DocListItem
 }>();
 
+useDayjs
+
 // @Methods:
 const formatTime = (timestamp: number) => {
-  return dayjs(timestamp).format('YYYY/MM/DD HH:mm:ss');
+  return useDayjs(timestamp).format('YYYY/MM/DD HH:mm:ss');
 }
 </script>
 

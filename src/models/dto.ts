@@ -79,3 +79,11 @@ export interface UserActivityDto {
   activityType: UserActivityType;
   activityData: UserActivityData;
 }
+
+export interface DocShowInWikiListDto {
+  id: string;
+  title: string;
+  creator: UserSimpleDTO;
+  updateTime: number;
+  publicSharing: boolean;
+}

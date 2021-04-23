@@ -165,11 +165,8 @@
 <script setup lang="ts">
 import { defineProps } from "vue";
 import { GoodTwo, WritingFluently, Rss, People, Newlybuild, Peoples } from '@icon-park/vue-next';
-import * as dayjs from 'dayjs';
-import * as relativeTime from 'dayjs/plugin/relativeTime';
-import 'dayjs/locale/zh-cn'
-dayjs.extend(relativeTime);
 import { UserActivityType } from '@/models';
+import { useDayjs } from "@/composable/useDayjs";
 import type {
   OrgSimpleDTO,
   DocSimpleDto,
@@ -184,7 +181,7 @@ defineProps<{
 }>();
 
 const timeDisplay = (timestamp: number) => {
-  return dayjs(timestamp).locale('zh-cn').format("YYYY-MM-DD A h:mm");
+  return useDayjs(timestamp).format("YYYY-MM-DD A h:mm");
 }
 
 const doc_dto = (data: UserActivityData) => data as DocSimpleDto;

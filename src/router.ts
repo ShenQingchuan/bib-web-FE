@@ -2,6 +2,7 @@ import { isBibUserTokenValid } from './utils';
 import { message } from 'ant-design-vue';
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router';
 import { Component } from 'vue';
+import { create } from 'underscore';
 const DEFAULT_ROUTE_TITILE = 'Bib · 打造你的云上知识库';
 const $title = (title: string) => `${title} | ${DEFAULT_ROUTE_TITILE}`;
 
@@ -102,6 +103,31 @@ let routes: Array<RouteRecordRaw> = [
   createRoute('/wiki/new', () => import('./pages/wiki/new.vue'), '新建知识库', {
     requiredAuth: true
   }),
+  createRoute(
+    '/wiki/:wikiId',
+    () => import('./pages/wiki/layout.vue'),
+    '知识库',
+    {
+      requireAuth: true
+    },
+    [
+      createRoute('', () => import('./pages/wiki/index.vue'), '知识库目录'),
+      createRoute(
+        'manage',
+        () => import('./pages/wiki/manage.vue'),
+        '管理知识库',
+        {},
+        [
+          createRoute(
+            'docs',
+            () => import('./pages/wiki/docs.vue'),
+            '管理知识库文档',
+            { tab: 'docs' }
+          )
+        ]
+      )
+    ]
+  ),
   createRoute('/org/new', () => import('./pages/org/new.vue'), '新建团队', {
     requiredAuth: true
   })
@@ -135,10 +161,13 @@ router.beforeEach(async (to, from, next) => {
   const logined = isBibUserTokenValid();
 
   if (logined) {
-    if (to.path === '/') next('/dashboard');
-    else if (to.path === '/login')
+    if (to.path === '/') {
+      next('/dashboard');
+    } else if (to.path === '/login') {
       message.warn('您已经登录，若要重新登录请退出当前帐号！');
-    else next();
+    } else if (/^\/wiki\/\d+\/manage$/g.test(to.path)) {
+      next(to.path + '/docs');
+    } else next();
   } else {
     if (to.meta.requiredAuth) {
       message.warning('请您先登录后再操作！', 2);

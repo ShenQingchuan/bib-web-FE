@@ -21,11 +21,8 @@
 import { defineProps } from "vue";
 import { useRouter } from "vue-router";
 import { Lock, Peoples } from '@icon-park/vue-next';
+import { useDayjs } from "@/composable/useDayjs";
 import type { WikiListItemData } from './common';
-
-import * as dayjs from "dayjs";
-import 'dayjs/locale/zh-cn' // 导入本地化语言
-dayjs.locale('zh-cn');
 
 defineProps<{
   wiki: WikiListItemData
@@ -37,7 +34,7 @@ const router = useRouter();
 
 // @Methods:
 const formatTime = (timestamp: number) => {
-  return dayjs(timestamp).format('YYYY/MM/DD HH:mm:ss');
+  return useDayjs(timestamp).format('YYYY/MM/DD HH:mm:ss');
 }
 </script>
 

@@ -35,8 +35,6 @@
 
 <script setup lang="ts">
 import { computed, onMounted, ref } from "vue";
-import * as dayjs from "dayjs";
-import 'dayjs/locale/zh-cn' // 导入本地化语言
 import { DocListItemArchiveType, docListItemFilters as filters } from "@/components/page-dashboard/common";
 import { fusions } from "@/fusions";
 import { usePayloadFromToken } from "@/utils";
@@ -44,7 +42,6 @@ import DocListItemView from '@/components/page-dashboard/doc-list-item.vue';
 import { DownOutlined } from '@ant-design/icons-vue';
 import type { DocListItem, DocFilter } from "@/components/page-dashboard/common";
 
-dayjs.locale('zh-cn');
 
 const tokenPayload = usePayloadFromToken()!;
 

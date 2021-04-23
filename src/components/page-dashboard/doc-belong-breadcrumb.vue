@@ -9,13 +9,17 @@
       v-if="doc.archiveType == DocListItemArchiveType.UserWiki
       || doc.archiveType == DocListItemArchiveType.OrgWiki"
     >
-      <a class="doc-belong-breadcrumb-link" :href="`/wiki/${doc.wikiId}`">{{ doc.wikiName }}</a>
+      <a class="doc-belong-breadcrumb-link" :href="`/wiki/${doc.wikiId}`">
+        <FolderOpen class="iconpark m-r-2" />
+        {{ doc.wikiName }}
+      </a>
     </a-breadcrumb-item>
   </a-breadcrumb>
 </template>
 
 <script setup lang="ts">
 import { defineProps } from "vue";
+import { FolderOpen } from '@icon-park/vue-next';
 import { DocListItemArchiveType } from './common';
 import type { DocListItem } from './common';
 

@@ -122,7 +122,7 @@ let routes: Array<RouteRecordRaw> = [
             'docs',
             () => import('./pages/wiki/docs.vue'),
             '管理知识库文档',
-            { tab: 'docs' }
+            { tab: 'docs', keepalive: true }
           )
         ]
       )

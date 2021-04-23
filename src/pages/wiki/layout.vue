@@ -15,21 +15,17 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
 import CommonHeader from '@/components/view-header/common-header.vue';
-
-// @States:
-
-// @LifeCycels:
-
-// @Methods:
-
 </script>
 
 <style lang="less" scoped>
 @import "./common.less";
+@import "@/less/color.less";
 
 .page-wiki {
   .t-b-layout;
+}
+.page-wiki__content {
+  background-color: @N50;
 }
 </style>

@@ -13,13 +13,7 @@
         </a>
       </div>
       <!-- 搜索框 -->
-      <a-auto-complete v-show="!consice" class="component-view-header__inner-search">
-        <a-input placeholder="搜索">
-          <template #prefix>
-            <search-outlined></search-outlined>
-          </template>
-        </a-input>
-      </a-auto-complete>
+      <common-searcher v-show="!consice" />
 
       <!-- 导航菜单 -->
       <ul class="flex-row anis-center component-view-header__inner-nav-menu">
@@ -75,8 +69,9 @@ import {
   ClockCircleOutlined,
   BellOutlined,
 } from "@ant-design/icons-vue";
-import { isBibUserTokenValid, usePayloadFromToken, userDetailsStorageRef } from "../../utils";
+import { isBibUserTokenValid, usePayloadFromToken } from "@/utils";
 import userActionAvatarOverlay from "./user-action__avatar-overlay.vue";
+import CommonSearcher from '@/components/common-search/search.vue';
 
 export default {
   name: "common-header",
@@ -85,6 +80,7 @@ export default {
     SearchOutlined,
     ClockCircleOutlined,
     BellOutlined,
+    CommonSearcher
   },
   props: {
     consice: Boolean,
@@ -185,21 +181,5 @@ export default {
   width: 18px;
   height: 18px;
   background: url("../../assets/svg/user-actions__new.svg");
-}
-</style>
-
-<style lang="less">
-.component-view-header__container
-  .component-view-header__inner-search
-  .ant-input-affix-wrapper {
-  max-width: 200px;
-  border-radius: 6px;
-  border: none;
-  margin-right: 24px;
-  box-shadow: none !important;
-  &,
-  & input {
-    background-color: #f5f5f5;
-  }
 }
 </style>

@@ -13,7 +13,10 @@
     </a-tooltip>
 
     <span class="m-l-auto tc-n500">最近更新于：{{ formatTime(wiki.updateTime) }}</span>
-    <div class="m-l-20 page-dashboard__wiki-manage cursor-ptr tc-primary">管理</div>
+    <div
+      class="m-l-20 page-dashboard__wiki-manage cursor-ptr tc-primary"
+      @click="$router.push(`/wiki/${wiki.id}/manage`)"
+    >管理</div>
   </div>
 </template>
 

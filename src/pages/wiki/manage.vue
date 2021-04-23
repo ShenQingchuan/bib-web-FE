@@ -2,7 +2,10 @@
   <a-layout class="page-wiki-manage__container">
     <a-layout-header class="page-wiki-manage__header flex-row anis-center">
       <div class="flex-row anis-center page-wiki-manage__header-tabs m-lr-auto">
-        <div class="page-wiki-manage-header-back p-lr-32 m-r-48 cursor-ptr flex-row anis-center">
+        <div
+          class="page-wiki-manage-header-back p-lr-32 m-r-48 cursor-ptr flex-row anis-center"
+          @click="$router.push(`/wiki/${$route.params.wikiId}`)"
+        >
           <ArrowLeft class="iconpark m-r-10" size="18" />返回目录
         </div>
 
@@ -64,6 +67,7 @@ import { ArrowLeft } from '@icon-park/vue-next';
   &.active {
     border-bottom: 2px solid @primary-color;
     font-weight: 500;
+    line-height: 65px;
   }
 }
 .page-wiki-manage-header-back {

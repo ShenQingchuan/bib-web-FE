@@ -365,10 +365,14 @@ export function runLogout() {
   userDetailsStorageRef.value = null;
 
   nextTick(() => {
-    const logoutMsgCloser = message.loading('正在退出登录...', 1, () => {
-      router.push('/login').then(() => {
-        logoutMsgCloser();
-      });
+    const logoutMsgCloser = message.loading({
+      content: '正在退出登录...',
+      key: 'logout-message-tip',
+      onClose: () => {
+        router.push('/login').then(() => {
+          logoutMsgCloser();
+        });
+      }
     });
   });
 }

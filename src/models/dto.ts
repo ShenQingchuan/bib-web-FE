@@ -24,6 +24,17 @@ export interface UserSimpleDto {
   followersCount: number;
 }
 
+export interface UserDetailsFullDto {
+  id: number;
+  avatarURL: string;
+  introduce: string;
+  address: string;
+  profession: string;
+  isFollowing: boolean;
+  followersCount: number;
+  followingsCount: number;
+}
+
 export interface OrgSimpleDto {
   id: number;
   name: string;

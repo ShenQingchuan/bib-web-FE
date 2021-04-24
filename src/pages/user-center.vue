@@ -12,11 +12,11 @@
         <h3 class="text-center m-tb-16">{{ userName }}</h3>
         <div class="counter-wrapper w-p100 m-t-6 m-b-32 flex-row jyct-center anis-center">
           <div class="counter-container flex-col anis-center">
-            <div class="count-number fs-20 fw-700 m-lr-32">{{ userDetails.fansCount }}</div>
+            <div class="count-number fs-20 fw-700 m-lr-32">{{ userDetails.followersCount }}</div>
             <div class="label-text">粉丝</div>
           </div>
           <div class="counter-container flex-col anis-center">
-            <div class="count-number fs-20 fw-700 m-lr-32">{{ userDetails.subscribeCount }}</div>
+            <div class="count-number fs-20 fw-700 m-lr-32">{{ userDetails.followingsCount }}</div>
             <div class="label-text">关注</div>
           </div>
         </div>
@@ -30,7 +30,7 @@
             path: '/user-settings#profile',
           })"
         >编辑资料</a-button>
-        <a-button v-else class="m-b-20" block>关注</a-button>
+        <a-button v-else class="m-b-20" block @click="onFollowUser">{{ focused ? '取消关注' : '关注' }}</a-button>
 
         <div class="w-p100 m-tb-6 text-left">
           <div class="flex-row anis-center m-tb-16">
@@ -119,7 +119,7 @@
 
 <script setup lang="ts">
 import { reactive, ref } from "vue";
-import { useRoute } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 import { EnvironmentOutlined, ProfileOutlined } from "@ant-design/icons-vue";
 import { LocalTwo } from '@icon-park/vue-next';
 import { fusions } from "@/fusions";
@@ -127,19 +127,22 @@ import { usePayloadFromToken, userDetailsStorageRef } from '@/utils'
 import { message } from "ant-design-vue";
 import CommonHeader from "@/components/view-header/common-header.vue";
 import UserActivityCard from '@/components/page-user-center/user-activity-card.vue';
-import type { OrgSimpleDto, UserActivityDto } from '@/models'
+import * as us from 'underscore';
+import type { OrgSimpleDto, UserActivityDto, UserDetailsFullDto } from '@/models'
 
 const userDetails = reactive({
   avatarURL: "",
   introduce: "",
   address: "",
   profession: "",
-  fansCount: 0,
-  subscribeCount: 0,
+  followersCount: 0,
+  followingsCount: 0,
 });
 const route = useRoute();
+const router = useRouter();
 const userName = route.params['userName'] as string;
 const isMe = usePayloadFromToken()?.userName === userName || false;
+const focused = ref(false);
 const joinedOrgs = ref<OrgSimpleDto[]>([]);
 const activities = ref<UserActivityDto[]>([]);
 const loadingUserActivities = ref(false);
@@ -148,14 +151,29 @@ const pageTotal = ref(0);
 
 // 获取 用户详细信息
 (async () => {
-  const detailRes = await fusions.get(`/details/?userName=${userName}`);
+  let requestURL = `/details/?userName=${userName}`;
+  const credential = usePayloadFromToken();
+  if (credential) {
+    // 已经登录
+    requestURL += `&readerId=${credential.userId}`;
+  }
+  const detailRes = await fusions.get(requestURL);
   if (detailRes.data.responseOk) {
-    const { avatarURL, introduce, address, profession } = detailRes.data.data;
+    const { avatarURL, introduce, address,
+      profession, followersCount, followingsCount, isFollowing
+    } = detailRes.data.data as UserDetailsFullDto;
+
     userDetails.avatarURL = avatarURL;
     userDetails.introduce = introduce;
     userDetails.address = address;
     userDetails.profession = profession;
-    userDetailsStorageRef.value = userDetails;
+    userDetails.followersCount = followersCount;
+    userDetails.followingsCount = followingsCount;
+    focused.value = isFollowing;
+
+    if (isMe) {
+      userDetailsStorageRef.value = userDetails;
+    }
   }
 })();
 
@@ -187,6 +205,38 @@ const fetchUserActivity = async () => {
   }
 }
 fetchUserActivity();
+
+// @Methods:
+const onFollowUser = us.debounce(() => {
+  const credential = usePayloadFromToken();
+  if (!credential) {
+    message.warn({
+      content: "请先登录后再执行本操作",
+      key: 'follow-user-message-tip'
+    });
+    router.push('/login');
+    return;
+  }
+
+  fusions.post('/user/follow', {
+    srcUid: credential.userId,
+    targetUserName: userName
+  }).then((resp) => {
+    if (resp.data.responseOk) {
+      message.success({
+        content: `${focused.value ? '取消关注' : '关注'} ${userName} 成功！`,
+        key: 'follow-user-message-tip'
+      });
+      if (focused.value) {
+        userDetails.followersCount -= 1;
+        focused.value = false;
+      } else {
+        userDetails.followersCount += 1;
+        focused.value = true;
+      }
+    }
+  })
+}, 1500, true);
 </script>
 
 <style lang="less">

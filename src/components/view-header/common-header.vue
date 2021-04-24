@@ -69,9 +69,10 @@ import {
   ClockCircleOutlined,
   BellOutlined,
 } from "@ant-design/icons-vue";
-import { isBibUserTokenValid, usePayloadFromToken } from "@/utils";
+import { isBibUserTokenValid, usePayloadFromToken, userDetailsStorageRef } from "@/utils";
 import userActionAvatarOverlay from "./user-action__avatar-overlay.vue";
 import CommonSearcher from '@/components/common-search/search.vue';
+import { ref } from "vue";
 
 export default {
   name: "common-header",
@@ -89,7 +90,7 @@ export default {
     const userLogined = isBibUserTokenValid();
     const tokenPayload = usePayloadFromToken()!;
     const userName = tokenPayload.userName ?? `Bib 用户 - UID ${tokenPayload.userId}`;
-    const userAvatarURL = tokenPayload.avatarURL;
+    const userAvatarURL = ref(userDetailsStorageRef.value?.avatarURL || tokenPayload.avatarURL || '');
 
     return {
       navs: [

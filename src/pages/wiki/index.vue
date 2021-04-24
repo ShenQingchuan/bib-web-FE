@@ -22,7 +22,7 @@
           </a-breadcrumb-item>
           <a-breadcrumb-item>
             <span class="text-noselect">{{ wikiViewData.name }}</span>
-            <a-tooltip title="私有知识库">
+            <a-tooltip title="私有知识库" v-if="wikiViewData.isPrivate">
               <Lock class="iconpark m-l-12 tc-n500" theme="filled" />
             </a-tooltip>
           </a-breadcrumb-item>
@@ -41,7 +41,7 @@
             <Connect theme="outline" class="iconpark m-r-4" />分享
           </a-button>
           <a-button class="m-r-10" @click="$router.push($route.path + '/manage')">管理</a-button>
-          <a-button type="primary">在此新建文档</a-button>
+          <a-button type="primary" @click="onCreateNewDocInWiki">在此新建文档</a-button>
         </template>
       </template>
     </a-layout-header>
@@ -76,14 +76,16 @@
 
 <script setup lang="ts">
 import { ref } from 'vue';
-import { useRoute } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 import { fusions } from '@/fusions';
 import { usePayloadFromToken, numberFormat } from '@/utils';
 import { useDayjs } from '@/composable/useDayjs';
+import { message } from 'ant-design-vue';
 import { Lock, Rss, Connect } from '@icon-park/vue-next';
-import type { WikiViewDataDto } from '@/models';
+import type { DocumentViewData, WikiViewDataDto } from '@/models';
 
 const route = useRoute();
+const router = useRouter();
 const tokenPayload = usePayloadFromToken()!;
 const wikiId = route.params.wikiId as string;
 
@@ -101,7 +103,18 @@ fusions.get(`/wiki/?wikiId=${wikiId}&userId=${tokenPayload.userId}`)
   });
 
 // @Methods:
-
+const onCreateNewDocInWiki = () => {
+  message.loading("初始化新文档中，请稍候...");
+  fusions.post('/docs/', {
+    userId: tokenPayload.userId,
+    wikiId
+  }).then((resp) => {
+    if (resp.data.responseOk) {
+      const newDocViewData = resp.data.data as DocumentViewData
+      router.push(`/doc/${newDocViewData.id}/edit`).then(() => message.destroy());
+    }
+  });
+}
 </script>
 
 <style lang="less" scoped>

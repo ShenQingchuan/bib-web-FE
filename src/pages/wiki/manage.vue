@@ -6,7 +6,7 @@
           class="page-wiki-manage-header-back p-lr-32 m-r-48 cursor-ptr flex-row anis-center"
           @click="$router.push(`/wiki/${$route.params.wikiId}`)"
         >
-          <ArrowLeft class="iconpark m-r-10" size="18" />返回目录
+          <ArrowLeft class="iconpark m-r-10" size="18" />返回首页
         </div>
 
         <div
@@ -57,10 +57,6 @@ import { ArrowLeft } from '@icon-park/vue-next';
 
 .page-wiki-manage {
   .t-b-layout;
-}
-.page-wiki-manage__header {
-  background: #fff;
-  border-bottom: 1px solid #e8e8e8;
 }
 .page-wiki-manage__header-tab {
   &:hover,

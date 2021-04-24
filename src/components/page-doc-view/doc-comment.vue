@@ -40,10 +40,10 @@
 import { defineProps, ref, computed, defineEmit } from "vue";
 import { LikeFilled, LikeOutlined } from '@ant-design/icons-vue';
 import { useDayjs } from "@/composable/useDayjs";
-import type { DocumentCommentDTO } from "../../models";
+import type { DocumentCommentDto } from "../../models";
 
 const props = defineProps<{
-  comment: DocumentCommentDTO;
+  comment: DocumentCommentDto;
 }>();
 
 const emit = defineEmit(['replyTo']);

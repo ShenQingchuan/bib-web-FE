@@ -66,7 +66,7 @@ import DocViewHeader from '@/components/page-doc-view/doc-view-header.vue';
 import DocComment from '@/components/page-doc-view/doc-comment.vue';
 import DocSideToc from '@/components/DocSideToc/doc-side-toc.vue';
 import * as us from 'underscore';
-import type { DocumentCommentDTO, DocumentViewData, UserSimpleDTO } from "@/models";
+import type { DocumentCommentDto, DocumentViewData, UserSimpleDto } from "@/models";
 import type { DocTableOfContentsUnit } from "@/components/BibEditor/typings";
 
 // @States:
@@ -82,11 +82,11 @@ const docName = `bib-doc-id${docId}`;
 
 // @States:
 const viewData = ref<DocumentViewData>();
-const comments = ref<DocumentCommentDTO[]>([]);
+const comments = ref<DocumentCommentDto[]>([]);
 const commentContent = ref('');
 const thumbsUped = ref(false);
 const thumbsUpedCount = ref(0);
-const replyTo = ref<DocumentCommentDTO>();
+const replyTo = ref<DocumentCommentDto>();
 
 // # doc-side-toc
 const headingRefs = ref<HTMLHeadingElement[]>([]);
@@ -168,7 +168,7 @@ Promise.all([
 });
 
 // @Methods:
-const onReplyTo = (replyToPayload: DocumentCommentDTO) => {
+const onReplyTo = (replyToPayload: DocumentCommentDto) => {
   replyTo.value = replyToPayload;
   commentInputer.value.focus();
 }
@@ -195,7 +195,7 @@ const onSubmitComment = () => {
     replyToId: replyTo.value?.id || null
   }).then((resp) => {
     if (resp.data.responseOk) {
-      comments.value.push(resp.data.data as DocumentCommentDTO);
+      comments.value.push(resp.data.data as DocumentCommentDto);
 
       commentContent.value = "";
       commentInputer.value.blur();

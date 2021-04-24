@@ -127,7 +127,7 @@ import { usePayloadFromToken, userDetailsStorageRef } from '@/utils'
 import { message } from "ant-design-vue";
 import CommonHeader from "@/components/view-header/common-header.vue";
 import UserActivityCard from '@/components/page-user-center/user-activity-card.vue';
-import type { OrgSimpleDTO, UserActivityDto } from '@/models'
+import type { OrgSimpleDto, UserActivityDto } from '@/models'
 
 const userDetails = reactive({
   avatarURL: "",
@@ -140,7 +140,7 @@ const userDetails = reactive({
 const route = useRoute();
 const userName = route.params['userName'] as string;
 const isMe = usePayloadFromToken()?.userName === userName || false;
-const joinedOrgs = ref<OrgSimpleDTO[]>([]);
+const joinedOrgs = ref<OrgSimpleDto[]>([]);
 const activities = ref<UserActivityDto[]>([]);
 const loadingUserActivities = ref(false);
 const page = ref(0);

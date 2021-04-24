@@ -82,7 +82,7 @@ import { fusions } from '@/fusions';
 import { cosImageUploadLoadingKey, cosImageURLPrefix, multiplePartFormContentType, usePayloadFromToken } from '@/utils';
 import CommonHeader from '@/components/view-header/common-header.vue'
 import CenterBigCardLayout from '@/components/layouts/center-big-card-layout.vue';
-import type { OrgSimpleDTO } from '@/models';
+import type { OrgSimpleDto } from '@/models';
 
 const tokenPayload = usePayloadFromToken()!;
 const router = useRouter()
@@ -137,7 +137,7 @@ const onCreateOrgFormSubmit = () => {
   };
   fusions.post('/org/', form).then((resp) => {
     if (resp.data.responseOk) {
-      const newOrg: OrgSimpleDTO = resp.data.data;
+      const newOrg: OrgSimpleDto = resp.data.data;
       message.success({ content: "创建团队成功", key: 'create-org' });
       router.push(`/org/${newOrg.id}`);
     }

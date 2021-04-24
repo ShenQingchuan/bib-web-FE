@@ -3,3 +3,4 @@ export * from './values';
 export * from './strings-utils';
 export * from './url-regexp';
 export * from './commonly-used-regexp';
+export * from './number-format';

@@ -168,11 +168,11 @@ import { GoodTwo, WritingFluently, Rss, People, Newlybuild, Peoples } from '@ico
 import { UserActivityType } from '@/models';
 import { useDayjs } from "@/composable/useDayjs";
 import type {
-  OrgSimpleDTO,
+  OrgSimpleDto,
   DocSimpleDto,
   UserActivityDto,
   UserActivityData,
-  UserSimpleDTO,
+  UserSimpleDto,
   WikiSimpleDto,
 } from "@/models";
 
@@ -185,9 +185,9 @@ const timeDisplay = (timestamp: number) => {
 }
 
 const doc_dto = (data: UserActivityData) => data as DocSimpleDto;
-const user_dto = (data: UserActivityData) => data as UserSimpleDTO;
+const user_dto = (data: UserActivityData) => data as UserSimpleDto;
 const wiki_dto = (data: UserActivityData) => data as WikiSimpleDto;
-const org_dto = (data: UserActivityData) => data as OrgSimpleDTO;
+const org_dto = (data: UserActivityData) => data as OrgSimpleDto;
 </script>
 
 <style lang="less" scoped>

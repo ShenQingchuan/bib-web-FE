@@ -2,9 +2,10 @@ export interface DocSimpleDto {
   id: number;
   title: string;
   contentAbstract: string;
-  creator: UserSimpleDTO;
+  creator: UserSimpleDto;
   inWiki: boolean;
   wikiName: string | null;
+  updateTime: number;
 }
 export interface WikiSimpleDto {
   id: number;
@@ -12,7 +13,7 @@ export interface WikiSimpleDto {
   description: string;
   focusCount: number;
 }
-export interface UserSimpleDTO {
+export interface UserSimpleDto {
   uid: number;
   userName: string;
   userDetails: {
@@ -23,7 +24,7 @@ export interface UserSimpleDTO {
   followersCount: number;
 }
 
-export interface OrgSimpleDTO {
+export interface OrgSimpleDto {
   id: number;
   name: string;
   desc: string;
@@ -37,10 +38,10 @@ export interface DocumentViewData {
   id: number;
   title: string;
   contentAbstract: string;
-  creator: UserSimpleDTO;
-  thumbUpUsers: UserSimpleDTO[];
-  collaborators: UserSimpleDTO[];
-  comments: DocumentCommentDTO[];
+  creator: UserSimpleDto;
+  thumbUpUsers: UserSimpleDto[];
+  collaborators: UserSimpleDto[];
+  comments: DocumentCommentDto[];
   thumbsUped: boolean;
   publicSharing: boolean;
   inWiki: {
@@ -50,11 +51,11 @@ export interface DocumentViewData {
   };
 }
 
-export interface DocumentCommentDTO {
+export interface DocumentCommentDto {
   id: number;
   content: string;
-  creator: UserSimpleDTO;
-  replyTo: DocumentCommentDTO | null;
+  creator: UserSimpleDto;
+  replyTo: DocumentCommentDto | null;
   createTime: number;
   thumbsUpCount: number;
 }
@@ -71,8 +72,8 @@ export enum UserActivityType {
 export type UserActivityData =
   | DocSimpleDto
   | WikiSimpleDto
-  | UserSimpleDTO
-  | OrgSimpleDTO;
+  | UserSimpleDto
+  | OrgSimpleDto;
 
 export interface UserActivityDto {
   createTime: number;
@@ -83,7 +84,19 @@ export interface UserActivityDto {
 export interface DocShowInWikiListDto {
   id: string;
   title: string;
-  creator: UserSimpleDTO;
+  creator: UserSimpleDto;
   updateTime: number;
   publicSharing: boolean;
+}
+
+export interface WikiViewDataDto {
+  id: number;
+  name: string;
+  description: string;
+  isPrivate: boolean;
+  joined: boolean;
+  focused: boolean;
+  focusCount: number;
+  creator: UserSimpleDto;
+  docs: DocSimpleDto[];
 }

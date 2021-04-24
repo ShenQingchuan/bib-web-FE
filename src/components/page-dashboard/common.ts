@@ -1,4 +1,4 @@
-import type { OrgSimpleDTO } from '@/models';
+import type { OrgSimpleDto } from '@/models';
 
 /** 归档类型：0 个人创建 1 团队创建 2 个人创建于知识库 3 团队创建于知识库 */
 export enum DocListItemArchiveType {
@@ -41,7 +41,7 @@ export interface WikiListItemData {
   wikiType: WikiType;
   isPrivate: boolean;
   updateTime: number;
-  organization: OrgSimpleDTO;
+  organization: OrgSimpleDto;
 }
 
 export const docListItemFilters: DocFilter[] = [

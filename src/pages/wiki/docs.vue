@@ -27,36 +27,7 @@
     <a-skeleton active :loading="wikiDocsListLoading">
       <a-empty class="m-tb-60" v-if="wikiDocList.length === 0" description="知识库暂时还没有文档..." />
       <template v-else>
-        <a-row
-          v-for="doc in wikiDocList"
-          :key="doc.id"
-          class="page-wiki-manage-wiki__docs-list-item flex-row anis-center to-ellipsis p-tb-8 p-lr-48 cursor-ptr"
-        >
-          <a-col :span="10">
-            <div class="wiki-doc-title">
-              <img src="/assets/svg/dashboard__doc-icon.svg" alt="文档" width="16" height="16" />
-              {{ doc.title }}
-              <a-tooltip title="公开分享阅读" v-if="doc.publicSharing">
-                <ShareSys class="tc-n500 iconpark m-l-10" />
-              </a-tooltip>
-            </div>
-          </a-col>
-          <a-col :span="6">
-            <a
-              :href="`/user/${doc.creator.userName}`"
-              class="wiki-doc-author-name fs-12 tc-n500"
-            >{{ doc.creator.userName }}</a>
-          </a-col>
-          <a-col :span="6">
-            <div class="wiki-doc-update-time fs-12 tc-n500">{{ useDayjs(doc.updateTime).fromNow() }}</div>
-          </a-col>
-          <a-col :span="2">
-            <div class="wiki-doc-operations fs-12 tc-n500">
-              <Write class="iconpark m-r-10" @click="$router.push(`/doc/${doc.id}/edit`)" />
-              <Delete class="iconpark m-r-10" />
-            </div>
-          </a-col>
-        </a-row>
+        <wiki-doc-list-item v-for="doc in wikiDocList" :key="doc.id" :wiki-doc="doc" />
         <a-button v-if="wikiDocsListPage !== wikiDocsListPageTotal" @click="fetchDocList">加载更多</a-button>
       </template>
     </a-skeleton>
@@ -66,12 +37,11 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
-import { ShareSys, Write, Delete } from '@icon-park/vue-next';
-import { useDayjs } from '@/composable/useDayjs';
 import { usePayloadFromToken } from '@/utils';
 import { fusions } from '@/fusions';
 import { message } from 'ant-design-vue';
 import CommonSearcher from '@/components/common-search/search.vue';
+import WikiDocListItem from '@/components/page-wiki/wiki-doc-list-item.vue';
 import type { DocShowInWikiListDto, DocumentViewData } from '@/models';
 
 const tokenPayload = usePayloadFromToken()!;
@@ -131,15 +101,8 @@ onMounted(() => {
   border: 1px solid @N200;
   border-radius: 6px 6px 0 0;
 }
-.page-wiki-manage-wiki__docs-list-header,
-.page-wiki-manage-wiki__docs-list-item {
+.page-wiki-manage-wiki__docs-list-header {
   border-bottom: 1px solid @N200;
   background-color: white;
-}
-
-.page-wiki-manage-wiki__docs-list-item {
-  &:hover {
-    background-color: @N100;
-  }
 }
 </style>

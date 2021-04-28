@@ -63,7 +63,8 @@
   </div>
 </template>
 
-<script lang="ts">
+<script setup lang="ts">
+import { defineProps } from "vue";
 import {
   SearchOutlined,
   ClockCircleOutlined,
@@ -72,39 +73,20 @@ import {
 import { isBibUserTokenValid, usePayloadFromToken, userDetailsStorageRef } from "@/utils";
 import userActionAvatarOverlay from "./user-action__avatar-overlay.vue";
 import CommonSearcher from '@/components/common-search/search.vue';
-import { ref } from "vue";
 
-export default {
-  name: "common-header",
-  components: {
-    userActionAvatarOverlay,
-    SearchOutlined,
-    ClockCircleOutlined,
-    BellOutlined,
-    CommonSearcher
-  },
-  props: {
-    consice: Boolean,
-  },
-  setup() {
-    const userLogined = isBibUserTokenValid();
-    const tokenPayload = usePayloadFromToken()!;
-    const userName = tokenPayload.userName ?? `Bib 用户 - UID ${tokenPayload.userId}`;
-    const userAvatarURL = ref(userDetailsStorageRef.value?.avatarURL || tokenPayload.avatarURL || '');
+const props = defineProps<{ consice: boolean, avatarURL: string }>();
 
-    return {
-      navs: [
-        { name: "工作台", href: "/dashboard" },
-        { name: "发现", href: "/expolore" },
-        { name: "反馈", href: "/feedback" },
-        { name: "开源", href: "https://github.com/KahraLab/bib-web-FE" },
-      ],
-      userName,
-      userLogined,
-      userAvatarURL
-    };
-  },
-};
+// @States:
+const userLogined = isBibUserTokenValid();
+const tokenPayload = usePayloadFromToken()!;
+const userName = tokenPayload.userName ?? `Bib 用户 - UID ${tokenPayload.userId}`;
+const userAvatarURL = props.avatarURL || tokenPayload.avatarURL || userDetailsStorageRef.value.avatarURL || '';
+const navs = [
+  { name: "工作台", href: "/dashboard" },
+  { name: "发现", href: "/expolore" },
+  { name: "反馈", href: "/feedback" },
+  { name: "开源", href: "https://github.com/KahraLab/bib-web-FE" },
+];
 </script>
 
 <style lang="less" scoped>

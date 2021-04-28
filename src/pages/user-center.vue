@@ -1,5 +1,5 @@
 <template>
-  <common-header consice />
+  <common-header consice :avatarURL="userDetails.avatarURL" />
   <a-row class="page-user-info__wrapper w-p80 m-lr-auto flex-row p-t-24 p-b-32 p-lr-16">
     <!-- 用户中心 左栏 -->
     <a-col :span="8">

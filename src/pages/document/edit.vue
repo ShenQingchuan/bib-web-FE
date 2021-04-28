@@ -1,22 +1,18 @@
 <template>
-  <a-skeleton class="m-tb-100" :paragraph="{ rows: 48 }" v-if="!editableGuardPass" />
+  <doc-view-header :view-data="viewData" editing @quit-document-edit="onQuitDocumentEdit" />
 
-  <template v-else>
-    <doc-view-header :view-data="viewData" editing @quit-document-edit="onQuitDocumentEdit" />
+  <bib-editor-menu v-if="editorViewMounted" :editor-instance="editorInstance" fixed top="65px" />
 
-    <bib-editor-menu v-if="editorViewMounted" :editor-instance="editorInstance" fixed top="65px" />
-
-    <div class="page-doc-edit__bib-editor-wrapper">
-      <input
-        v-if="viewData"
-        class="page-doc-edit__title-inputer p-lr-60 p-t-36 fs-32 fw-700"
-        v-model="viewData.title"
-        type="text"
-        placeholder="请输入文章标题..."
-      />
-      <div class="page-doc-edit__bib-editor" :ref="initEditorViewRef"></div>
-    </div>
-  </template>
+  <div class="page-doc-edit__bib-editor-wrapper">
+    <input
+      v-if="viewData"
+      class="page-doc-edit__title-inputer p-lr-60 p-t-36 fs-32 fw-700"
+      v-model="viewData.title"
+      type="text"
+      placeholder="请输入文章标题..."
+    />
+    <div class="page-doc-edit__bib-editor" :ref="initEditorViewRef"></div>
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -75,7 +71,7 @@ const onQuitDocumentEdit = () => {
   }
 }
 const editableGuard = () => {
-  if (!viewData.value?.collaborators.includes(credential.userId)) {
+  if (!viewData.value!.collaborators.includes(credential.userId)) {
     message.warn("您还没有此篇文档的编辑权限！");
     router.push(route.path.slice(0, -5));
     return;
@@ -87,8 +83,8 @@ const editableGuard = () => {
 
 if (!us.isEmpty(editingDocViewData.value)) {
   viewData.value = editingDocViewData.value!;
-  editableGuard();
   nextTick(() => {
+    editableGuard();
     editingDocViewData.value = null;
   })
 } else {
@@ -96,7 +92,9 @@ if (!us.isEmpty(editingDocViewData.value)) {
     const resp = await fusions.get(`/docs/${route.params.docId}?userId=${credential.userId}`);
     if (resp.data.responseOk) {
       viewData.value = resp.data.data;
-      editableGuard();
+      nextTick(() => {
+        editableGuard();
+      })
     }
   })();
 }

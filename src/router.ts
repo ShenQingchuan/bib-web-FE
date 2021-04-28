@@ -2,7 +2,6 @@ import { isBibUserTokenValid } from './utils';
 import { message } from 'ant-design-vue';
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router';
 import { Component } from 'vue';
-import { create } from 'underscore';
 const DEFAULT_ROUTE_TITILE = 'Bib · 打造你的云上知识库';
 const $title = (title: string) => `${title} | ${DEFAULT_ROUTE_TITILE}`;
 
@@ -156,7 +155,7 @@ router.beforeEach(async (to, from, next) => {
       `[Vue Router]: 正在从 ${from.fullPath} --> 前往 --> ${to.fullPath}`
     );
   // 更换页面标题
-  document.title = to.meta?.title || DEFAULT_ROUTE_TITILE;
+  document.title = (to.meta?.title as string) || DEFAULT_ROUTE_TITILE;
   // 首页 / 若已登录重定向至工作台
   const logined = isBibUserTokenValid();
 

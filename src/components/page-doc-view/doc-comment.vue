@@ -1,4 +1,4 @@
-<template>
+@<template>
   <a-comment>
     <template #actions>
       <span>
@@ -67,8 +67,8 @@ const handleReply = () => emit('replyTo', props.comment);
 </script>
 
 <style lang="less" scoped>
-@import "../../less/color.less";
-@import "../../less/shared.less";
+@import "@/less/color.less";
+@import "@/less/shared.less";
 
 .page-document-view__comment-reply-to {
   color: @N500;

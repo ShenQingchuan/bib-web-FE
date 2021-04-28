@@ -1,18 +1,22 @@
 <template>
-  <doc-view-header :view-data="viewData" editing @quit-document-edit="onQuitDocumentEdit" />
+  <a-skeleton class="m-tb-100" :paragraph="{ rows: 48 }" v-if="!editableGuardPass" />
 
-  <bib-editor-menu v-if="editorViewMounted" :editor-instance="editorInstance" fixed top="65px" />
+  <template v-else>
+    <doc-view-header :view-data="viewData" editing @quit-document-edit="onQuitDocumentEdit" />
 
-  <div class="page-doc-edit__bib-editor-wrapper">
-    <input
-      v-if="viewData"
-      class="page-doc-edit__title-inputer p-lr-60 p-t-36 fs-32 fw-700"
-      v-model="viewData.title"
-      type="text"
-      placeholder="请输入文章标题..."
-    />
-    <div class="page-doc-edit__bib-editor" :ref="initEditorViewRef"></div>
-  </div>
+    <bib-editor-menu v-if="editorViewMounted" :editor-instance="editorInstance" fixed top="65px" />
+
+    <div class="page-doc-edit__bib-editor-wrapper">
+      <input
+        v-if="viewData"
+        class="page-doc-edit__title-inputer p-lr-60 p-t-36 fs-32 fw-700"
+        v-model="viewData.title"
+        type="text"
+        placeholder="请输入文章标题..."
+      />
+      <div class="page-doc-edit__bib-editor" :ref="initEditorViewRef"></div>
+    </div>
+  </template>
 </template>
 
 <script setup lang="ts">
@@ -27,12 +31,14 @@ import BibEditorMenu from '@/components/BibEditor/menu/bib-editor-menu.vue';
 import * as us from 'underscore';
 import type { EditorInstance } from '@/components/BibEditor/typings';
 import type { DocumentViewData } from '@/models';
+import { message } from 'ant-design-vue';
 
 const route = useRoute(), router = useRouter();
 const credential = usePayloadFromToken()!;
 
 // @States:
 const editorViewMounted = ref(false);
+const editableGuardPass = ref(false);
 const viewData = ref<DocumentViewData>();
 
 // 初始化 editor view
@@ -68,9 +74,20 @@ const onQuitDocumentEdit = () => {
     });
   }
 }
+const editableGuard = () => {
+  if (!viewData.value?.collaborators.includes(credential.userId)) {
+    message.warn("您还没有此篇文档的编辑权限！");
+    router.push(route.path.slice(0, -5));
+    return;
+  }
+
+  editableGuardPass.value = true;
+}
+
 
 if (!us.isEmpty(editingDocViewData.value)) {
   viewData.value = editingDocViewData.value!;
+  editableGuard();
   nextTick(() => {
     editingDocViewData.value = null;
   })
@@ -79,6 +96,7 @@ if (!us.isEmpty(editingDocViewData.value)) {
     const resp = await fusions.get(`/docs/${route.params.docId}?userId=${credential.userId}`);
     if (resp.data.responseOk) {
       viewData.value = resp.data.data;
+      editableGuard();
     }
   })();
 }

@@ -1,6 +1,6 @@
 <template>
   <div class="page-document-view__wrapper flex-col">
-    <doc-view-header :view-data="viewData" />
+    <doc-view-header :view-data="viewData" :editable="editable" />
 
     <doc-side-toc :toc="tableOfContentsData" />
 
@@ -87,6 +87,7 @@ const commentContent = ref('');
 const thumbsUped = ref(false);
 const thumbsUpedCount = ref(0);
 const replyTo = ref<DocumentCommentDto>();
+const editable = ref(false);
 
 // # doc-side-toc
 const headingRefs = ref<HTMLHeadingElement[]>([]);
@@ -114,6 +115,8 @@ Promise.all([
   const [ydocToPmDocJsonStringResp, viewDataResp] = resolves;
   if (ydocToPmDocJsonStringResp.data.responseOk && viewDataResp.data.responseOk) {
     viewData.value = viewDataResp.data.data;
+    editable.value = viewData.value!.collaborators.includes(credential.userId);
+
     const ydocToPmDocJsonString = ydocToPmDocJsonStringResp.data.data;
 
     // 存储一部分组件在本地使用渲染用的、有离线需求的数据
@@ -146,7 +149,6 @@ Promise.all([
           '.ProseMirror h1,h2,h3,h4,h5,h6'
         ) as NodeListOf<HTMLHeadingElement>
       );
-      console.log('[ headingRefs.value ]', headingRefs.value);
       headingRefs.value.forEach(h => console.log(
         `header: ${h.textContent} , offsetTop: ${h.offsetTop}, scrollTop: ${h.scrollTop}, clientHeight: ${h.clientHeight}`)
       );
@@ -206,8 +208,8 @@ const onSubmitComment = () => {
 </script>
 
 <style lang="less" scoped>
-@import "../../less/color.less";
-@import "../../less/shared.less";
+@import "@/less/color.less";
+@import "@/less/shared.less";
 .page-document-view__content {
   width: 64vw;
 

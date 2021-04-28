@@ -36,13 +36,15 @@
         </a-button>
 
         <!-- 拥有该知识库协作者权限： -->
-        <template v-if="wikiViewData.joined">
+        <div :style="{
+          opacity: wikiViewData.joined ? 1 : 0
+        }">
           <a-button class="m-r-10">
             <Connect theme="outline" class="iconpark m-r-4" />分享
           </a-button>
           <a-button class="m-r-10" @click="$router.push($route.path + '/manage')">管理</a-button>
           <a-button type="primary" @click="onCreateNewDocInWiki">在此新建文档</a-button>
-        </template>
+        </div>
       </template>
     </a-layout-header>
     <a-layout-content class="page-wiki-index__content flex-row jyct-center p-b-64">
@@ -94,7 +96,7 @@ const wikiViewData = ref<WikiViewDataDto>();
 const wikiViewLoading = ref(true);
 
 // @LifeCycels:
-fusions.get(`/wiki/?wikiId=${wikiId}&userId=${tokenPayload.userId}`)
+fusions.get(`/wiki/?wikiId=${wikiId}&readerId=${tokenPayload.userId}`)
   .then((resp) => {
     if (resp.data.responseOk) {
       wikiViewData.value = resp.data.data as WikiViewDataDto;

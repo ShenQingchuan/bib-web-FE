@@ -43,8 +43,10 @@
       </a-tooltip>
       <a-button class="m-lr-10" v-show="!editing">分享阅读</a-button>
 
-      <a-button class="m-lr-10" v-if="!editing" type="primary" @click="onDocumentEdit">编辑</a-button>
-      <a-button class="m-lr-10" v-else @click="quitDocumentEdit">保存并退出编辑</a-button>
+      <template v-if="editable || editing">
+        <a-button class="m-lr-10" v-if="!editing" type="primary" @click="onDocumentEdit">编辑</a-button>
+        <a-button class="m-lr-10" v-else @click="quitDocumentEdit">保存并退出编辑</a-button>
+      </template>
     </div>
   </div>
 </template>
@@ -58,6 +60,7 @@ import type { DocumentViewData } from '@/models';
 
 const props = defineProps<{
   editing?: boolean;
+  editable?: boolean;
   viewData?: DocumentViewData,
 }>()
 const emit = defineEmit(['quit-document-edit']);

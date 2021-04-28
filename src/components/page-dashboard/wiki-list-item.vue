@@ -8,7 +8,7 @@
     <a-tooltip title="私有知识库" v-if="wiki.isPrivate">
       <Lock theme="filled" class="m-l-14 iconpark tc-n500" />
     </a-tooltip>
-    <a-tooltip title="团队所属" v-if="wiki.organization">
+    <a-tooltip v-if="wiki.organization" :title="`${wiki.organization.name} 团队所属`">
       <Peoples theme="filled" class="m-l-10 iconpark tc-n500" />
     </a-tooltip>
 

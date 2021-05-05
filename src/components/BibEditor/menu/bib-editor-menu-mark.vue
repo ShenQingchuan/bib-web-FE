@@ -38,7 +38,7 @@ onMounted(() => {
         }
       }
     }
-    if (meta?.needUpdate?.value || tr.selectionSet) {
+    if (meta?.$needUpdate?.value || tr.selectionSet || tr.storedMarks?.length) {
       const { $from, $to, empty } = editorInstance.view.state.selection;
       const storedMarks =
         editorInstance.view.state.storedMarks
@@ -47,6 +47,8 @@ onMounted(() => {
       let concated = storedMarks.concat($from.marks());
       if (!empty) concated = concated.concat($to.marks());
       isActive.value = us.uniq(concated).map(m => m.type.name).includes(props.mark);
+    } else {
+      isActive.value = false;
     }
   }, {
     $needUpdate: needUpdate

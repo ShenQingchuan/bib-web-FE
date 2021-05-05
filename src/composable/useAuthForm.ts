@@ -167,7 +167,9 @@ export function useLoginForm() {
           if (res.data.responseOk) {
             message.success($content('登录成功！'));
             tokenStorageRef.value = res.data.data.token;
-            router.push('/dashboard');
+            nextTick(() => {
+              router.push('/dashboard');
+            });
           }
         })
         .catch(() => {
@@ -367,6 +369,7 @@ export function runLogout() {
   nextTick(() => {
     const logoutMsgCloser = message.loading({
       content: '正在退出登录...',
+      duration: 1,
       key: 'logout-message-tip',
       onClose: () => {
         router.push('/login').then(() => {

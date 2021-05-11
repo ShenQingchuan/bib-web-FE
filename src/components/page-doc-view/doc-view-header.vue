@@ -50,7 +50,7 @@
         :color="user.color"
         @click="$router.push(`/user/${user.userName}`)"
       >
-        <a-tooltip :title="user.userName">
+        <a-tooltip :title="user.userName" placement="bottom">
           <a-avatar shape="circle" :src="user.avatarURL || `/assets/svg/user-avatar__default.svg`"></a-avatar>
         </a-tooltip>
       </a-badge>

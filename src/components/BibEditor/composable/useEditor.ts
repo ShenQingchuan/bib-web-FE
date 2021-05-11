@@ -117,7 +117,7 @@ export function useEditor(options: BibEditorOptions) {
 
   /** 初始化 EditorView 方法（可通过 ref hook） */
   const initEditor = (el: any) => {
-    let initState: EditorState;
+    let initState: EditorState, provider: WebsocketProvider;
     let plugins = [
       history(),
       buildInputRules(EditorSchema),
@@ -147,7 +147,7 @@ export function useEditor(options: BibEditorOptions) {
     if (!options.readonly) {
       let ydoc = new Y.Doc();
       // Y.js 协同配置：
-      const provider = new WebsocketProvider(
+      provider = new WebsocketProvider(
         'ws://localhost:2048',
         options.docName,
         ydoc
@@ -519,6 +519,11 @@ export function useEditor(options: BibEditorOptions) {
       toJSON() {
         return view.state.doc.toJSON();
       },
+      /** 退出编辑 */
+      quitEditor(callback?: (...innerArgs: any[]) => void, ...args: any[]) {
+        provider.disconnect();
+        callback?.(...args);
+      }
     };
 
     // onViewCreated Hook

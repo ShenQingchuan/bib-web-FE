@@ -70,7 +70,11 @@ const onQuitDocumentEdit = () => {
         savedDocViewData.value[docId] = resp.data.data as DocumentViewData;
         editingDocViewData.value = null;
 
-        router.push(route.path.slice(0, -5));
+        editorInstance.value.quitEditor(() => {
+          nextTick(() => {
+            router.push(route.path.slice(0, -5));
+          })
+        });
       }
     });
   }

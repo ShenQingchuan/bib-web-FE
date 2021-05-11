@@ -54,6 +54,7 @@ export interface EditorInstance {
   execTableCommand: (cmdName: TableCommand) => void;
   onEditorDispatched: (fn: DispatchHook, meta?: Record<string, any>) => void;
   applyForNodesAtCursor: (fn: (node: Node, pos: number) => void) => void;
+  quitEditor: (callback?: (...innerArgs: any[]) => void, ...args: any[]) => void;
 }
 
 export interface EditorComposition {

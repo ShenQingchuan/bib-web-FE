@@ -71,7 +71,9 @@ const onQuitDocumentEdit = () => {
         editingDocViewData.value = null;
 
         editorInstance.value.quitEditor(() => {
-          nextTick(() => {
+          nextTick(() => { 
+            // disconnect websocket 后需要更新在线列表，
+            // 最好将路由跳转推到下一个 tick
             router.push(route.path.slice(0, -5));
           })
         });

@@ -1,5 +1,5 @@
 <template>
-  <common-header consice />
+  <common-header :avatarURL="userDetailsStorageRef.avatarURL" consice />
 
   <div class="page-user-settings__wrapper m-tb-48 m-lr-auto p-32">
     <a-tabs
@@ -22,7 +22,10 @@
             <div class="flex-row anis-center">
               <a-avatar
                 class="w-80px h-80px m-l-20"
-                :src="detailsFormData.avatarURL || '/assets/svg/user-avatar__default.svg'"
+                :src="
+                  detailsFormData.avatarURL ||
+                    '/assets/svg/user-avatar__default.svg'
+                "
               ></a-avatar>
               <div
                 class="page-user-settings__profile-upload-avatar flex-row anis-center brr-6 m-l-24"
@@ -87,29 +90,36 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive } from 'vue';
-import { multiplePartFormContentType, userDetailsStorageRef } from "../utils";
+import { ref } from 'vue';
 import { UploadOne } from '@icon-park/vue-next';
 import { templateRef } from '@vueuse/core';
-import CommonHeader from '@/components/view-header/common-header.vue';
 import { message } from 'ant-design-vue';
 import { fusions } from '@/fusions';
-import { cosImageUploadLoadingKey, usePayloadFromToken, cosImageURLPrefix } from '@/utils'
+import {
+  cosImageUploadLoadingKey,
+  usePayloadFromToken,
+  cosImageURLPrefix,
+  multiplePartFormContentType,
+  userDetailsStorageRef,
+  tokenStorageRef
+} from '@/utils';
+import CommonHeader from '@/components/view-header/common-header.vue';
 
 // @States:
 const activeTabKey = ref(
-  window.location.hash.slice(1) // 去掉 '#' 号前缀
-  || 'profile'
+  window.location.hash.slice(1) || 'profile' // 去掉 '#' 号前缀
 );
 const detailsFormData = userDetailsStorageRef;
-const userAvatarUploadRef = templateRef<HTMLInputElement>('userAvatarUploadRef');
+const userAvatarUploadRef = templateRef<HTMLInputElement>(
+  'userAvatarUploadRef'
+);
 
 // @LifeCycles:
 
 // @Methods:
 const onTabChange = (activeKey: string) => {
   window.location.hash = activeKey;
-}
+};
 const onAvatarInput = () => {
   const tokenPayload = usePayloadFromToken();
   if (tokenPayload && userAvatarUploadRef.value.files) {
@@ -120,37 +130,53 @@ const onAvatarInput = () => {
       content: '头像上传中，请稍候...',
       key: cosImageUploadLoadingKey
     });
-    formData.append("uploadImages", images[0]);
-    formData.append("userId", `${tokenPayload.userId}`);
-    fusions.post('/details/uploadAvatar', formData, {
-      headers: {
-        "Content-Type": multiplePartFormContentType,
-      }
-    }).then((res) => {
-      const r: { key: string, putObjectResult: any } = res.data.data.newAvatar[0];
-      detailsFormData.value.avatarURL = `${cosImageURLPrefix}${r.key}`;
-      message.success({
-        content: res.data.message,
-        key: cosImageUploadLoadingKey
+    formData.append('uploadImages', images[0]);
+    formData.append('userId', `${tokenPayload.userId}`);
+    fusions
+      .post('/details/uploadAvatar', formData, {
+        headers: {
+          'Content-Type': multiplePartFormContentType
+        }
+      })
+      .then((res) => {
+        const r: { key: string; putObjectResult: any } =
+          res.data.data.newAvatar;
+        const newAvatarURL = `${cosImageURLPrefix}${r.key}`;
+        detailsFormData.value.avatarURL = newAvatarURL;
+        userDetailsStorageRef.value.avatarURL = newAvatarURL;
+        tokenStorageRef.value = res.data.data.newToken; // 更新了头像，所以需要更新 token 内容
+
+        message.success({
+          content: res.data.message,
+          key: cosImageUploadLoadingKey
+        });
       });
-    })
   }
-}
+};
 const onDetailsSubmit = () => {
   const tokenPayload = usePayloadFromToken();
   if (tokenPayload) {
-    fusions.post('/details/', {
-      ...detailsFormData.value,
-      userId: tokenPayload.userId
-    }).then((res) => {
-      message.success(res.data.message);
-    })
+    fusions
+      .post('/details/', {
+        ...detailsFormData.value,
+        userId: tokenPayload.userId
+      })
+      .then((res) => {
+        const { avatarURL, address, profession, introduce } = res.data.data;
+        userDetailsStorageRef.value = {
+          avatarURL,
+          address,
+          profession,
+          introduce
+        };
+        message.success(res.data.message);
+      });
   }
-}
+};
 </script>
 
 <style lang="less" scoped>
-@import "@/less/color.less";
+@import '@/less/color.less';
 .page-user-settings__wrapper {
   width: 100%;
   max-width: 800px;

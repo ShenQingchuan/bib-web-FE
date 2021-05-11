@@ -63,6 +63,7 @@ import { columnResizing, goToNextCell, tableEditing } from 'prosemirror-tables';
 import insertTableCommand from '../commands/insertTable';
 import execTableCommandFn from '../helpers/exec-table-command';
 import { applyUpdate, encodeStateAsUpdate } from 'yjs';
+import { userDetailsStorageRef } from '@/utils';
 
 function isListNodeType(node: Node, schema: Schema) {
   return (
@@ -181,8 +182,7 @@ export function useEditor(options: BibEditorOptions) {
 
       // 更新本文档在线的其他用户
       // @ts-ignore
-      provider.awareness.on('update', (x) => {
-        console.log('[ entries ]', provider.awareness.getStates().entries());
+      provider.awareness.on('update', () => {
         onlineOtherUsers.value = [...provider.awareness.getStates().entries()]
           .filter((s) => s[0] !== provider.awareness.clientID)
           .map((s) => ({
@@ -200,7 +200,7 @@ export function useEditor(options: BibEditorOptions) {
         color: cursorColor.value,
         name: credential?.userName,
         uid: credential?.userId,
-        avatarURL: credential?.avatarURL
+        avatarURL: userDetailsStorageRef.value.avatarURL || credential?.avatarURL || ''
       });
 
       initState = EditorState.create({

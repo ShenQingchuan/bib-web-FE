@@ -3,13 +3,19 @@
     <div
       class="flex-row anis-center component-view-header__inner"
       :class="{
-        'jyct-btwn': !userLogined,
+        'jyct-btwn': !userLogined
       }"
     >
       <!-- Header Logo -->
-      <div class="flex-row anis-center component-view-header__inner-logo m-r-24">
+      <div
+        class="flex-row anis-center component-view-header__inner-logo m-r-24"
+      >
         <a href="/">
-          <img src="/assets/img/Icon-png-logo.png" alt="header-logo" height="48" />
+          <img
+            src="/assets/img/Icon-png-logo.png"
+            alt="header-logo"
+            height="48"
+          />
         </a>
       </div>
       <!-- 搜索框 -->
@@ -21,7 +27,7 @@
           <li
             class="component-view-header__inner-nav-menu-item"
             :class="{
-              __active: item.href === $route.path,
+              __active: item.href === $route.path
             }"
           >
             <a :href="item.href">{{ item.name }}</a>
@@ -45,7 +51,7 @@
         <a-popover :title="userName">
           <a-avatar
             class="component-view-header__inner-user-actions-avatar"
-            :src="userAvatarURL || '/assets/svg/user-avatar__default.svg'"
+            :src="userAvatarURL"
           ></a-avatar>
           <template #content>
             <user-action-avatar-overlay />
@@ -55,8 +61,12 @@
       <!-- 未登录状态 -->
       <div v-else class="flex-row vc component-view-header__login-register">
         <a-space>
-          <a-button type="primary" @click="$router.push('/login')">登录</a-button>
-          <a-button type="default" @click="$router.push('/register')">注册</a-button>
+          <a-button type="primary" @click="$router.push('/login')"
+            >登录</a-button
+          >
+          <a-button type="default" @click="$router.push('/register')"
+            >注册</a-button
+          >
         </a-space>
       </div>
     </div>
@@ -64,26 +74,38 @@
 </template>
 
 <script setup lang="ts">
-import { defineProps } from "vue";
+import { computed, defineProps } from 'vue';
+import { BellOutlined } from '@ant-design/icons-vue';
 import {
-  BellOutlined,
-} from "@ant-design/icons-vue";
-import { isBibUserTokenValid, usePayloadFromToken, userDetailsStorageRef } from "@/utils";
-import userActionAvatarOverlay from "./user-action__avatar-overlay.vue";
+  isBibUserTokenValid,
+  usePayloadFromToken,
+  userDetailsStorageRef
+} from '@/utils';
+import userActionAvatarOverlay from './user-action__avatar-overlay.vue';
 import CommonSearcher from '@/components/common-search/search.vue';
 
-const props = defineProps<{ consice?: boolean, avatarURL?: string }>();
+const props = defineProps<{
+  consice?: boolean;
+  avatarURL?: string;
+}>();
 
 // @States:
 const userLogined = isBibUserTokenValid();
 const tokenPayload = usePayloadFromToken()!;
-const userName = tokenPayload.userName ?? `Bib 用户 - UID ${tokenPayload.userId}`;
-const userAvatarURL = props.avatarURL || tokenPayload.avatarURL || userDetailsStorageRef.value.avatarURL || '';
+const userName =
+  tokenPayload.userName ?? `Bib 用户 - UID ${tokenPayload.userId}`;
+const userAvatarURL = computed(
+  () =>
+    props.avatarURL ||
+    userDetailsStorageRef.value?.avatarURL ||
+    tokenPayload.avatarURL ||
+    '/assets/svg/user-avatar__default.svg'
+);
 const navs = [
-  { name: "工作台", href: "/dashboard" },
-  { name: "发现", href: "/expolore" },
-  { name: "反馈", href: "/feedback" },
-  { name: "开源", href: "https://github.com/KahraLab/bib-web-FE" },
+  { name: '工作台', href: '/dashboard' },
+  { name: '发现', href: '/expolore' },
+  { name: '反馈', href: '/feedback' },
+  { name: '开源', href: 'https://github.com/KahraLab/bib-web-FE' }
 ];
 </script>
 
@@ -161,6 +183,6 @@ const navs = [
   vertical-align: top;
   width: 18px;
   height: 18px;
-  background: url("../../assets/svg/user-actions__new.svg");
+  background: url('../../assets/svg/user-actions__new.svg');
 }
 </style>

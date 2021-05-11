@@ -83,7 +83,10 @@ export const nodes: {
     attrs: extends_textBlockAttrs(),
     content: 'inline*',
     group: 'block',
-    parseDOM: [{ tag: 'p', getAttrs: extendsTextBlockStyleAttrs() }],
+    parseDOM: [{
+      tag: 'p',
+      getAttrs: extendsTextBlockStyleAttrs()
+    }],
     toDOM(node: Node) {
       const style = stylesOfTextBlock(node);
       return ['p', { style }, 0];
@@ -466,13 +469,13 @@ export const marks: {
     }
   },
 
-  // :: MarkSpec An delete mark. Rendered as an `<del>` element.
   u: {
     parseDOM: [{ tag: 'u' }],
     toDOM() {
       return uDOM;
     }
   },
+  // :: MarkSpec An delete mark. Rendered as an `<del>` element.
   del: {
     parseDOM: [{ tag: 'del' }],
     toDOM() {

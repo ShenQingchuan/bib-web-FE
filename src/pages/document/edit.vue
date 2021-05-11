@@ -1,5 +1,10 @@
 <template>
-  <doc-view-header :view-data="viewData" editing @quit-document-edit="onQuitDocumentEdit" />
+  <doc-view-header
+    editing
+    :view-data="viewData"
+    :online-users="onlineOtherUsers"
+    @quit-document-edit="onQuitDocumentEdit"
+  />
 
   <bib-editor-menu v-if="editorViewMounted" :editor-instance="editorInstance" fixed top="65px" />
 
@@ -38,7 +43,7 @@ const editableGuardPass = ref(false);
 const viewData = ref<DocumentViewData>();
 
 // 初始化 editor view
-const { initEditor } = useEditor({
+const { initEditor, onlineOtherUsers } = useEditor({
   docName: `bib-doc-id${route.params.docId}`,
   credential,
 });

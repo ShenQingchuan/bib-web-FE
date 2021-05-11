@@ -66,15 +66,13 @@
 <script setup lang="ts">
 import { defineProps } from "vue";
 import {
-  SearchOutlined,
-  ClockCircleOutlined,
   BellOutlined,
 } from "@ant-design/icons-vue";
 import { isBibUserTokenValid, usePayloadFromToken, userDetailsStorageRef } from "@/utils";
 import userActionAvatarOverlay from "./user-action__avatar-overlay.vue";
 import CommonSearcher from '@/components/common-search/search.vue';
 
-const props = defineProps<{ consice: boolean, avatarURL: string }>();
+const props = defineProps<{ consice?: boolean, avatarURL?: string }>();
 
 // @States:
 const userLogined = isBibUserTokenValid();

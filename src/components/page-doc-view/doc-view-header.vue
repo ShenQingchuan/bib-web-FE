@@ -1,5 +1,5 @@
 <template>
-  <div class="page-document-view__header flex-row anis-center jyct-btwn p-tb-16">
+  <div class="page-document-view__header flex-row anis-center p-tb-16">
     <div class="flex-row anis-center p-l-24 p-r-16">
       <a v-show="!editing" href="/">
         <img src="/assets/img/Icon-png-logo.png" alt="header-logo" height="48" class="m-r-24" />
@@ -37,9 +37,30 @@
       </a-breadcrumb>
     </div>
 
-    <div class="flex-row anis-center p-r-24">
+    <!-- 在线用户列表 -->
+    <div v-if="editing && onlineUsers" class="flex-row anis-center p-lr-6 m-l-auto m-r-10">
+      <a-badge
+        v-for="user in onlineUsers.slice(0, 8)"
+        :key="user.userId"
+        :numberStyle="{
+          width: '8px',
+          height: '8px'
+        }"
+        class="cursor-ptr"
+        :color="user.color"
+        @click="$router.push(`/user/${user.userName}`)"
+      >
+        <a-tooltip :title="user.userName">
+          <a-avatar shape="circle" :src="user.avatarURL || `/assets/svg/user-avatar__default.svg`"></a-avatar>
+        </a-tooltip>
+      </a-badge>
+    </div>
+
+    <div class="flex-row anis-center p-r-24" :class="{
+      'm-l-auto': !editing
+    }">
       <a-tooltip title="添加协作用户">
-        <people-plus theme="outline" :size="20" class="iconpark m-r-20 cursor-ptr" />
+        <people-plus theme="outline" :size="20" class="iconpark m-l-10 m-r-4 cursor-ptr" />
       </a-tooltip>
       <a-button class="m-lr-10" v-show="!editing">分享阅读</a-button>
 
@@ -56,12 +77,15 @@ import { defineEmit, defineProps } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { Lock, PeoplePlus } from '@icon-park/vue-next';
 import { editingDocViewData, savedDocViewData } from '@/pages/document/editing-doc-storage-ref';
+// import type { Ref } from 'vue';
+import type { OnlineUser } from '../BibEditor/typings';
 import type { DocumentViewData } from '@/models';
 
 const props = defineProps<{
   editing?: boolean;
   editable?: boolean;
   viewData?: DocumentViewData,
+  onlineUsers?: OnlineUser[]
 }>()
 const emit = defineEmit(['quit-document-edit']);
 

@@ -181,16 +181,16 @@ export function useEditor(options: BibEditorOptions) {
 
       // 更新本文档在线的其他用户
       // @ts-ignore
-      provider.awareness.on('update', ({ added }) => {
-        if (added.length > 0) {
-          onlineOtherUsers.value = [...provider.awareness.getStates().entries()]
-            .filter((s) => s[0] !== provider.awareness.clientID)
-            .map((s) => ({
-              userId: s[1].user.uid,
-              userName: s[1].user.name,
-              color: s[1].user.color
-            }));
-        }
+      provider.awareness.on('update', (x) => {
+        console.log('[ entries ]', provider.awareness.getStates().entries());
+        onlineOtherUsers.value = [...provider.awareness.getStates().entries()]
+          .filter((s) => s[0] !== provider.awareness.clientID)
+          .map((s) => ({
+            userId: s[1].user.uid,
+            userName: s[1].user.name,
+            avatarURL: s[1].user.avatarURL,
+            color: s[1].user.color
+          }));
       });
 
       cursorColor.value = randomColor({
@@ -199,7 +199,8 @@ export function useEditor(options: BibEditorOptions) {
       provider.awareness.setLocalStateField('user', {
         color: cursorColor.value,
         name: credential?.userName,
-        uid: credential?.userId
+        uid: credential?.userId,
+        avatarURL: credential?.avatarURL
       });
 
       initState = EditorState.create({

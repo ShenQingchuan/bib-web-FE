@@ -60,7 +60,8 @@ import {
   Skeleton,
   Breadcrumb,
   Timeline,
-  Spin
+  Spin,
+  Badge
 } from 'ant-design-vue';
 
 createApp(App)
@@ -91,6 +92,7 @@ createApp(App)
   .use(Timeline)
   .use(Spin)
   .use(Comment)
+  .use(Badge)
   // for vue3-colorpicker
   .use(colorPicker)
   .mount('#app');

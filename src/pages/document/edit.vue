@@ -6,7 +6,12 @@
     @quit-document-edit="onQuitDocumentEdit"
   />
 
-  <bib-editor-menu v-if="editorViewMounted" :editor-instance="editorInstance" fixed top="65px" />
+  <bib-editor-menu
+    v-if="editorViewMounted"
+    :editor-instance="editorInstance"
+    fixed
+    top="65px"
+  />
 
   <div class="page-doc-edit__bib-editor-wrapper">
     <input
@@ -71,7 +76,7 @@ const onQuitDocumentEdit = () => {
         editingDocViewData.value = null;
 
         editorInstance.value.quitEditor(() => {
-          nextTick(() => { 
+          nextTick(() => {
             // disconnect websocket 后需要更新在线列表，
             // 最好将路由跳转推到下一个 tick
             router.push(route.path.slice(0, -5));
@@ -82,7 +87,7 @@ const onQuitDocumentEdit = () => {
   }
 }
 const editableGuard = () => {
-  if (!viewData.value!.collaborators.includes(credential.userId)) {
+  if (!viewData.value!.collaborators.map(u => u.uid).includes(credential.userId)) {
     message.warn("您还没有此篇文档的编辑权限！");
     router.push(route.path.slice(0, -5));
     return;

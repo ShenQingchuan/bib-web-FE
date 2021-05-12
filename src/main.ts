@@ -61,7 +61,8 @@ import {
   Breadcrumb,
   Timeline,
   Spin,
-  Badge
+  Badge,
+  Modal
 } from 'ant-design-vue';
 
 createApp(App)
@@ -93,6 +94,7 @@ createApp(App)
   .use(Spin)
   .use(Comment)
   .use(Badge)
+  .use(Modal)
   // for vue3-colorpicker
   .use(colorPicker)
   .mount('#app');

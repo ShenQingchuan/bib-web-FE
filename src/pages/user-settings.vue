@@ -22,10 +22,7 @@
             <div class="flex-row anis-center">
               <a-avatar
                 class="w-80px h-80px m-l-20"
-                :src="
-                  detailsFormData.avatarURL ||
-                    '/assets/svg/user-avatar__default.svg'
-                "
+                :src="userAvatarUrlFix(detailsFormData.avatarURL)"
               ></a-avatar>
               <div
                 class="page-user-settings__profile-upload-avatar flex-row anis-center brr-6 m-l-24"
@@ -101,7 +98,8 @@ import {
   cosImageURLPrefix,
   multiplePartFormContentType,
   userDetailsStorageRef,
-  tokenStorageRef
+  tokenStorageRef,
+  userAvatarUrlFix
 } from '@/utils';
 import CommonHeader from '@/components/view-header/common-header.vue';
 

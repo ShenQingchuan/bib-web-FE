@@ -7,10 +7,12 @@
     :paragraph="{ rows: 12 }"
   ></a-skeleton>
   <a-layout v-else class="page-wiki-index__container">
-    <a-layout-header class="page-wiki-index__header flex-row jyct-center anis-center">
+    <a-layout-header
+      class="page-wiki-index__header flex-row jyct-center anis-center"
+    >
       <template v-if="wikiViewData">
         <a-avatar
-          :src="wikiViewData.creator.userDetails.avatarURL || '/assets/svg/user-avatar__default.svg'"
+          :src="userAvatarUrlFix(wikiViewData.creator.userDetails.avatarURL)"
           @click="$router.push(`/user/${wikiViewData?.creator.userName}`)"
         />
         <a-breadcrumb class="m-r-24">
@@ -18,7 +20,8 @@
             <a
               class="m-l-32 tc-n500 uname-link"
               :href="`/user/${wikiViewData.creator.userName}`"
-            >{{ wikiViewData.creator.userName }}</a>
+              >{{ wikiViewData.creator.userName }}</a
+            >
           </a-breadcrumb-item>
           <a-breadcrumb-item>
             <span class="text-noselect">{{ wikiViewData.name }}</span>
@@ -30,24 +33,34 @@
         <a-button size="small" class="m-r-400">
           <Rss theme="outline" class="iconpark m-r-4" />
           {{ wikiViewData.focused ? '已关注' : '关注' }}
-          <span
-            class="m-l-12"
-          >{{ numberFormat(wikiViewData.focusCount) || 0 }}</span>
+          <span class="m-l-12">{{
+            numberFormat(wikiViewData.focusCount) || 0
+          }}</span>
         </a-button>
 
         <!-- 拥有该知识库协作者权限： -->
-        <div :style="{
-          opacity: wikiViewData.joined ? 1 : 0
-        }">
+        <div
+          :style="{
+            opacity: wikiViewData.joined ? 1 : 0
+          }"
+        >
           <a-button class="m-r-10">
             <Connect theme="outline" class="iconpark m-r-4" />分享
           </a-button>
-          <a-button class="m-r-10" @click="$router.push($route.path + '/manage')">管理</a-button>
-          <a-button type="primary" @click="onCreateNewDocInWiki">在此新建文档</a-button>
+          <a-button
+            class="m-r-10"
+            @click="$router.push($route.path + '/manage')"
+            >管理</a-button
+          >
+          <a-button type="primary" @click="onCreateNewDocInWiki"
+            >在此新建文档</a-button
+          >
         </div>
       </template>
     </a-layout-header>
-    <a-layout-content class="page-wiki-index__content flex-row jyct-center p-b-64">
+    <a-layout-content
+      class="page-wiki-index__content flex-row jyct-center p-b-64"
+    >
       <div class="page-wiki-index__paper m-t-48 flex-col anis-center">
         <div class="fs-28 fw-500">{{ wikiViewData?.name }}</div>
         <p class="tc-n500 fs-18 m-tb-16">{{ wikiViewData?.name }}</p>
@@ -60,15 +73,25 @@
           >
             <span
               class="page-wiki-index__paper-catalog-item-doc-name fw-500 to-ellipsis"
-            >{{ item.title }}</span>
-            <div class="page-wiki-index__paper-catalog-item-line flex-1 m-lr-16"></div>
+              >{{ item.title }}</span
+            >
+            <div
+              class="page-wiki-index__paper-catalog-item-line flex-1 m-lr-16"
+            ></div>
             <span
               class="page-wiki-index__paper-catalog-item-time tc-n500 to-ellipsis"
-            >{{ useDayjs(item.updateTime).format("YYYY-MM-DD HH:mm") }}</span>
+              >{{ useDayjs(item.updateTime).format('YYYY-MM-DD HH:mm') }}</span
+            >
           </div>
-          <a-skeleton v-if="wikiViewData && wikiViewData.docs.length < 5" :paragraph="{ rows: 2 }" />
+          <a-skeleton
+            v-if="wikiViewData && wikiViewData.docs.length < 5"
+            :paragraph="{ rows: 2 }"
+          />
           <div class="page-wiki-index__paper-background">
-            <img src="/assets/svg/wiki-view__background.svg" alt="illustration" />
+            <img
+              src="/assets/svg/wiki-view__background.svg"
+              alt="illustration"
+            />
           </div>
         </div>
       </div>
@@ -80,7 +103,7 @@
 import { ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { fusions } from '@/fusions';
-import { usePayloadFromToken, numberFormat } from '@/utils';
+import { usePayloadFromToken, numberFormat, userAvatarUrlFix } from '@/utils';
 import { useDayjs } from '@/composable/useDayjs';
 import { message } from 'ant-design-vue';
 import { Lock, Rss, Connect } from '@icon-park/vue-next';
@@ -120,8 +143,8 @@ const onCreateNewDocInWiki = () => {
 </script>
 
 <style lang="less" scoped>
-@import "./common.less";
-@import "@/less/color.less";
+@import './common.less';
+@import '@/less/color.less';
 
 .page-wiki-index__skeleton {
   width: 80vw;

@@ -51,7 +51,7 @@ export interface DocumentViewData {
   contentAbstract: string;
   creator: UserSimpleDto;
   thumbUpUsers: UserSimpleDto[];
-  collaborators: number[]; // 合作者的 uid
+  collaborators: UserSimpleDto[]; // 合作者的 uid
   comments: DocumentCommentDto[];
   thumbsUped: boolean;
   publicSharing: boolean;

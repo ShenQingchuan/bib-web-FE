@@ -26,6 +26,10 @@ a:visited {
 .ant-popover-inner-content {
   padding: 0;
 }
+// antd form.item label colon 应完全去掉伪类元素
+.ant-form-item-label > label.ant-form-item-no-colon::after {
+  content: none;
+}
 
 .ant-spin-text {
   margin-top: 12px;

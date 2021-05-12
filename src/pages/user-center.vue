@@ -1,22 +1,30 @@
 <template>
   <common-header consice :avatarURL="userDetails.avatarURL" />
-  <a-row class="page-user-info__wrapper w-p80 m-lr-auto flex-row p-t-24 p-b-32 p-lr-16">
+  <a-row
+    class="page-user-info__wrapper w-p80 m-lr-auto flex-row p-t-24 p-b-32 p-lr-16"
+  >
     <!-- 用户中心 左栏 -->
     <a-col :span="8">
       <!-- 基本资料 -->
       <a-card class="basic-info-card flex-col anis-center">
         <a-avatar
           class="user-avatar"
-          :src="userDetails.avatarURL || '/assets/svg/user-avatar__default.svg'"
+          :src="userAvatarUrlFix(userDetails.avatarURL)"
         ></a-avatar>
         <h3 class="text-center m-tb-16">{{ userName }}</h3>
-        <div class="counter-wrapper w-p100 m-t-6 m-b-32 flex-row jyct-center anis-center">
+        <div
+          class="counter-wrapper w-p100 m-t-6 m-b-32 flex-row jyct-center anis-center"
+        >
           <div class="counter-container flex-col anis-center">
-            <div class="count-number fs-20 fw-700 m-lr-32">{{ userDetails.followersCount }}</div>
+            <div class="count-number fs-20 fw-700 m-lr-32">
+              {{ userDetails.followersCount }}
+            </div>
             <div class="label-text">粉丝</div>
           </div>
           <div class="counter-container flex-col anis-center">
-            <div class="count-number fs-20 fw-700 m-lr-32">{{ userDetails.followingsCount }}</div>
+            <div class="count-number fs-20 fw-700 m-lr-32">
+              {{ userDetails.followingsCount }}
+            </div>
             <div class="label-text">关注</div>
           </div>
         </div>
@@ -26,11 +34,16 @@
           v-if="isMe"
           class="m-b-20"
           block
-          @click="$router.push({
-            path: '/user-settings#profile',
-          })"
-        >编辑资料</a-button>
-        <a-button v-else class="m-b-20" block @click="onFollowUser">{{ focused ? '取消关注' : '关注' }}</a-button>
+          @click="
+            $router.push({
+              path: '/user-settings#profile'
+            })
+          "
+          >编辑资料</a-button
+        >
+        <a-button v-else class="m-b-20" block @click="onFollowUser">{{
+          focused ? '取消关注' : '关注'
+        }}</a-button>
 
         <div class="w-p100 m-tb-6 text-left">
           <div class="flex-row anis-center m-tb-16">
@@ -38,7 +51,8 @@
             <span
               class="user-detail-address m-l-16"
               v-if="userDetails.address"
-            >{{ userDetails.address }}</span>
+              >{{ userDetails.address }}</span
+            >
             <span v-else class="m-l-8 detail-placeholder">还未填写地址</span>
           </div>
 
@@ -47,8 +61,12 @@
             <p
               class="user-detail-introduce m-l-16 m-tb-0 inline"
               v-if="userDetails.introduce"
-            >{{ userDetails.introduce }}</p>
-            <span v-else class="m-l-8 detail-placeholder">还未填写个人简介</span>
+            >
+              {{ userDetails.introduce }}
+            </p>
+            <span v-else class="m-l-8 detail-placeholder"
+              >还未填写个人简介</span
+            >
           </div>
         </div>
       </a-card>
@@ -66,7 +84,11 @@
           }"
         />
         <div class="flex-row anis-center p-6">
-          <div v-for="org in joinedOrgs" :key="org.id" class="flex-col anis-center">
+          <div
+            v-for="org in joinedOrgs"
+            :key="org.id"
+            class="flex-col anis-center"
+          >
             <a :href="`/org/${org.id}`">
               <a-avatar
                 :size="48"
@@ -85,7 +107,12 @@
       <a-card>
         <template #title>
           <div class="flex-row anis-center">
-            <img src="/assets/svg/user-center__activity-icon.svg" alt="动态" width="26" height="26" />
+            <img
+              src="/assets/svg/user-center__activity-icon.svg"
+              alt="动态"
+              width="26"
+              height="26"
+            />
             <h4 class="inline m-tb-0 m-l-4">动态</h4>
           </div>
         </template>
@@ -98,14 +125,23 @@
           <a-spin tip="加载用户动态中..."></a-spin>
         </div>
         <template v-else>
-          <a-empty v-if="activities.length === 0" description="暂无动态"></a-empty>
+          <a-empty
+            v-if="activities.length === 0"
+            description="暂无动态"
+          ></a-empty>
           <a-timeline v-else>
-            <user-activity-card v-for="act in activities" :key="act.createTime" :activity="act" />
+            <user-activity-card
+              v-for="act in activities"
+              :key="act.createTime"
+              :activity="act"
+            />
             <a-timeline-item v-show="page === pageTotal">
               <template #dot>
                 <local-two theme="outline" size="16" />
               </template>
-              <span class="user-center__activity-nomoredot-text m-t-6">找不到更早的动态了，就让以前随风而逝吧…</span>
+              <span class="user-center__activity-nomoredot-text m-t-6"
+                >找不到更早的动态了，就让以前随风而逝吧…</span
+              >
             </a-timeline-item>
           </a-timeline>
         </template>
@@ -123,7 +159,7 @@ import { useRoute, useRouter } from 'vue-router';
 import { EnvironmentOutlined, ProfileOutlined } from "@ant-design/icons-vue";
 import { LocalTwo } from '@icon-park/vue-next';
 import { fusions } from "@/fusions";
-import { usePayloadFromToken, userDetailsStorageRef } from '@/utils'
+import { usePayloadFromToken, userDetailsStorageRef, userAvatarUrlFix } from '@/utils'
 import { message } from "ant-design-vue";
 import CommonHeader from "@/components/view-header/common-header.vue";
 import UserActivityCard from '@/components/page-user-center/user-activity-card.vue';
@@ -246,7 +282,7 @@ const onFollowUser = us.debounce(() => {
 }
 </style>
 <style lang="less" scoped>
-@import "@/less/color.less";
+@import '@/less/color.less';
 .page-user-info__wrapper {
   .user-avatar {
     width: 160px;

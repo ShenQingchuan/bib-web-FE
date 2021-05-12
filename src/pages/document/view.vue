@@ -6,24 +6,32 @@
 
     <!-- 通过 readonly ProseMirror 加载出文档 -->
     <div class="page-document-view__content m-t-80 m-lr-auto">
-      <a-skeleton class="m-t-40" active v-if="loadingViewData" :paragraph="{ rows: 20 }" />
+      <a-skeleton
+        class="m-t-40"
+        active
+        v-if="loadingViewData"
+        :paragraph="{ rows: 20 }"
+      />
       <div v-show="!loadingViewData" ref="docViewRef"></div>
     </div>
 
-    <div v-if="!loadingViewData" class="page-document-view__meta-section m-t-32 m-b-64">
+    <div
+      v-if="!loadingViewData"
+      class="page-document-view__meta-section m-t-32 m-b-64"
+    >
       <!-- 点赞 -->
       <div
         class="page-document-view__thumbs-up-btn flex-row jyct-center anis-center m-lr-auto"
         :class="{
-          'active': thumbsUped
+          active: thumbsUped
         }"
         @click="onThumbsUpDocument"
       >
         <thumbs-up theme="filled" :size="24" class="iconpark" />
       </div>
-      <div
-        class="page-document-view__thumbs-up-divider m-lr-auto m-tb-20"
-      >点赞 {{ thumbsUpedCount }} 人</div>
+      <div class="page-document-view__thumbs-up-divider m-lr-auto m-tb-20">
+        点赞 {{ thumbsUpedCount }} 人
+      </div>
 
       <!-- 评论 -->
       <div class="page-document-view__comments p-20 m-lr-auto">
@@ -38,12 +46,13 @@
           class="page-document-view__comment-inputer"
           size="large"
           v-model:value="commentContent"
-          :placeholder="replyTo
-          ? `回复 ${replyTo.creator.userName}：`
-          : (userTokenPayload
-            ? '评论文章，按回车键提交...'
-            : '请登录后评论...'
-          )"
+          :placeholder="
+            replyTo
+              ? `回复 ${replyTo.creator.userName}：`
+              : userTokenPayload
+              ? '评论文章，按回车键提交...'
+              : '请登录后评论...'
+          "
           @press-enter="onSubmitComment"
           :disabled="!userTokenPayload"
         />
@@ -115,7 +124,7 @@ Promise.all([
   const [ydocToPmDocJsonStringResp, viewDataResp] = resolves;
   if (ydocToPmDocJsonStringResp.data.responseOk && viewDataResp.data.responseOk) {
     viewData.value = viewDataResp.data.data;
-    editable.value = viewData.value!.collaborators.includes(credential.userId);
+    editable.value = viewData.value!.collaborators.map(u => u.uid).includes(credential.userId);
 
     const ydocToPmDocJsonString = ydocToPmDocJsonStringResp.data.data;
 
@@ -135,7 +144,7 @@ Promise.all([
       JSON.stringify(view.state.doc.toJSON())
     )
 
-    // 将文章标题替换到 Tab 
+    // 将文章标题替换到 Tab
     document.title = `${viewData.value!.title} ｜查看文档 · Bib`
 
     loadingViewData.value = false;
@@ -208,8 +217,8 @@ const onSubmitComment = () => {
 </script>
 
 <style lang="less" scoped>
-@import "@/less/color.less";
-@import "@/less/shared.less";
+@import '@/less/color.less';
+@import '@/less/shared.less';
 .page-document-view__content {
   width: 64vw;
 
@@ -247,7 +256,7 @@ const onSubmitComment = () => {
 
   &::before,
   &::after {
-    content: "";
+    content: '';
     width: 50px;
     height: 1px;
     position: absolute;

@@ -8,14 +8,21 @@
         </a-tooltip>
         <span class="p-l-8">{{ likedCount }}</span>
       </span>
-      <div class="page-document-view__comment-reply-to inline cursor-ptr" @click="handleReply">回复</div>
+      <div
+        class="page-document-view__comment-reply-to inline cursor-ptr"
+        @click="handleReply"
+      >
+        回复
+      </div>
     </template>
     <template #author>
-      <a :href="`/user/${comment.creator.userName}`">{{ comment.creator.userName }}</a>
+      <a :href="`/user/${comment.creator.userName}`">{{
+        comment.creator.userName
+      }}</a>
     </template>
     <template #avatar>
       <a-avatar
-        :src="comment.creator.userDetails.avatarURL || '/assets/svg/user-avatar__default.svg'"
+        :src="userAvatarUrlFix(comment.creator.userDetails.avatarURL)"
         alt="comment-user-avatar"
       />
     </template>
@@ -24,7 +31,8 @@
         <a
           v-if="comment.replyTo"
           :href="`/user/${comment.replyTo.creator.userName}`"
-        >@{{ comment.replyTo.creator.userName }}</a>
+          >@{{ comment.replyTo.creator.userName }}</a
+        >
         {{ comment.content }}
       </p>
     </template>
@@ -40,7 +48,8 @@
 import { defineProps, ref, computed, defineEmit } from "vue";
 import { LikeFilled, LikeOutlined } from '@ant-design/icons-vue';
 import { useDayjs } from "@/composable/useDayjs";
-import type { DocumentCommentDto } from "../../models";
+import { userAvatarUrlFix } from '@/utils';
+import type { DocumentCommentDto } from "@/models";
 
 const props = defineProps<{
   comment: DocumentCommentDto;
@@ -67,8 +76,8 @@ const handleReply = () => emit('replyTo', props.comment);
 </script>
 
 <style lang="less" scoped>
-@import "@/less/color.less";
-@import "@/less/shared.less";
+@import '@/less/color.less';
+@import '@/less/shared.less';
 
 .page-document-view__comment-reply-to {
   color: @N500;

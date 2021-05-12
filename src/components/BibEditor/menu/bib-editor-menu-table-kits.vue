@@ -51,7 +51,7 @@
 </template>
 
 <script setup lang="ts">
-import { inject, onMounted } from 'vue';
+import { inject, onMounted, readonly } from 'vue';
 import { MergeCells, SplitCells } from '@icon-park/vue-next';
 import { EditorSchema } from "../editor-schema";
 import Icon from '@ant-design/icons-vue';
@@ -61,9 +61,11 @@ import IconInsertRowBefore from '../icons/editor__insert-row-before.vue';
 import IconInsertRowAfter from '../icons/editor__insert-col-before.vue';
 import * as pmutils from 'prosemirror-utils';
 import type { EditorInstance, TableCommand } from '../typings';
+import type { Ref } from 'vue';
 
 // @States:
 const editorInstance = inject<EditorInstance>('editorInstance')!;
+const isBibEditorTableMode = inject<Readonly<Ref<boolean>>>('is-bib-editor-table-mode')!;
 const switchToTableMode = inject<(val: boolean) => void>('update:bib-editor-table-mode')!;
 
 // @LifeCycels:
@@ -75,7 +77,9 @@ onMounted(() => {
       EditorSchema.nodes.table_cell,
       EditorSchema.nodes.table_header
     ].includes(node.type))(tr.selection);
-    isInTable && switchToTableMode(isInTable);
+    if (isInTable !== isBibEditorTableMode.value) {
+      switchToTableMode(isInTable);
+    }
   });
 })
 
@@ -86,9 +90,9 @@ const execTableCommand = (cmdName: TableCommand) => {
 </script>
 
 <style lang="less" scoped>
-@import "@/less/color.less";
-@import "@/less/shared.less";
-@import "./menu-btn-common.less";
+@import '@/less/color.less';
+@import '@/less/shared.less';
+@import './menu-btn-common.less';
 
 .bib-editor-menu-item {
   &__table-kits-btn {

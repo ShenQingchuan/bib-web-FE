@@ -33,7 +33,7 @@
 </template>
 
 <script setup lang="ts">
-import { defineProps, provide, ref } from "vue";
+import { defineProps, provide, readonly, ref } from "vue";
 import { BoldOutlined, ItalicOutlined, StrikethroughOutlined, UnderlineOutlined } from "@ant-design/icons-vue";
 import Icon from "@ant-design/icons-vue";
 import CodeMarkIcon from "../icons/code-mark-icon.vue";
@@ -75,6 +75,7 @@ const props = defineProps<{
 provide("editorInstance", props.editorInstance);
 
 const isInTable = ref(false);
+provide('is-bib-editor-table-mode', readonly(isInTable));
 provide('update:bib-editor-table-mode', (val: boolean) => {
   isInTable.value = val;
 });

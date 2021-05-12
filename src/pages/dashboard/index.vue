@@ -1,5 +1,7 @@
 <template>
-  <div class="page-dashboard__index-index-doc-list-wrapper flex-row anis-center p-12">
+  <div
+    class="page-dashboard__index-index-doc-list-wrapper flex-row anis-center p-12"
+  >
     <!-- 最近文档列表 -->
     <div class="page-dashboard__index-index-doc-list flex-col flex-1">
       <div class="flex-row anis-center m-b-16">
@@ -15,17 +17,29 @@
                 v-for="f in filters"
                 :key="f.archiveType || '-'"
                 @click="setFilter(f)"
-              >{{ f.text }}</a-menu-item>
+                >{{ f.text }}</a-menu-item
+              >
             </a-menu>
           </template>
         </a-dropdown>
       </div>
       <a-skeleton active :loading="listLoading">
-        <a-empty v-if="filteredDocList.length === 0" description="暂时还没有文档..." />
+        <a-empty
+          v-if="filteredDocList.length === 0"
+          description="暂时还没有文档..."
+        />
         <template v-else>
-          <doc-list-item-view v-for="doc in filteredDocList" :key="doc.createTime" :doc-item="doc" />
+          <doc-list-item-view
+            v-for="doc in filteredDocList"
+            :key="doc.createTime"
+            :doc-item="doc"
+          />
           <div class="w-p100 flex-row anis-center jyct-center">
-            <a-button v-if="docListPage !== docListPageTotal" @click="fetchDocList">加载更多</a-button>
+            <a-button
+              v-if="docListPage !== docListPageTotal"
+              @click="fetchDocList"
+              >加载更多</a-button
+            >
           </div>
         </template>
       </a-skeleton>
@@ -125,7 +139,10 @@ export default defineComponent({
       }
       fusions.get(`/docs/myList?userId=${tokenPayload.userId}&pageNum=${docListPage.value}`)
         .then(res => {
-          docList.value.push(...res.data.data.items);
+          docList.value = [
+            ...docList.value,
+            ...res.data.data.items
+          ];
           docList.value.sort((a, b) => b.updateTime - a.updateTime);
           if (docListPage.value === 0) {
             docListPageTotal.value = res.data.data.pageTotal;

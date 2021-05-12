@@ -200,7 +200,7 @@ export function useEditor(options: BibEditorOptions) {
         color: cursorColor.value,
         name: credential?.userName,
         uid: credential?.userId,
-        avatarURL: userDetailsStorageRef.value.avatarURL || credential?.avatarURL || ''
+        avatarURL: userDetailsStorageRef.value?.avatarURL || credential?.avatarURL || ''
       });
 
       initState = EditorState.create({

@@ -56,17 +56,18 @@
   <div v-else class="page-document-view__wrapper flex-col">
     <doc-view-header :view-data="viewData" :editable="editable" />
 
-    <doc-side-toc :toc="tableOfContentsData" />
-
-    <!-- 通过 readonly ProseMirror 加载出文档 -->
-    <div class="page-document-view__content m-t-80 m-r-auto">
-      <a-skeleton
-        class="m-t-40"
-        active
-        v-if="loadingViewData"
-        :paragraph="{ rows: 20 }"
-      />
-      <div v-show="!loadingViewData" ref="docViewRef"></div>
+    <div class="flex-row m-t-100 pos-rel">
+      <doc-side-toc :toc="tableOfContentsData" />
+      <!-- 通过 readonly ProseMirror 加载出文档 -->
+      <div class="page-document-view__content m-lr-auto">
+        <a-skeleton
+          class="m-t-40"
+          active
+          v-if="loadingViewData"
+          :paragraph="{ rows: 20 }"
+        />
+        <div v-show="!loadingViewData" ref="docViewRef"></div>
+      </div>
     </div>
 
     <div

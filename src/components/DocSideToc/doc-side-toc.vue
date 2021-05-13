@@ -1,6 +1,11 @@
 <template>
   <div class="doc-side-toc__wrapper to-ellipsis p-l-8">
-    <doc-side-toc-item v-for="(unit, i) in toc" :key="i" :item="unit" :index="`${i}`" />
+    <doc-side-toc-item
+      v-for="(unit, i) in toc"
+      :key="i"
+      :item="unit"
+      :index="`${i}`"
+    />
   </div>
 </template>
 
@@ -50,13 +55,13 @@ onUnmounted(() => {
 </script>
 
 <style lang="less" scoped>
-@import "../../less/color.less";
+@import '../../less/color.less';
 .doc-side-toc__wrapper {
   width: 170px;
+  height: 100%;
   position: sticky;
-  border-left: 2px solid @N300;
-  // z-index: 9;
-  // top: 120px;
-  // left: 40px;
+  top: 100px;
+  left: 40px;
+  border-left: 2px solid #dee0e3;
 }
 </style>

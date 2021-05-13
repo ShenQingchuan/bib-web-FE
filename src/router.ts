@@ -88,7 +88,7 @@ let routes: Array<RouteRecordRaw> = [
     () => import('./pages/document/view.vue'),
     '查看文档',
     {
-      requiredAuth: true
+      requiredAuth: false
     }
   ),
   createRoute(

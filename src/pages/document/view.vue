@@ -1,5 +1,41 @@
 <template>
-  <div class="page-document-view__wrapper flex-col">
+  <!-- 访问文档用户需为协作者，若为未登录态则文档必须 publicSharing -->
+  <div
+    v-if="noReadingAuth"
+    class="page-document-view__no-public-sharing-read flex-col jyct-center p-tb-100 m-lr-auto"
+  >
+    <doc-view-header :view-data="viewData" consice />
+    <img
+      class="page-document-view__no-read-auth-img m-lr-auto"
+      src="/assets/svg/no-auth-to-doc.svg"
+      alt="无权查看该文档"
+    />
+    <div class="page-document-view__no-read-auth-tip m-t-32 m-lr-auto flex-col">
+      <span class="p-8 fw-500 fs-24 text-center">
+        <FileLock class="iconpark tc-primary" />
+        没有权限访问
+      </span>
+      <span class="p-t-8 p-b-4 text-center">
+        当前登录身份为
+        <span class="tc-primary cursor-default">{{
+          isBibUserTokenValid() ? credential.userName : '未登录'
+        }}</span>
+      </span>
+      <span class="p-b-8 p-t-4 fs-16 text-center">
+        您可以向
+        <a
+          class="tc-primary fw-500"
+          :href="`/user/${viewData?.creator.userName}`"
+        >
+          {{ viewData?.creator.userName }}
+        </a>
+        申请权限
+      </span>
+    </div>
+  </div>
+
+  <!-- 有权限则渲染文档视图 -->
+  <div v-else class="page-document-view__wrapper flex-col">
     <doc-view-header :view-data="viewData" :editable="editable" />
 
     <doc-side-toc :toc="tableOfContentsData" />
@@ -64,12 +100,12 @@
 <script setup lang="ts">
 import { nextTick, provide, readonly, ref } from "vue";
 import { templateRef } from "@vueuse/core";
-import { useRoute } from 'vue-router';
-import { ThumbsUp } from '@icon-park/vue-next';
+import { useRoute, useRouter } from 'vue-router';
+import { ThumbsUp, FileLock } from '@icon-park/vue-next';
 import { fetchDocFromPersistence, fusions, mocker } from '@/fusions';
 import { useEditor } from "@/components/BibEditor/composable/useEditor";
 import { useTableOfContents } from '@/components/BibEditor/composable/useTableOfContents';
-import { usePayloadFromToken, userDetailsStorageRef } from "@/utils";
+import { usePayloadFromToken, isBibUserTokenValid } from "@/utils";
 import { savedDocViewData } from "./editing-doc-storage-ref";
 import DocViewHeader from '@/components/page-doc-view/doc-view-header.vue';
 import DocComment from '@/components/page-doc-view/doc-comment.vue';
@@ -77,12 +113,14 @@ import DocSideToc from '@/components/DocSideToc/doc-side-toc.vue';
 import * as us from 'underscore';
 import type { DocumentCommentDto, DocumentViewData, UserSimpleDto } from "@/models";
 import type { DocTableOfContentsUnit } from "@/components/BibEditor/typings";
+import { message } from "ant-design-vue";
 
 // @States:
-const route = useRoute();
+const route = useRoute(), router = useRouter();
 const docId = route.params.docId as string;
 const credential = usePayloadFromToken()!;
 const loadingViewData = ref(false);
+const noReadingAuth = ref(false);
 const docViewRef = templateRef('docViewRef');
 const userTokenPayload = usePayloadFromToken();
 const commentInputer = templateRef<HTMLInputElement>('commentInputer');
@@ -124,6 +162,14 @@ Promise.all([
   const [ydocToPmDocJsonStringResp, viewDataResp] = resolves;
   if (ydocToPmDocJsonStringResp.data.responseOk && viewDataResp.data.responseOk) {
     viewData.value = viewDataResp.data.data;
+    if (
+      !viewData.value!.publicSharing
+      && !viewData.value!.collaborators.map(u => u.uid).includes(credential.userId)
+    ) {
+      message.warn('该文档暂时不提供公开阅览！');
+      noReadingAuth.value = true;
+      return;
+    }
     editable.value = viewData.value!.collaborators.map(u => u.uid).includes(credential.userId);
 
     const ydocToPmDocJsonString = ydocToPmDocJsonStringResp.data.data;
@@ -158,9 +204,6 @@ Promise.all([
           '.ProseMirror h1,h2,h3,h4,h5,h6'
         ) as NodeListOf<HTMLHeadingElement>
       );
-      headingRefs.value.forEach(h => console.log(
-        `header: ${h.textContent} , offsetTop: ${h.offsetTop}, scrollTop: ${h.scrollTop}, clientHeight: ${h.clientHeight}`)
-      );
       tocItemRefs.value = Array.from(
         document.querySelectorAll('.doc-side-toc__item')
       );
@@ -173,8 +216,8 @@ Promise.all([
           })
           e.stopPropagation();
         }
-      })
-    })
+      });
+    });
   }
 });
 
@@ -283,5 +326,16 @@ const onSubmitComment = () => {
     transition: color ease 0.5s;
     color: @primary-color;
   }
+}
+
+.page-document-view__no-public-sharing-read {
+  height: 100vh;
+}
+.page-document-view__no-public-sharing-header {
+  .header-container;
+}
+.page-document-view__no-read-auth-img {
+  width: 300px;
+  height: auto;
 }
 </style>

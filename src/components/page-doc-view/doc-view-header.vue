@@ -1,5 +1,5 @@
 <template>
-  <div class="page-document-view__header flex-row anis-center p-tb-16">
+  <div class="page-document-view__header flex-row anis-center">
     <div class="flex-row anis-center p-l-24 p-r-16">
       <a v-show="!editing" href="/">
         <img
@@ -72,6 +72,7 @@
     </div>
 
     <div
+      v-if="!consice"
       class="flex-row anis-center p-r-24"
       :class="{
         'm-l-auto': !editing
@@ -193,6 +194,7 @@ import type { DocumentViewData, UserSimpleDto } from '@/models';
 const props = defineProps<{
   editing?: boolean;
   editable?: boolean;
+  consice?: boolean;
   viewData?: DocumentViewData,
   onlineUsers?: OnlineUser[]
 }>()
@@ -251,12 +253,7 @@ const onInviteUser = (inviteUser: UserSimpleDto) => {
 @import '@/less/shared.less';
 
 .page-document-view__header {
-  background-color: #fff;
-  position: fixed;
-  top: 0;
-  width: 100vw;
-  z-index: 9;
-  border-bottom: 1px solid @N200;
+  .header-container;
 }
 .page-document-view__header-breadcrumb {
   color: @N600;

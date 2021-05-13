@@ -59,7 +59,7 @@
     <doc-side-toc :toc="tableOfContentsData" />
 
     <!-- 通过 readonly ProseMirror 加载出文档 -->
-    <div class="page-document-view__content m-t-80 m-lr-auto">
+    <div class="page-document-view__content m-t-80 m-r-auto">
       <a-skeleton
         class="m-t-40"
         active

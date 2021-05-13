@@ -12,7 +12,11 @@
     <bib-menu-font-size />
     <bib-menu-text-color />
     <bib-menu-text-bg-color />
-    <bib-menu-mark v-for="item in marksGroup" :key="item.mark" :mark="item.mark">
+    <bib-menu-mark
+      v-for="item in marksGroup"
+      :key="item.mark"
+      :mark="item.mark"
+    >
       <Icon :component="item.icon" />
     </bib-menu-mark>
     <bib-menu-align />
@@ -75,10 +79,7 @@ const props = defineProps<{
 provide("editorInstance", props.editorInstance);
 
 const isInTable = ref(false);
-provide('is-bib-editor-table-mode', readonly(isInTable));
-provide('update:bib-editor-table-mode', (val: boolean) => {
-  isInTable.value = val;
-});
+provide('is-bib-editor-table-mode', isInTable);
 </script>
 
 <style lang="less">

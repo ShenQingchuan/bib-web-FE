@@ -51,7 +51,7 @@
 </template>
 
 <script setup lang="ts">
-import { inject, onMounted, readonly } from 'vue';
+import { inject, onMounted } from 'vue';
 import { MergeCells, SplitCells } from '@icon-park/vue-next';
 import { EditorSchema } from "../editor-schema";
 import Icon from '@ant-design/icons-vue';
@@ -65,8 +65,7 @@ import type { Ref } from 'vue';
 
 // @States:
 const editorInstance = inject<EditorInstance>('editorInstance')!;
-const isBibEditorTableMode = inject<Readonly<Ref<boolean>>>('is-bib-editor-table-mode')!;
-const switchToTableMode = inject<(val: boolean) => void>('update:bib-editor-table-mode')!;
+const isBibEditorTableMode = inject<Ref<boolean>>('is-bib-editor-table-mode')!;
 
 // @LifeCycels:
 onMounted(() => {
@@ -78,7 +77,7 @@ onMounted(() => {
       EditorSchema.nodes.table_header
     ].includes(node.type))(tr.selection);
     if (isInTable !== isBibEditorTableMode.value) {
-      switchToTableMode(isInTable);
+      isBibEditorTableMode.value = isInTable;
     }
   });
 })

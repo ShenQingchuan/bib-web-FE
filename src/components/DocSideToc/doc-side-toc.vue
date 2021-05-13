@@ -53,10 +53,10 @@ onUnmounted(() => {
 @import "../../less/color.less";
 .doc-side-toc__wrapper {
   width: 170px;
-  position: fixed;
-  z-index: 9;
+  position: sticky;
   border-left: 2px solid @N300;
-  top: 120px;
-  right: 40px;
+  // z-index: 9;
+  // top: 120px;
+  // left: 40px;
 }
 </style>

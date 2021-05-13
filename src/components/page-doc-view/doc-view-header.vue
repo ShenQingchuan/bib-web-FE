@@ -89,6 +89,7 @@
       <DocInviteModal
         :showInviteModal="showInviteModal"
         :viewData="viewData"
+        @modal-close="showInviteModal = false"
       />
 
       <a-button class="m-lr-10" v-show="!editing">分享阅读</a-button>
@@ -111,7 +112,7 @@
 <script setup lang="ts">
 import { defineEmit, defineProps, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
-import { Lock, PeoplePlus, Search } from '@icon-park/vue-next';
+import { Lock, PeoplePlus } from '@icon-park/vue-next';
 import { editingDocViewData, savedDocViewData } from '@/pages/document/editing-doc-storage-ref';
 import DocInviteModal from './doc-invite-modal.vue';
 import type { OnlineUser } from '../BibEditor/typings';
@@ -146,7 +147,6 @@ const onDocumentEdit = () => {
 const quitDocumentEdit = () => {
   emit('quit-document-edit');
 }
-
 </script>
 
 <style lang="less" scoped>

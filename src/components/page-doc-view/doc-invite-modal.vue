@@ -3,7 +3,8 @@
     v-model:visible="showInviteModal"
     title="邀请新用户参与协作"
     :width="630"
-    @ok="showInviteModal = false"
+    @ok="$emit('modal-close')"
+    @cancel="$emit('modal-close')"
   >
     <a-tabs v-model:activeKey="modalTabKey" :animated="false">
       <a-tab-pane key="1" tab="邀请用户加入协作">
@@ -111,7 +112,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, defineProps } from 'vue';
+import { ref, computed, defineProps, defineEmit } from 'vue';
 import { userAvatarUrlFix } from '@/utils';
 import { Search } from '@icon-park/vue-next';
 import { fusions } from '@/fusions';
@@ -123,6 +124,7 @@ const props = defineProps<{
   showInviteModal: boolean;
   viewData?: DocumentViewData;
 }>();
+defineEmit(['modal-close']);
 
 // @States:
 const showInviteSearchLoading = ref(false);

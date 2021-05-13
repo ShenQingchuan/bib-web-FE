@@ -17,20 +17,38 @@
       </span>
       <span class="p-t-8 p-b-4 text-center">
         当前登录身份为
-        <span class="tc-primary cursor-default">{{
-          isBibUserTokenValid() ? credential.userName : '未登录'
-        }}</span>
-      </span>
-      <span class="p-b-8 p-t-4 fs-16 text-center">
-        您可以向
         <a
-          class="tc-primary fw-500"
-          :href="`/user/${viewData?.creator.userName}`"
+          class="tc-primary"
+          :href="logined ? `/user/${credential.userName}` : '/login'"
+          >{{ logined ? credential.userName : '未登录' }}</a
         >
-          {{ viewData?.creator.userName }}
-        </a>
-        申请权限
       </span>
+      <template v-if="logined">
+        <template v-if="!sendedJoinRequest">
+          <span class="p-b-8 p-t-4 fs-16 text-center">
+            您可以向
+            <a
+              class="tc-primary fw-500"
+              :href="`/user/${viewData?.creator.userName}`"
+            >
+              {{ viewData?.creator.userName }}
+            </a>
+            申请权限
+          </span>
+          <div class="flex-row anis-center jyct-center m-tb-16">
+            <a-button
+              type="primary"
+              class="m-lr-20"
+              @click="createJoinCollaborationRequest"
+              >申请</a-button
+            >
+            <a-button class="m-lr-20">取消</a-button>
+          </div>
+        </template>
+        <span v-else class="p-tb-12 tc-n500 text-center fs-16">
+          已经申请权限，请等待回复后刷新页面。
+        </span>
+      </template>
     </div>
   </div>
 
@@ -116,7 +134,7 @@ import type { DocTableOfContentsUnit } from "@/components/BibEditor/typings";
 import { message } from "ant-design-vue";
 
 // @States:
-const route = useRoute(), router = useRouter();
+const route = useRoute();
 const docId = route.params.docId as string;
 const credential = usePayloadFromToken()!;
 const loadingViewData = ref(false);
@@ -128,6 +146,7 @@ const tableOfContentsData = ref<DocTableOfContentsUnit[]>([]);
 const docName = `bib-doc-id${docId}`;
 
 // @States:
+const logined = isBibUserTokenValid();
 const viewData = ref<DocumentViewData>();
 const comments = ref<DocumentCommentDto[]>([]);
 const commentContent = ref('');
@@ -135,6 +154,7 @@ const thumbsUped = ref(false);
 const thumbsUpedCount = ref(0);
 const replyTo = ref<DocumentCommentDto>();
 const editable = ref(false);
+const sendedJoinRequest = ref(false);
 
 // # doc-side-toc
 const headingRefs = ref<HTMLHeadingElement[]>([]);
@@ -145,9 +165,9 @@ provide('doc-view-toc-items-refs', tocItemRefs);
 
 // @LifeCycles:
 loadingViewData.value = true;
-const fetchViewData = (): any =>
+const fetchViewData = (): Promise<any> =>
   us.isEmpty(savedDocViewData.value[docId])
-    ? fusions.get(`/docs/${docId}?userId=${credential.userId}`)
+    ? fusions.get(`/docs/${docId}?userId=${credential?.userId || -1}`)
     : Promise.resolve({ // mock a structure as AxiosResponse
       data: {
         responseOk: true,
@@ -155,6 +175,8 @@ const fetchViewData = (): any =>
       }
     });
 
+
+// start-up:
 Promise.all([
   fetchDocFromPersistence(docName),
   fetchViewData()
@@ -162,15 +184,23 @@ Promise.all([
   const [ydocToPmDocJsonStringResp, viewDataResp] = resolves;
   if (ydocToPmDocJsonStringResp.data.responseOk && viewDataResp.data.responseOk) {
     viewData.value = viewDataResp.data.data;
-    if (
-      !viewData.value!.publicSharing
-      && !viewData.value!.collaborators.map(u => u.uid).includes(credential.userId)
-    ) {
-      message.warn('该文档暂时不提供公开阅览！');
+    let canSeeDoc = !!credential
+      ? viewData.value!.collaborators.map(u => u.uid).includes(credential!.userId)
+      : viewData.value!.publicSharing;
+    sendedJoinRequest.value = viewData!.value!.pendingRequests
+      .map(u => u.uid).includes(
+        credential.userId
+      );
+    if (!canSeeDoc) {
+      !credential && message.warn('该文档暂时不提供公开阅览！');
       noReadingAuth.value = true;
       return;
     }
-    editable.value = viewData.value!.collaborators.map(u => u.uid).includes(credential.userId);
+
+    // 以下内容为 “文章可见时” 的配置：
+    editable.value = !!credential
+      ? viewData.value!.collaborators.map(u => u.uid).includes(credential.userId)
+      : false;
 
     const ydocToPmDocJsonString = ydocToPmDocJsonStringResp.data.data;
 
@@ -257,6 +287,15 @@ const onSubmitComment = () => {
   })
 
 }
+const createJoinCollaborationRequest = () => {
+  fusions.post(`/docs/joinCollaborationRequest?docId=${docId}&userId=${credential!.userId}`)
+    .then((resp) => {
+      if (resp.data.responseOk) {
+        message.success("申请访问权限成功，请耐心等待所有者回复后刷新！");
+        sendedJoinRequest.value = true;
+      }
+    });
+}
 </script>
 
 <style lang="less" scoped>
@@ -330,6 +369,7 @@ const onSubmitComment = () => {
 
 .page-document-view__no-public-sharing-read {
   height: 100vh;
+  background-color: @N100;
 }
 .page-document-view__no-public-sharing-header {
   .header-container;

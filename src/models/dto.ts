@@ -52,6 +52,7 @@ export interface DocumentViewData {
   creator: UserSimpleDto;
   thumbUpUsers: UserSimpleDto[];
   collaborators: UserSimpleDto[]; // 合作者的 uid
+  pendingRequests: UserSimpleDto[]; // 合作者的 uid
   comments: DocumentCommentDto[];
   thumbsUped: boolean;
   publicSharing: boolean;

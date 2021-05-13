@@ -86,82 +86,10 @@
           @click="showInviteModal = true"
         />
       </a-tooltip>
-      <a-modal
-        v-model:visible="showInviteModal"
-        title="邀请新用户参与协作"
-        :width="630"
-        @ok="showInviteModal = false"
-      >
-        <div class="invite-collaborators-modal__body flex-col">
-          <a-form>
-            <a-form-item
-              :labelCol="{ span: 5 }"
-              labelAlign="left"
-              :colon="false"
-              :wrapperCol="{
-                span: 18
-              }"
-              :style="{ lineHeight: 1 }"
-            >
-              <template #label>
-                <div class="invite-collaborators-modal__form-item-label">
-                  <Search class="iconpark" />
-                  <span class="m-lr-10 fw-500">搜索用户名</span>
-                </div>
-              </template>
-              <a-input
-                v-model:value="inviteModalInputName"
-                @input="
-                  showInviteSearchLoading = true;
-                  searchUserByName();
-                "
-              ></a-input>
-            </a-form-item>
-          </a-form>
-        </div>
-
-        <h3 class="fw-300 m-b-2">找到以下用户</h3>
-        <a-divider class="m-tb-4" />
-        <template v-if="foundUserByName.length > 0">
-          <div
-            v-for="user in foundUserByName"
-            :key="user.uid"
-            class="flex-row anis-center p-tb-6"
-          >
-            <a-avatar
-              :src="userAvatarUrlFix(user.userDetails.avatarURL)"
-              shape="circle"
-            />
-            <span class="m-lr-10 tc-n600">{{ user.userName }}</span>
-            <a-button
-              class="m-r-16 m-l-auto"
-              :disabled="isAlreadyInvited(user.uid)"
-              @click="onInviteUser(user)"
-              >{{ isAlreadyInvited(user.uid) ? '已邀请' : '邀请' }}</a-button
-            >
-          </div>
-        </template>
-        <a-spin
-          v-else-if="showInviteSearchLoading"
-          class="w-p100 m-tb-32"
-          tip="搜索中，请稍候..."
-        />
-        <a-empty v-else class="m-tb-48" description="未找到要搜索的用户..." />
-
-        <h3 class="fw-300 m-b-2 m-t-32">已经邀请的用户</h3>
-        <a-divider class="m-tb-4" />
-        <div
-          v-for="user in viewData?.collaborators.concat(invitedUserCache)"
-          :key="user.uid"
-          class="flex-row anis-center p-tb-6"
-        >
-          <a-avatar
-            :src="userAvatarUrlFix(user.userDetails.avatarURL)"
-            shape="circle"
-          />
-          <span class="m-lr-10 tc-n600">{{ user.userName }}</span>
-        </div>
-      </a-modal>
+      <DocInviteModal
+        :showInviteModal="showInviteModal"
+        :viewData="viewData"
+      />
 
       <a-button class="m-lr-10" v-show="!editing">分享阅读</a-button>
       <template v-if="editable || editing">
@@ -181,13 +109,11 @@
 </template>
 
 <script setup lang="ts">
-import { computed, defineEmit, defineProps, ref } from 'vue';
+import { defineEmit, defineProps, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { Lock, PeoplePlus, Search } from '@icon-park/vue-next';
 import { editingDocViewData, savedDocViewData } from '@/pages/document/editing-doc-storage-ref';
-import { fusions } from '@/fusions';
-import { userAvatarUrlFix } from '@/utils';
-import us from 'underscore';
+import DocInviteModal from './doc-invite-modal.vue';
 import type { OnlineUser } from '../BibEditor/typings';
 import type { DocumentViewData, UserSimpleDto } from '@/models';
 
@@ -206,14 +132,6 @@ const emit = defineEmit([
 const router = useRouter(), route = useRoute();
 const docId = route.params.docId as string;
 const showInviteModal = ref(false);
-const showInviteSearchLoading = ref(false);
-const inviteModalInputName = ref('');
-const foundUserByName = ref<UserSimpleDto[]>([]);
-const invitedUserCache = ref<UserSimpleDto[]>([]);
-const collaboratorsUids = computed(() =>
-  (props.viewData?.collaborators.map(u => u.uid) || [])
-    .concat(invitedUserCache.value.map(u => u.uid))
-);
 
 // @LifeCycles:
 
@@ -228,24 +146,7 @@ const onDocumentEdit = () => {
 const quitDocumentEdit = () => {
   emit('quit-document-edit');
 }
-const searchUserByName = us.debounce(() => {
-  fusions.get(`/user/seekAllUserByName?userName=${inviteModalInputName.value}`)
-    .then((resp) => {
-      foundUserByName.value = resp.data.responseOk ? resp.data.data : [];
-      showInviteSearchLoading.value = false;
-    });
-}, 1500, false);
-const isAlreadyInvited = (uid: number) => {
-  return collaboratorsUids.value.includes(uid);
-};
-const onInviteUser = (inviteUser: UserSimpleDto) => {
-  fusions.patch(`/docs/addCollaborator?docId=${props.viewData!.id}&invitingUserId=${inviteUser.uid}`)
-    .then((resp) => {
-      if (resp.data.responseOk) {
-        invitedUserCache.value.push(inviteUser);
-      }
-    })
-}
+
 </script>
 
 <style lang="less" scoped>

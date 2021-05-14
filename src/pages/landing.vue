@@ -20,7 +20,7 @@
     </div>
 
     <section class="p-tb-32 p-lr-24 flex-row m-t-200">
-      <div>
+      <div class="m-r-64">
         <div class="fw-700 fs-42">开源的在线协同知识库</div>
         <div class="fs-24 fw-300">个人笔记与知识创作，团队协同与知识沉淀</div>
         <a
@@ -30,11 +30,13 @@
         >
       </div>
       <img
-        class="page-landing-title__illustration"
+        class="page-landing-title__illustration flex-1"
         src="/assets/img/landing-title-background.png"
         alt="首页标题配图"
       />
     </section>
+
+    <a-divider class="w-600px m-lr-auto" />
 
     <section class="p-t-12 p-b-32 p-lr-24 flex-col anis-center m-t-64">
       <div class="text-center p-4 fw-500 fs-32">常用场景</div>
@@ -54,6 +56,8 @@
         </div>
       </div>
     </section>
+
+    <a-divider class="w-600px m-lr-auto" />
 
     <section class="p-t-12 p-b-32 p-lr-24 flex-col anis-center m-t-64">
       <div class="text-center p-4 fw-500 fs-32">核心特色</div>
@@ -100,7 +104,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue';
+import { ref } from 'vue';
 
 const conditions = [
   {
@@ -147,7 +151,6 @@ const specs = [
 
 // @States:
 const specKey = ref(0);
-const specImgSrc = computed(() => specs[specKey.value].imgSrc);
 
 // @LifeCycels:
 setInterval(() => {
@@ -169,7 +172,7 @@ setInterval(() => {
   .header-container;
 }
 .page-landing__wrapper {
-  background-color: @N50;
+  background-color: @N20;
   min-height: 100vh;
 }
 .page-landing-header__logo {
@@ -177,7 +180,7 @@ setInterval(() => {
   height: auto;
 }
 .page-landing-title__illustration {
-  width: 540px;
+  width: 600px;
 }
 .page-landing__ant-btn {
   height: auto;

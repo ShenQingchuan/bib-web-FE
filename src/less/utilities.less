@@ -88,7 +88,7 @@
 .loopFontWeight(@fontWeightPoints);
 
 // 字体大小 font-size
-@fontSizePoints: 12, 14, 16, 18, 20, 24, 26, 28, 32;
+@fontSizePoints: 12, 14, 16, 18, 20, 24, 26, 28, 32, 36, 42, 48, 64, 72;
 .loopFontSize(@data, @i: 1) when(@i =< length(@data)) {
   @item: extract(@data, @i);
   .fs-@{item} {
@@ -111,6 +111,9 @@
   .loopPercentageWidthHeight(@data, (@i + 1));
 }
 .loopPercentageWidthHeight(@widthPoints);
+.w-ftct {
+  width: fit-content;
+}
 
 .loopPixelWidthHeight(@data, @i: 1) when(@i =< length(@data)) {
   @item: extract(@data, @i);

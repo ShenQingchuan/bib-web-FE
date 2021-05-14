@@ -7,7 +7,7 @@ import {
 
 const FETCH_DOC_BASEURL =
   process.env.NODE_ENV === 'production'
-    ? 'https://yjs.techdict.pro'
+    ? 'https://bibyjs.techdict.pro'
     : 'http://localhost:3000/yjs-api';
 
 const fetchDocAxiosInstance = axios.create(axiosInstanceBaseConfig);

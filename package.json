@@ -3,7 +3,8 @@
   "version": "0.1.0",
   "scripts": {
     "dev": "vite & bib-web-yjs-server",
-    "build": "vuedx-typecheck . && vite build"
+    "build": "vite build",
+    "serve": "vite preview"
   },
   "license": "MIT",
   "dependencies": {

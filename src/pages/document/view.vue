@@ -119,7 +119,7 @@
 <script setup lang="ts">
 import { nextTick, provide, readonly, ref } from "vue";
 import { templateRef } from "@vueuse/core";
-import { useRoute, useRouter } from 'vue-router';
+import { useRoute } from 'vue-router';
 import { ThumbsUp, FileLock } from '@icon-park/vue-next';
 import { fetchDocFromPersistence, fusions, mocker } from '@/fusions';
 import { useEditor } from "@/components/BibEditor/composable/useEditor";

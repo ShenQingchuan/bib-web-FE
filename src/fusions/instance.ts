@@ -10,7 +10,7 @@ import {
 
 const defaultBaseURL =
   process.env.NODE_ENV === 'production'
-    ? 'https://bibs.techdict.pro'
+    ? 'https://bibapi.techdict.pro'
     : 'http://localhost:3000/api';
 
 const fusions = axios.create(

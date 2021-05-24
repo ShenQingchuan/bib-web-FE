@@ -1,8 +1,12 @@
 <template>
   <div class="bib-editor-menu-item__wrapper m-lr-4" @click="toggleFn">
-    <a-button class="bib-editor-menu-item__btn" :class="{
-      active: isActive
-    }" type="link">
+    <a-button
+      class="bib-editor-menu-item__btn"
+      :class="{
+        active: isActive
+      }"
+      type="link"
+    >
       <template #icon>
         <slot></slot>
       </template>
@@ -13,7 +17,7 @@
 <script setup lang="ts">
 import { inject, defineProps, ref, onMounted } from "vue";
 import type { EditorInstance, EditorToggleCategories } from "../typings";
-import * as us from "underscore";
+import us from "underscore";
 import { EditorSchema } from "../editor-schema";
 
 const props = defineProps<{
@@ -70,8 +74,8 @@ const toggleFn = () => {
 </script>
 
 <style lang="less" scoped>
-@import "@/less/color.less";
-@import "./menu-btn-common.less";
+@import '@/less/color.less';
+@import './menu-btn-common.less';
 .bib-editor-menu-item__btn {
   .menu-btn-common;
 }

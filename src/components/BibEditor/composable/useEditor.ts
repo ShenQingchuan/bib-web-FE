@@ -62,7 +62,6 @@ import { insertVideoIframe } from '../helpers/insert-video-iframe';
 import { columnResizing, goToNextCell, tableEditing } from 'prosemirror-tables';
 import insertTableCommand from '../commands/insertTable';
 import execTableCommandFn from '../helpers/exec-table-command';
-import { applyUpdate, encodeStateAsUpdate } from 'yjs';
 import { userDetailsStorageRef } from '@/utils';
 
 function isListNodeType(node: Node, schema: Schema) {

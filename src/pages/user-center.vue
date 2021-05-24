@@ -163,7 +163,7 @@ import { usePayloadFromToken, userDetailsStorageRef, userAvatarUrlFix } from '@/
 import { message } from "ant-design-vue";
 import CommonHeader from "@/components/view-header/common-header.vue";
 import UserActivityCard from '@/components/page-user-center/user-activity-card.vue';
-import * as us from 'underscore';
+import us from 'underscore';
 import type { OrgSimpleDto, UserActivityDto, UserDetailsFullDto } from '@/models'
 
 const userDetails = reactive({

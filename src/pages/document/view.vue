@@ -54,7 +54,11 @@
 
   <!-- 有权限则渲染文档视图 -->
   <div v-else class="page-document-view__wrapper flex-col">
-    <doc-view-header :view-data="viewData" :editable="editable" />
+    <doc-view-header
+      :view-data="viewData"
+      :editable="editable"
+      @inviting="updateJoinRequests"
+    />
 
     <div class="flex-row m-t-100 pos-rel">
       <doc-side-toc :toc="tableOfContentsData" />
@@ -129,10 +133,13 @@ import { savedDocViewData } from "./editing-doc-storage-ref";
 import DocViewHeader from '@/components/page-doc-view/doc-view-header.vue';
 import DocComment from '@/components/page-doc-view/doc-comment.vue';
 import DocSideToc from '@/components/DocSideToc/doc-side-toc.vue';
-import * as us from 'underscore';
+import us from 'underscore';
 import type { DocumentCommentDto, DocumentViewData, UserSimpleDto } from "@/models";
 import type { DocTableOfContentsUnit } from "@/components/BibEditor/typings";
 import { message } from "ant-design-vue";
+
+// @Utils:
+const requestForViewData = () => fusions.get(`/docs/${docId}?userId=${credential?.userId || -1}`);
 
 // @States:
 const route = useRoute();
@@ -166,16 +173,16 @@ provide('doc-view-toc-items-refs', tocItemRefs);
 
 // @LifeCycles:
 loadingViewData.value = true;
-const fetchViewData = (): Promise<any> =>
-  us.isEmpty(savedDocViewData.value[docId])
-    ? fusions.get(`/docs/${docId}?userId=${credential?.userId || -1}`)
+const fetchViewData = (): Promise<any> => {
+  return us.isEmpty(savedDocViewData.value[docId])
+    ? requestForViewData()
     : Promise.resolve({ // mock a structure as AxiosResponse
       data: {
         responseOk: true,
         data: savedDocViewData.value[docId]
       }
     });
-
+}
 
 // start-up:
 Promise.all([
@@ -296,6 +303,14 @@ const createJoinCollaborationRequest = () => {
         sendedJoinRequest.value = true;
       }
     });
+}
+const updateJoinRequests = () => {
+  requestForViewData().then((resp) => {
+    if (resp.data.responseOk) {
+      viewData.value = resp.data.data;
+      savedDocViewData.value[docId] = resp.data.data;
+    }
+  });
 }
 </script>
 

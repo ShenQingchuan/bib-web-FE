@@ -83,7 +83,7 @@
           theme="outline"
           :size="20"
           class="iconpark m-l-10 m-r-4 cursor-ptr"
-          @click="showInviteModal = true"
+          @click="showInviteModal = true; $emit('inviting')"
         />
       </a-tooltip>
       <DocInviteModal
@@ -126,7 +126,8 @@ const props = defineProps<{
   onlineUsers?: OnlineUser[]
 }>()
 const emit = defineEmit([
-  'quit-document-edit'
+  'quit-document-edit',
+  'inviting'
 ]);
 
 // @States:

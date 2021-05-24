@@ -2,7 +2,7 @@ import { Node } from 'prosemirror-model';
 import { EditorView } from 'prosemirror-view';
 import { exitCode } from 'prosemirror-commands';
 import { undo, redo } from 'y-prosemirror';
-import * as CodeMirror from 'codemirror';
+import CodeMirror from 'codemirror';
 import {
   EditorState,
   Selection,

@@ -37,7 +37,7 @@
 </template>
 
 <script setup lang="ts">
-import { defineProps, provide, readonly, ref } from "vue";
+import { defineProps, provide, ref } from "vue";
 import { BoldOutlined, ItalicOutlined, StrikethroughOutlined, UnderlineOutlined } from "@ant-design/icons-vue";
 import Icon from "@ant-design/icons-vue";
 import CodeMarkIcon from "../icons/code-mark-icon.vue";

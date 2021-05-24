@@ -46,7 +46,7 @@ onMounted(() => {
       }
     }
   });
-})
+});
 
 // @Methods: 
 const toggleAlignFn = (direction: string) => {

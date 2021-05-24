@@ -34,7 +34,7 @@ import { editingDocViewData, savedDocViewData } from './editing-doc-storage-ref'
 import { useEditor } from "@/components/BibEditor/composable/useEditor";
 import DocViewHeader from '@/components/page-doc-view/doc-view-header.vue';
 import BibEditorMenu from '@/components/BibEditor/menu/bib-editor-menu.vue';
-import * as us from 'underscore';
+import us from 'underscore';
 import type { EditorInstance } from '@/components/BibEditor/typings';
 import type { DocumentViewData } from '@/models';
 import { message } from 'ant-design-vue';

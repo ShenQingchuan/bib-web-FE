@@ -1,6 +1,6 @@
 import { Schema, Node, Mark } from 'prosemirror-model';
 import { tableNodes } from 'prosemirror-tables';
-import * as us from 'underscore';
+import us from 'underscore';
 
 const blockquoteDOM = ['blockquote', 0],
   brDOM = ['br'],
@@ -83,10 +83,12 @@ export const nodes: {
     attrs: extends_textBlockAttrs(),
     content: 'inline*',
     group: 'block',
-    parseDOM: [{
-      tag: 'p',
-      getAttrs: extendsTextBlockStyleAttrs()
-    }],
+    parseDOM: [
+      {
+        tag: 'p',
+        getAttrs: extendsTextBlockStyleAttrs()
+      }
+    ],
     toDOM(node: Node) {
       const style = stylesOfTextBlock(node);
       return ['p', { style }, 0];

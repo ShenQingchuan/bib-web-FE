@@ -1,4 +1,4 @@
-import { computed, nextTick, reactive, ref } from 'vue';
+import { computed, nextTick, reactive, ref, Ref } from 'vue';
 import {
   EMAIL_REGEXP,
   MOBILE_PHONE_REGEXP,
@@ -62,20 +62,7 @@ export function useLoginForm() {
         : LoginFormType.NAME_FORM,
     rememberMe: false
   });
-  const loginFormTRef = ref<InstanceType<typeof Form> | null>(null);
-
-  const seekByEmailFn /** @Utils: */ = _.debounce(
-    async (email: string) => {
-      const res = await fusions.get('/user/seekByEmail?email=' + email);
-      if (res.data.responseOk) {
-        loginForm.userName = res.data.data.userName;
-      }
-      return res.data.responseOk;
-    },
-    2000,
-    true
-  );
-  const loginFormRules: Record<string, ValidationRule[]> = {
+  const loginFormRules: Ref<Record<string, ValidationRule[]>> = ref({
     userName: [
       {
         validator: async (rule, value) => {
@@ -97,18 +84,18 @@ export function useLoginForm() {
       {
         validator: async (rule: unknown, value: string) => {
           if (
-            loginForm.formType === LoginFormType.EMAIL_FORM &&
-            !EMAIL_REGEXP.test(value)
+            loginForm.formType === LoginFormType.EMAIL_FORM
           ) {
-            return Promise.reject(
-              LoginRegisterFormError.USEREMAIL_FORMAT_INVALID
-            );
-          }
-
-          /** 查找当前邮箱账号是否存在，若存在取出它的用户名 */
+            if (!EMAIL_REGEXP.test(value)) {
+              return Promise.reject(
+                LoginRegisterFormError.USEREMAIL_FORMAT_INVALID
+              );
+            }
+            /** 查找当前邮箱账号是否存在，若存在取出它的用户名 */
           return (await seekByEmailFn(value))
             ? Promise.resolve()
             : Promise.reject(LoginRegisterFormError.USEREMAIL_NOTFOUND);
+          }
         },
         trigger: 'change'
       }
@@ -127,14 +114,19 @@ export function useLoginForm() {
         trigger: 'change'
       }
     ]
-  };
+  });
+  const { validate } = Form.useForm(loginForm, loginFormRules);
 
-  // @Computed:
-  const submitable = computed(
-    () =>
-      loginFormTRef.value?.fields.reduce((p, c) => p + c.errors.length, 0) ===
-        0 &&
-      loginFormTRef.value?.fields.every((field) => field.fieldValue !== '')
+  const seekByEmailFn /** @Utils: */ = _.debounce(
+    async (email: string) => {
+      const res = await fusions.get('/user/seekByEmail?email=' + email);
+      if (res.data.responseOk) {
+        loginForm.userName = res.data.data.userName;
+      }
+      return res.data.responseOk;
+    },
+    2000,
+    true
   );
 
   // @Methods:
@@ -151,8 +143,7 @@ export function useLoginForm() {
   const handleSubmitLoginForm = _.debounce(
     async () => {
       // 首先验证各字段
-      loginFormTRef.value
-        ?.validate()
+      validate()
         .then(async (validateResult) => {
           if (!validateResult) {
             message.error(
@@ -182,11 +173,9 @@ export function useLoginForm() {
 
   return {
     loginForm,
-    loginFormTRef,
     loginFormRules,
     handleSubmitLoginForm,
     handleChangeFormType,
-    submitable
   };
 }
 
@@ -203,11 +192,7 @@ export function useRegisterForm() {
     password: '',
     confirmPassword: ''
   });
-  const isSendSmsCodeBtnDisabled = ref(false);
-  const sendSmsCodeAgainPendingSeconds = ref(0);
-  const sendSmsCodeCount = ref(0);
-  const registerFormTRef = ref<InstanceType<typeof Form> | null>(null);
-  const registerFormRules: Record<string, ValidationRule[]> = {
+  const registerFormRules: Ref<Record<string, ValidationRule[]>> = ref({
     userName: [
       {
         validator: (rule, value) => {
@@ -275,23 +260,17 @@ export function useRegisterForm() {
         }
       }
     ]
-  };
-
-  // @Computed:
-  const submitable = computed(
-    () =>
-      registerFormTRef.value?.fields.reduce(
-        (p, c) => p + c.errors.length,
-        0
-      ) === 0 &&
-      registerFormTRef.value?.fields.every((field) => field.fieldValue !== '')
-  );
+  });
+  const { validate } = Form.useForm(registerForm, registerFormRules);
+  const isSendSmsCodeBtnDisabled = ref(false);
+  const sendSmsCodeAgainPendingSeconds = ref(0);
+  const sendSmsCodeCount = ref(0);
+  const registerFormTRef = ref<InstanceType<typeof Form> | null>(null);
 
   // @Methods:
   const handleSubmitRegisterForm = _.debounce(
     async () => {
-      registerFormTRef.value
-        ?.validate()
+      validate()
         .then(async (validateResult) => {
           if (!validateResult) {
             message.error(
@@ -355,7 +334,6 @@ export function useRegisterForm() {
     isSendSmsCodeBtnDisabled,
     sendSmsCodeAgainPendingSeconds,
     handleSubmitRegisterForm,
-    submitable,
     sendSmsCode
   };
 }

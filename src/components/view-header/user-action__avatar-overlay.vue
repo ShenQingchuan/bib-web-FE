@@ -1,17 +1,17 @@
 <template>
   <a-menu class="component-user-action__avatar-overlay-menu">
     <a-menu-item @click="$router.push(`/user/${userName}`)">
-      <UserOutlined />个人中心
+      <UserOutlined /><span class="m-l-12">个人中心</span>
     </a-menu-item>
     <a-menu-item @click="$router.push('/user-settings')">
-      <SettingOutlined />帐户设置
+      <SettingOutlined /><span class="m-l-12">帐户设置</span>
     </a-menu-item>
     <a-menu-item @click="$router.push('/help')">
-      <ReadOutlined />帮助文档
+      <ReadOutlined /><span class="m-l-12">帮助文档</span>
     </a-menu-item>
     <a-divider class="component-user-action__avatar-overlay-menu__divider" />
     <a-menu-item @click="runLogout">
-      <LogoutOutlined />退出登录
+      <LogoutOutlined /><span class="m-l-12">退出登录</span>
     </a-menu-item>
   </a-menu>
 </template>
@@ -21,27 +21,27 @@ import {
   UserOutlined,
   SettingOutlined,
   LogoutOutlined,
-  ReadOutlined,
-} from "@ant-design/icons-vue";
-import { usePayloadFromToken } from "../../utils";
-import { runLogout } from "../../composable/useAuthForm";
+  ReadOutlined
+} from '@ant-design/icons-vue';
+import { usePayloadFromToken } from '../../utils';
+import { runLogout } from '../../composable/useAuthForm';
 
 export default {
-  name: "user-action__avatar-overlay",
+  name: 'user-action__avatar-overlay',
   components: {
     UserOutlined,
     SettingOutlined,
     LogoutOutlined,
-    ReadOutlined,
+    ReadOutlined
   },
   setup() {
-    const userName = usePayloadFromToken()?.userName ?? "";
+    const userName = usePayloadFromToken()?.userName ?? '';
 
     return {
       userName,
-      runLogout,
+      runLogout
     };
-  },
+  }
 };
 </script>
 

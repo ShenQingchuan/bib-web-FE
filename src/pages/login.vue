@@ -3,7 +3,6 @@
     <template #center>
       <a-form
         class="page-login__form"
-        ref="loginFormTRef"
         layout="vertical"
         :model="loginForm"
         :rules="loginFormRules"
@@ -15,7 +14,10 @@
           name="userEmail"
           hasFeedback
         >
-          <a-input v-model:value="loginForm.userEmail" placeholder="请输入邮箱地址">
+          <a-input
+            v-model:value="loginForm.userEmail"
+            placeholder="请输入邮箱地址"
+          >
             <template #prefix>
               <MailOutlined />
             </template>
@@ -27,7 +29,10 @@
           name="userName"
           hasFeedback
         >
-          <a-input v-model:value="loginForm.userName" placeholder="请输入用户名">
+          <a-input
+            v-model:value="loginForm.userName"
+            placeholder="请输入用户名"
+          >
             <template #prefix>
               <UserOutlined />
             </template>
@@ -35,7 +40,11 @@
         </a-form-item>
         <!-- 密码 -->
         <a-form-item name="password" hasFeedback>
-          <a-input v-model:value="loginForm.password" type="password" placeholder="请输入密码">
+          <a-input
+            v-model:value="loginForm.password"
+            type="password"
+            placeholder="请输入密码"
+          >
             <template #prefix>
               <LockOutlined />
             </template>
@@ -50,34 +59,40 @@
           <a-button
             type="primary"
             html-type="button"
-            :disabled="!submitable"
             @click="handleSubmitLoginForm"
             block
-          >登录</a-button>
+            >登录</a-button
+          >
         </a-form-item>
       </a-form>
     </template>
     <template #footer>
       <div class="flex-row vc page-login__footer-actions">
-        <a href="/password-retrieve" class="page-login-register__footer-actions-item">找回密码</a>
+        <a
+          href="/password-retrieve"
+          class="page-login-register__footer-actions-item"
+          >找回密码</a
+        >
         <a-divider type="vertical" />
         <a-button
           class="page-login-register__footer-actions-item"
           type="link"
           @click="
-          handleChangeFormType(
-            loginForm.formType === LoginFormType.EMAIL_FORM
-              ? LoginFormType.NAME_FORM
-              : LoginFormType.EMAIL_FORM
-          )
+            handleChangeFormType(
+              loginForm.formType === LoginFormType.EMAIL_FORM
+                ? LoginFormType.NAME_FORM
+                : LoginFormType.EMAIL_FORM
+            )
           "
         >
           {{
-            loginForm.formType === LoginFormType.EMAIL_FORM ? "用户名" : "邮箱"
+            loginForm.formType === LoginFormType.EMAIL_FORM ? '用户名' : '邮箱'
           }}登录
         </a-button>
         <a-divider type="vertical" />
-        <a href="/register" class="page-login-register__footer-actions-item">快速注册</a>
+        <a href="/register" class="page-login-register__footer-actions-item"
+          >快速注册</a
+        >
       </div>
     </template>
   </center-small-card-layout>
@@ -87,30 +102,30 @@
 import {
   MailOutlined,
   LockOutlined,
-  UserOutlined,
-} from "@ant-design/icons-vue";
-import { useLoginForm, LoginFormType } from "@/composable/useAuthForm";
-import CenterSmallCardLayout from "@/components/layouts/center-small-card-layout.vue";
+  UserOutlined
+} from '@ant-design/icons-vue';
+import { useLoginForm, LoginFormType } from '@/composable/useAuthForm';
+import CenterSmallCardLayout from '@/components/layouts/center-small-card-layout.vue';
 
 export default {
-  name: "login-page",
+  name: 'login-page',
   components: {
     CenterSmallCardLayout,
     LockOutlined,
     MailOutlined,
-    UserOutlined,
+    UserOutlined
   },
   setup() {
     return {
       ...useLoginForm(),
-      LoginFormType,
+      LoginFormType
     };
-  },
+  }
 };
 </script>
 
 <style lang="less" scoped>
-@import url("../less/color.less");
+@import url('../less/color.less');
 
 .page-login__form {
   min-width: 360px;

@@ -9,12 +9,12 @@
 
       <a
         href="/login"
-        class="page-landing__ant-btn ant-btn m-l-auto p-tb-6 m-r-12 fs-16"
+        class="page-landing__ant-btn ant-btn m-l-auto m-r-12 fs-16"
         ><span>登录</span></a
       >
       <a
         href="/register"
-        class="page-landing__ant-btn ant-btn ant-btn-primary m-lr-12 p-tb-6 fs-16"
+        class="page-landing__ant-btn ant-btn ant-btn-primary m-lr-12 fs-16"
         ><span>快速注册</span></a
       >
     </div>
@@ -185,7 +185,7 @@ setInterval(() => {
 .page-landing__ant-btn {
   height: auto;
   border-radius: 6px;
-  padding-top: 6px;
+  padding: 4px 15px !important;
 }
 .page-landing__condition-pic {
   width: 90px;

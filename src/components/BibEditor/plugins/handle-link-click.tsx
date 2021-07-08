@@ -7,6 +7,7 @@ import { EditorSchema } from '../editor-schema';
 import { trKeyLinkChange } from '../trKeys';
 import { EditorView } from 'prosemirror-view';
 import { URL_REGEX } from '../../../utils';
+import getMarkRange from '../helpers/get-mark-range';
 
 const {
   marks: { link: linkMarkType }
@@ -36,11 +37,16 @@ export function updateLinkWithPos(
   const { doc, tr } = view.state;
   if (!stored) {
     const resolvedPos = doc.resolve(pos);
-    tr.replaceWith(
-      resolvedPos.start(),
-      end || resolvedPos.end(),
-      EditorSchema.text(text, marks)
-    );
+    const markRange = getMarkRange(resolvedPos, EditorSchema.marks.link)
+    if (markRange) {
+      const { from, to } = markRange
+      tr.replaceWith(
+        from, to,
+        EditorSchema.text(text, marks)
+      );
+    } else {
+      tr.insert(pos, EditorSchema.text(text, marks));
+    }
   } else {
     // 如果是需要 stored Mark
     // 那么之前 addToSet 必然是添加到 [] 中
@@ -65,9 +71,9 @@ export function showUpdateLinkModal(
   const text = ref<string>(attrs?.text || currentTextNode?.textContent || ''),
     href = ref<string>(
       attrs?.href ||
-        (URL_REGEX.test(currentTextNode?.textContent)
-          ? currentTextNode?.textContent
-          : 'https://')
+      (URL_REGEX.test(currentTextNode?.textContent)
+        ? currentTextNode?.textContent
+        : 'https://')
     );
 
   Modal.confirm({

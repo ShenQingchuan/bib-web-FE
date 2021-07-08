@@ -369,8 +369,8 @@ export const marks: {
   // element.
   link: {
     attrs: {
-      href: {},
-      text: {}
+      href: { default: '' },
+      text: { default: '' }
     },
     inclusive: false,
     parseDOM: [
@@ -387,8 +387,8 @@ export const marks: {
       }
     ],
     toDOM(mark: Mark) {
-      let { href } = mark.attrs;
-      return ['a', { href }, 0];
+      let { href, text } = mark.attrs;
+      return ['a', { href }, text];
     }
   },
 

@@ -2,7 +2,7 @@
   <div
     class="doc-side-toc__item"
     :style="{
-      paddingLeft: `${(item.level - 1) * 6}px`
+      paddingLeft: `${(item.level - 1) * 10}px`
     }"
     :data-toc-index="index"
   >

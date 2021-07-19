@@ -12,16 +12,14 @@
     />
     <div class="page-document-view__no-read-auth-tip m-t-32 m-lr-auto flex-col">
       <span class="p-8 fw-500 fs-24 text-center">
-        <FileLock class="iconpark tc-primary" />
-        没有权限访问
+        <FileLock class="iconpark tc-primary" />没有权限访问
       </span>
       <span class="p-t-8 p-b-4 text-center">
         当前登录身份为
         <a
           class="tc-primary"
           :href="logined ? `/user/${credential.userName}` : '/login'"
-          >{{ logined ? credential.userName : '未登录' }}</a
-        >
+        >{{ logined ? credential.userName : '未登录' }}</a>
       </span>
       <template v-if="logined">
         <template v-if="!sendedJoinRequest">
@@ -30,54 +28,33 @@
             <a
               class="tc-primary fw-500"
               :href="`/user/${viewData?.creator.userName}`"
-            >
-              {{ viewData?.creator.userName }}
-            </a>
+            >{{ viewData?.creator.userName }}</a>
             申请权限
           </span>
           <div class="flex-row anis-center jyct-center m-tb-16">
-            <a-button
-              type="primary"
-              class="m-lr-20"
-              @click="createJoinCollaborationRequest"
-              >申请</a-button
-            >
+            <a-button type="primary" class="m-lr-20" @click="createJoinCollaborationRequest">申请</a-button>
             <a-button class="m-lr-20">取消</a-button>
           </div>
         </template>
-        <span v-else class="p-tb-12 tc-n500 text-center fs-16">
-          已经申请权限，请等待回复后刷新页面。
-        </span>
+        <span v-else class="p-tb-12 tc-n500 text-center fs-16">已经申请权限，请等待回复后刷新页面。</span>
       </template>
     </div>
   </div>
 
   <!-- 有权限则渲染文档视图 -->
   <div v-else class="page-document-view__wrapper flex-col">
-    <doc-view-header
-      :view-data="viewData"
-      :editable="editable"
-      @inviting="updateJoinRequests"
-    />
+    <doc-view-header :view-data="viewData" :editable="editable" @inviting="updateJoinRequests" />
 
     <div class="flex-row m-t-100 pos-rel">
       <doc-side-toc :toc="tableOfContentsData" />
       <!-- 通过 readonly ProseMirror 加载出文档 -->
       <div class="page-document-view__content m-lr-auto">
-        <a-skeleton
-          class="m-t-40"
-          active
-          v-if="loadingViewData"
-          :paragraph="{ rows: 20 }"
-        />
+        <a-skeleton class="m-t-40" active v-if="loadingViewData" :paragraph="{ rows: 20 }" />
         <div v-show="!loadingViewData" ref="docViewRef"></div>
       </div>
     </div>
 
-    <div
-      v-if="!loadingViewData"
-      class="page-document-view__meta-section m-t-32 m-b-64"
-    >
+    <div v-if="!loadingViewData" class="page-document-view__meta-section m-t-32 m-b-64">
       <!-- 点赞 -->
       <div
         class="page-document-view__thumbs-up-btn flex-row jyct-center anis-center m-lr-auto"
@@ -88,9 +65,9 @@
       >
         <thumbs-up theme="filled" :size="24" class="iconpark" />
       </div>
-      <div class="page-document-view__thumbs-up-divider m-lr-auto m-tb-20">
-        点赞 {{ thumbsUpedCount }} 人
-      </div>
+      <div
+        class="page-document-view__thumbs-up-divider m-lr-auto m-tb-20"
+      >点赞 {{ thumbsUpedCount }} 人</div>
 
       <!-- 评论 -->
       <div class="page-document-view__comments p-20 m-lr-auto">
@@ -109,8 +86,8 @@
             replyTo
               ? `回复 ${replyTo.creator.userName}：`
               : userTokenPayload
-              ? '评论文章，按回车键提交...'
-              : '请登录后评论...'
+                ? '评论文章，按回车键提交...'
+                : '请登录后评论...'
           "
           @press-enter="onSubmitComment"
           :disabled="!userTokenPayload"
@@ -127,16 +104,16 @@ import { useRoute } from 'vue-router';
 import { ThumbsUp, FileLock } from '@icon-park/vue-next';
 import { fetchDocFromPersistence, fusions, mocker } from '@/fusions';
 import { useEditor } from "@/components/BibEditor/composable/useEditor";
-import { useTableOfContents } from '@/components/BibEditor/composable/useTableOfContents';
+import { useTableOfContents, bindClickScrollHandler } from '@/components/BibEditor/composable/useTableOfContents';
 import { usePayloadFromToken, isBibUserTokenValid } from "@/utils";
 import { savedDocViewData } from "./editing-doc-storage-ref";
+import { message } from "ant-design-vue";
 import DocViewHeader from '@/components/page-doc-view/doc-view-header.vue';
 import DocComment from '@/components/page-doc-view/doc-comment.vue';
 import DocSideToc from '@/components/DocSideToc/doc-side-toc.vue';
 import us from 'underscore';
 import type { DocumentCommentDto, DocumentViewData, UserSimpleDto } from "@/models";
 import type { DocTableOfContentsUnit } from "@/components/BibEditor/typings";
-import { message } from "ant-design-vue";
 
 // @Utils:
 const requestForViewData = () => fusions.get(`/docs/${docId}?userId=${credential?.userId || -1}`);
@@ -182,6 +159,60 @@ const fetchViewData = (): Promise<any> => {
         data: savedDocViewData.value[docId]
       }
     });
+}
+
+// @Methods:
+const onReplyTo = (replyToPayload: DocumentCommentDto) => {
+  replyTo.value = replyToPayload;
+  commentInputer.value.focus();
+}
+const onThumbsUpDocument = us.debounce(() => {
+  fusions.put('/docs/thumbsUp', {
+    userId: credential.userId,
+    docId
+  }).then((resp) => {
+    if (resp.data.responseOk) {
+      thumbsUped.value = !thumbsUped.value;
+      if (thumbsUped.value) {
+        thumbsUpedCount.value += 1;
+      } else {
+        thumbsUpedCount.value -= 1;
+      }
+    }
+  })
+}, 2000, true);
+const onSubmitComment = () => {
+  fusions.post('/docs/comment', {
+    content: commentContent.value,
+    docId,
+    creatorId: credential.userId,
+    replyToId: replyTo.value?.id || null
+  }).then((resp) => {
+    if (resp.data.responseOk) {
+      comments.value.push(resp.data.data as DocumentCommentDto);
+
+      commentContent.value = "";
+      commentInputer.value.blur();
+    }
+  })
+
+}
+const createJoinCollaborationRequest = () => {
+  fusions.post(`/docs/joinCollaborationRequest?docId=${docId}&userId=${credential!.userId}`)
+    .then((resp) => {
+      if (resp.data.responseOk) {
+        message.success("申请访问权限成功，请耐心等待所有者回复后刷新！");
+        sendedJoinRequest.value = true;
+      }
+    });
+}
+const updateJoinRequests = () => {
+  requestForViewData().then((resp) => {
+    if (resp.data.responseOk) {
+      viewData.value = resp.data.data;
+      savedDocViewData.value[docId] = resp.data.data;
+    }
+  });
 }
 
 // start-up:
@@ -242,81 +273,15 @@ Promise.all([
           '.ProseMirror h1,h2,h3,h4,h5,h6'
         ) as NodeListOf<HTMLHeadingElement>
       );
-      tocItemRefs.value = Array.from(
-        document.querySelectorAll('.doc-side-toc__item')
-      );
-      tocItemRefs.value.forEach((tocItem, i) => {
-        tocItem.onclick = (e) => {
-          const target = headingRefs.value[i];
-          window.scrollTo({
-            top: target.offsetTop - target.clientHeight,
-            behavior: 'smooth'
-          })
-          e.stopPropagation();
-        }
-      });
+      bindClickScrollHandler(headingRefs, tocItemRefs);
     });
   }
 });
-
-// @Methods:
-const onReplyTo = (replyToPayload: DocumentCommentDto) => {
-  replyTo.value = replyToPayload;
-  commentInputer.value.focus();
-}
-const onThumbsUpDocument = us.debounce(() => {
-  fusions.put('/docs/thumbsUp', {
-    userId: credential.userId,
-    docId
-  }).then((resp) => {
-    if (resp.data.responseOk) {
-      thumbsUped.value = !thumbsUped.value;
-      if (thumbsUped.value) {
-        thumbsUpedCount.value += 1;
-      } else {
-        thumbsUpedCount.value -= 1;
-      }
-    }
-  })
-}, 2000, true);
-const onSubmitComment = () => {
-  fusions.post('/docs/comment', {
-    content: commentContent.value,
-    docId,
-    creatorId: credential.userId,
-    replyToId: replyTo.value?.id || null
-  }).then((resp) => {
-    if (resp.data.responseOk) {
-      comments.value.push(resp.data.data as DocumentCommentDto);
-
-      commentContent.value = "";
-      commentInputer.value.blur();
-    }
-  })
-
-}
-const createJoinCollaborationRequest = () => {
-  fusions.post(`/docs/joinCollaborationRequest?docId=${docId}&userId=${credential!.userId}`)
-    .then((resp) => {
-      if (resp.data.responseOk) {
-        message.success("申请访问权限成功，请耐心等待所有者回复后刷新！");
-        sendedJoinRequest.value = true;
-      }
-    });
-}
-const updateJoinRequests = () => {
-  requestForViewData().then((resp) => {
-    if (resp.data.responseOk) {
-      viewData.value = resp.data.data;
-      savedDocViewData.value[docId] = resp.data.data;
-    }
-  });
-}
 </script>
 
 <style lang="less" scoped>
-@import '@/less/color.less';
-@import '@/less/shared.less';
+@import "@/less/color.less";
+@import "@/less/shared.less";
 .page-document-view__content {
   width: 64vw;
 
@@ -354,7 +319,7 @@ const updateJoinRequests = () => {
 
   &::before,
   &::after {
-    content: '';
+    content: "";
     width: 50px;
     height: 1px;
     position: absolute;

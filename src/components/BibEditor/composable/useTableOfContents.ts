@@ -3,6 +3,7 @@ import {
   DocHeading,
   DocTableOfContentsUnit
 } from '../typings';
+import type { Ref } from 'vue';
 
 const decodeContentJSON = (content: string): DocContentElement => {
   return JSON.parse(content) as DocContentElement;
@@ -66,4 +67,22 @@ export const useTableOfContents = (
   }
 
   return toc;
+};
+export const bindClickScrollHandler = (
+  headingRefs: Ref<HTMLHeadingElement[]>,
+  tocItemRefs: Ref<HTMLElement[]>
+) => {
+  tocItemRefs.value = Array.from(
+    document.querySelectorAll(".doc-side-toc__item")
+  );
+  tocItemRefs.value.forEach((tocItem, i) => {
+    tocItem.onclick = (e) => {
+      const target = headingRefs.value[i];
+      window.scrollTo({
+        top: target.offsetTop - target.clientHeight,
+        behavior: "smooth",
+      });
+      e.stopPropagation();
+    };
+  });
 };

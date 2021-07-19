@@ -1,5 +1,8 @@
 <template>
-  <div class="doc-side-toc__wrapper to-ellipsis p-l-8">
+  <div class="doc-side-toc__wrapper to-ellipsis p-l-8" :style="{
+    top: `${top}px`,
+    left: `${left}px`
+  }">
     <doc-side-toc-item
       v-for="(unit, i) in toc"
       :key="i"
@@ -10,14 +13,19 @@
 </template>
 
 <script setup lang="ts">
-import { defineProps, ref, onMounted, onUnmounted, provide, inject } from "vue";
+import { defineProps, ref, onMounted, onUnmounted, provide, inject, withDefaults } from "vue";
 import DocSideTocItem from './doc-side-toc-item.vue';
 import type { Ref } from 'vue';
 import type { DocTableOfContentsUnit } from '@/components/BibEditor/typings';
 
-const props = defineProps<{
+const props = withDefaults(defineProps<{
   toc: DocTableOfContentsUnit[],
-}>();
+  top?: number,
+  left?: number
+}>(), {
+  top: 100,
+  left: 40
+});
 
 // @States:
 const activeItemIndex = ref(props.toc.length > 0 ? '0' : ''); // 默认首个
@@ -28,7 +36,6 @@ provide('doc-side-toc__active-index', activeItemIndex);
 provide('update:doc-side-toc__active-index', (indexKey: string) => {
   activeItemIndex.value = indexKey;
 });
-
 
 // @Methods:
 const onDocumentScroll = () => {
@@ -60,8 +67,6 @@ onUnmounted(() => {
   width: 170px;
   height: 100%;
   position: sticky;
-  top: 100px;
-  left: 40px;
   border-left: 2px solid #dee0e3;
 }
 </style>

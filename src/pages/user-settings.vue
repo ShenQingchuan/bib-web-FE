@@ -26,7 +26,7 @@
               ></a-avatar>
               <div
                 class="page-user-settings__profile-upload-avatar flex-row anis-center brr-6 m-l-24"
-                @click="userAvatarUploadRef.click()"
+                @click="userAvatarUploadRef?.click()"
               >
                 <upload-one class="m-t-12" theme="outline" size="24" />
                 <span class="m-l-8">点击上传新头像</span>
@@ -89,7 +89,6 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import { UploadOne } from '@icon-park/vue-next';
-import { templateRef } from '@vueuse/core';
 import { message } from 'ant-design-vue';
 import { fusions } from '@/fusions';
 import {
@@ -108,9 +107,7 @@ const activeTabKey = ref(
   window.location.hash.slice(1) || 'profile' // 去掉 '#' 号前缀
 );
 const detailsFormData = userDetailsStorageRef;
-const userAvatarUploadRef = templateRef<HTMLInputElement>(
-  'userAvatarUploadRef'
-);
+const userAvatarUploadRef = ref<HTMLInputElement | null>(null);
 
 // @LifeCycles:
 
@@ -120,7 +117,7 @@ const onTabChange = (activeKey: string) => {
 };
 const onAvatarInput = () => {
   const tokenPayload = usePayloadFromToken();
-  if (tokenPayload && userAvatarUploadRef.value.files) {
+  if (tokenPayload && userAvatarUploadRef.value?.files) {
     const images = userAvatarUploadRef.value.files;
     let formData = new FormData();
 
@@ -174,7 +171,7 @@ const onDetailsSubmit = () => {
 </script>
 
 <style lang="less" scoped>
-@import '@/less/color.less';
+@import "@/less/color.less";
 .page-user-settings__wrapper {
   width: 100%;
   max-width: 800px;

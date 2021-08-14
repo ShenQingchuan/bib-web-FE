@@ -36,10 +36,9 @@
 </template>
 
 <script setup lang="ts">
-import { inject } from 'vue';
+import { inject, ref } from 'vue';
 import Icon, { DesktopOutlined, GlobalOutlined } from '@ant-design/icons-vue';
 import insertImageIcon from '../icons/insert-image-icon.vue';
-import { templateRef } from '@vueuse/core';
 import { fusions } from '@/fusions';
 import {
   usePayloadFromToken,
@@ -54,7 +53,7 @@ import type { EditorInstance, InsertImageType } from '../typings';
 
 // @States:
 const editorInstance = inject<EditorInstance>("editorInstance")!;
-const inputRef = templateRef<HTMLInputElement>('localImageInputer');
+const localImageInputer = ref<HTMLInputElement | null>(null);
 
 // @LifeCycles:
 
@@ -64,8 +63,8 @@ const insertImage = (insertType: InsertImageType) => {
 }
 const onLocalImageInput = () => {
   const tokenPayload = usePayloadFromToken();
-  if (tokenPayload && inputRef.value.files) {
-    const images = inputRef.value.files;
+  if (tokenPayload && localImageInputer.value?.files) {
+    const images = localImageInputer.value.files;
     let formData = new FormData();
 
     message.loading({

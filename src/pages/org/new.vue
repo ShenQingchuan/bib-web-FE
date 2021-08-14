@@ -41,7 +41,7 @@
               <input
                 class="hidden"
                 type="file"
-                ref="org-avatar-uploader"
+                ref="orgAvatarUploadInputer"
                 id="org-avatar-uploader"
                 accept="image/jpeg, image/jpg, image/png"
                 @change="onAvatarUpload"
@@ -75,7 +75,6 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue';
 import { UploadOutlined } from '@ant-design/icons-vue';
-import { templateRef } from '@vueuse/core';
 import { message } from 'ant-design-vue';
 import { useRouter } from 'vue-router';
 import { fusions } from '@/fusions';
@@ -90,7 +89,7 @@ const router = useRouter()
 // @States:
 const orgName = ref('');
 const orgDesc = ref('');
-const orgAvatarUploadInputer = templateRef<HTMLInputElement>('org-avatar-uploader');
+const orgAvatarUploadInputer = ref<HTMLInputElement | null>(null);
 const orgAvatarURL = ref('');
 
 const isFormValid = computed(() => orgName.value.length > 0);
@@ -99,10 +98,10 @@ const isFormValid = computed(() => orgName.value.length > 0);
 
 // @Methods:
 const onUploadBtnClick = () => {
-  orgAvatarUploadInputer.value.click();
+  orgAvatarUploadInputer.value?.click();
 }
 const onAvatarUpload = () => {
-  const avatarFile = orgAvatarUploadInputer.value.files?.[0];
+  const avatarFile = orgAvatarUploadInputer.value?.files?.[0];
   if (avatarFile) {
     let formData = new FormData();
     formData.append("userId", `${tokenPayload.userId}`);

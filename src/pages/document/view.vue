@@ -99,7 +99,6 @@
 
 <script setup lang="ts">
 import { nextTick, provide, readonly, ref } from "vue";
-import { templateRef } from "@vueuse/core";
 import { useRoute } from 'vue-router';
 import { ThumbsUp, FileLock } from '@icon-park/vue-next';
 import { fetchDocFromPersistence, fusions, mocker } from '@/fusions';
@@ -122,11 +121,11 @@ const requestForViewData = () => fusions.get(`/docs/${docId}?userId=${credential
 const route = useRoute();
 const docId = route.params.docId as string;
 const credential = usePayloadFromToken()!;
+const userTokenPayload = usePayloadFromToken();
 const loadingViewData = ref(false);
 const noReadingAuth = ref(false);
-const docViewRef = templateRef('docViewRef');
-const userTokenPayload = usePayloadFromToken();
-const commentInputer = templateRef<HTMLInputElement>('commentInputer');
+const docViewRef = ref<HTMLElement | null>(null);
+const commentInputer = ref<HTMLElement | null>(null);
 const tableOfContentsData = ref<DocTableOfContentsUnit[]>([]);
 const docName = `bib-doc-id${docId}`;
 
@@ -164,7 +163,7 @@ const fetchViewData = (): Promise<any> => {
 // @Methods:
 const onReplyTo = (replyToPayload: DocumentCommentDto) => {
   replyTo.value = replyToPayload;
-  commentInputer.value.focus();
+  commentInputer.value?.focus();
 }
 const onThumbsUpDocument = us.debounce(() => {
   fusions.put('/docs/thumbsUp', {
@@ -192,7 +191,7 @@ const onSubmitComment = () => {
       comments.value.push(resp.data.data as DocumentCommentDto);
 
       commentContent.value = "";
-      commentInputer.value.blur();
+      commentInputer.value?.blur();
     }
   })
 

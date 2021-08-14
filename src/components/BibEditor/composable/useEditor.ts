@@ -148,7 +148,9 @@ export function useEditor(options: BibEditorOptions) {
       let ydoc = new Y.Doc();
       // Y.js 协同配置：
       provider = new WebsocketProvider(
-        'ws://localhost:2048',
+        process.env.NODE_ENV === 'production'
+          ? 'wss://bibyjs.techdict.pro'
+          : 'ws://localhost:2048',
         options.docName,
         ydoc
       );

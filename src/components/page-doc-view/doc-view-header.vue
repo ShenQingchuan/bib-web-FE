@@ -110,7 +110,7 @@
 </template>
 
 <script setup lang="ts">
-import { defineEmit, defineProps, ref } from 'vue';
+import { defineEmits, defineProps, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { Lock, PeoplePlus } from '@icon-park/vue-next';
 import { editingDocViewData, savedDocViewData } from '@/pages/document/editing-doc-storage-ref';
@@ -125,7 +125,7 @@ const props = defineProps<{
   viewData?: DocumentViewData,
   onlineUsers?: OnlineUser[]
 }>()
-const emit = defineEmit([
+const emit = defineEmits([
   'quit-document-edit',
   'inviting'
 ]);

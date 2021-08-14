@@ -45,7 +45,7 @@
 </template>
 
 <script setup lang="ts">
-import { defineProps, ref, computed, defineEmit } from "vue";
+import { defineProps, ref, computed, defineEmits } from "vue";
 import { LikeFilled, LikeOutlined } from '@ant-design/icons-vue';
 import { useDayjs } from "@/composable/useDayjs";
 import { userAvatarUrlFix } from '@/utils';
@@ -55,7 +55,7 @@ const props = defineProps<{
   comment: DocumentCommentDto;
 }>();
 
-const emit = defineEmit(['replyTo']);
+const emit = defineEmits(['replyTo']);
 
 // @States:
 const liked = ref(false);

@@ -42,7 +42,7 @@
 
           <!-- 地址 -->
           <a-form-item
-            class="page-user-settings__profile-form-item m-b-0"
+            class="page-user-settings__profile-form-item m-tb-20"
             name="address"
             :colon="false"
           >
@@ -54,7 +54,7 @@
 
           <!-- 职业 -->
           <a-form-item
-            class="page-user-settings__profile-form-item m-b-0"
+            class="page-user-settings__profile-form-item m-tb-20"
             name="profession"
             :colon="false"
           >
@@ -66,7 +66,7 @@
 
           <!-- 个人简介 -->
           <a-form-item
-            class="page-user-settings__profile-form-item m-b-0"
+            class="page-user-settings__profile-form-item m-tb-20"
             name="introduce"
             :colon="false"
           >

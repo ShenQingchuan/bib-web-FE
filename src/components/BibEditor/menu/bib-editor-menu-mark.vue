@@ -19,6 +19,7 @@ import { inject, defineProps, ref, onMounted } from "vue";
 import type { EditorInstance, EditorToggleCategories } from "../typings";
 import us from "underscore";
 import { EditorSchema } from "../editor-schema";
+import { guardYjsTrascationEvent } from "../utils";
 
 const props = defineProps<{
   mark: EditorToggleCategories;
@@ -32,7 +33,9 @@ const excludes = EditorSchema.marks[props.mark].spec.excludes;
 
 // @LifeCycles:
 onMounted(() => {
-  editorInstance.onEditorDispatched((tr, meta) => {
+  editorInstance.onEditorDispatched((tr) => {
+    if (guardYjsTrascationEvent(tr)) return;
+    props.mark === 'strong' && console.log('[tmy tr ]', tr);
     if (excludes) {
       const storedMarksNames = tr.storedMarks?.map(m => m.type.name);
       for (let ex of excludes.split(" ")) {
@@ -50,9 +53,7 @@ onMounted(() => {
     let concated = storedMarks.concat($from.marks());
     if (!empty) concated = concated.concat($to.marks());
     isActive.value = us.uniq(concated).map(m => m.type.name).includes(props.mark);
-  }, {
-    $needUpdate: needUpdate
-  })
+  });
 });
 const toggleFn = () => {
   toggleTo.value = isActive.value ? "off" : "on";

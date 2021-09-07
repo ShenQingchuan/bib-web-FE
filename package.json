@@ -2,7 +2,7 @@
   "name": "bib-web-fe",
   "version": "0.1.0",
   "scripts": {
-    "dev": "vite",
+    "dev": "vite & bib-web-yjs-server",
     "build": "vuedx-typecheck . && vite build",
     "serve": "vite preview"
   },

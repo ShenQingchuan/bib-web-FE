@@ -54,6 +54,7 @@ import { ref, inject, onMounted, computed } from 'vue';
 import { DownOutlined } from '@ant-design/icons-vue';
 import { EditorSchema } from "../editor-schema"
 import type { EditorInstance } from "../typings";
+import { guardYjsTrascationEvent } from '../utils';
 
 const defaultColor = '#000000'
 // @States:
@@ -70,6 +71,7 @@ const showColorForSvg = computed(() =>
 // @lifeCycles:
 onMounted(() => {
   editorInstance.onEditorDispatched((tr) => {
+    if (guardYjsTrascationEvent(tr)) return;
     editorInstance.applyForNodesAtCursor((node) => {
       if (!tr.getMeta("pointer") && node.isText) {
         const coloredMarkType = EditorSchema.marks.colored;

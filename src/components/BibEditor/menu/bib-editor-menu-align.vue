@@ -22,6 +22,7 @@ import { inject, onMounted, ref } from "vue";
 import { AlignLeftOutlined, AlignCenterOutlined, AlignRightOutlined } from "@ant-design/icons-vue";
 import type { EditorInstance } from "../typings";
 import { findParentNode } from "prosemirror-utils";
+import { guardYjsTrascationEvent } from "../utils";
 
 const alignOptions = [
   { direction: "left", icon: AlignLeftOutlined },
@@ -35,7 +36,8 @@ const activeAlign = ref<"none" | "left" | "center" | "right">("none");
 
 // @LifeCycles: 
 onMounted(() => {
-  editorInstance.onEditorDispatched(() => {
+  editorInstance.onEditorDispatched((tr) => {
+    if (guardYjsTrascationEvent(tr)) return;
     const { selection } = editorInstance.view.state;
     const parentHasAlign = findParentNode(node => !!node.attrs.textAlign)(selection);
     if (parentHasAlign) {

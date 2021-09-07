@@ -28,6 +28,7 @@ import {
 } from '@ant-design/icons-vue';
 import { findParentNode } from "prosemirror-utils";
 import type { EditorInstance } from "../typings";
+import { guardYjsTrascationEvent } from "../utils";
 
 // @States:
 const editorInstance = inject<EditorInstance>("editorInstance")!;
@@ -41,7 +42,8 @@ const activeList = ref("none");
 
 // @LifeCycles:
 onMounted(() => {
-  editorInstance.onEditorDispatched(() => {
+  editorInstance.onEditorDispatched((tr) => {
+    if (guardYjsTrascationEvent(tr)) return;
     editorInstance.applyForNodesAtCursor((currentNode) => {
       const hasListTypeParent = findParentNode(node => listTypeNames.includes(node.type.name))(
         editorInstance.view.state.selection

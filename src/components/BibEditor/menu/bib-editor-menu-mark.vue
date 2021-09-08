@@ -19,7 +19,7 @@ import { inject, ref, onMounted, Ref } from "vue";
 import type { EditorInstance, CanToggleMark } from "../typings";
 import us from "underscore";
 import { EditorSchema } from "../editor-schema";
-import { guardYjsTrascationEvent } from "../utils";
+import { shieldYjsTrascationEvent } from "../utils";
 
 const { isActive, mark: markName } = defineProps<{
   mark: CanToggleMark;
@@ -34,8 +34,7 @@ const excludes = EditorSchema.marks[markName].spec.excludes;
 // @LifeCycles:
 onMounted(() => {
   editorInstance.onEditorDispatched((tr) => {
-    if (guardYjsTrascationEvent(tr)) return;
-    markName === 'strong' && console.log('[tmy tr ]', tr);
+    if (shieldYjsTrascationEvent(tr)) return;
     if (excludes) {
       const storedMarksNames = tr.storedMarks?.map(m => m.type.name);
       for (let ex of excludes.split(" ")) {

@@ -81,7 +81,7 @@ import {
   usePayloadFromToken,
   userDetailsStorageRef
 } from '@/utils';
-import userActionAvatarOverlay from './user-action__avatar-overlay.vue';
+import UserActionAvatarOverlay from './user-action__avatar-overlay.vue';
 import CommonSearcher from '@/components/common-search/search.vue';
 
 const props = defineProps<{

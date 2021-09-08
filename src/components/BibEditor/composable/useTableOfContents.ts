@@ -8,7 +8,9 @@ import type { Ref } from 'vue';
 const decodeContentJSON = (content: string): DocContentElement => {
   return JSON.parse(content) as DocContentElement;
 };
-/** 获取 doc 文档的目录 */
+/** 获取 doc 文档的目录
+ * @param _doc 文档最终导出的 docJSON 字符串或原始 JSON 对象
+ */
 export const useTableOfContents = (
   _doc: string | DocContentElement
 ): DocTableOfContentsUnit[] => {

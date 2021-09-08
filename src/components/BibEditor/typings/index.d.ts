@@ -1,8 +1,8 @@
-import { EditorState, Transaction } from 'prosemirror-state';
-import { Node, Schema, NodeType } from 'prosemirror-model';
-import { EditorView } from 'prosemirror-view';
-import { Ref } from 'vue';
-import { UserTokenPayload } from '@/utils/user-token-validation';
+import { EditorState, Transaction } from "prosemirror-state";
+import { Node, Schema, NodeType } from "prosemirror-model";
+import { EditorView } from "prosemirror-view";
+import { Ref } from "vue";
+import { UserTokenPayload } from "@/utils/user-token-validation";
 
 export interface BibEditorOptions {
   docName: string;
@@ -18,13 +18,13 @@ export type EditorToggleMethodReturns = (
   dispatch?: ((tr: Transaction<Schema<string, string>>) => void) | undefined
 ) => boolean;
 export type CanToggleMark =
-  | 'strong'
-  | 'em'
-  | 'code'
-  | 'del'
-  | 'sub'
-  | 'sup'
-  | 'u';
+  | "strong"
+  | "em"
+  | "code"
+  | "del"
+  | "sub"
+  | "sup"
+  | "u";
 
 export interface DispatchHook {
   (tr: Transaction, meta?: Record<string, any>): void;
@@ -41,7 +41,7 @@ export interface EditorInstance {
   toggleHeading: (attrs: { level: number }) => void;
   toggleFontSize: (size: number) => void;
   toggleAlign: (direction: string) => void;
-  updateIndent: (t: '+' | '-') => void;
+  updateIndent: (t: "+" | "-") => void;
   toggleList: (listType: NodeType, itemTyp: NodeType) => void;
   toggleMark: (markName: CanToggleMark) => void;
   toggleTextColor: (color: string) => void;
@@ -54,7 +54,10 @@ export interface EditorInstance {
   execTableCommand: (cmdName: TableCommand) => void;
   onEditorDispatched: (fn: DispatchHook, meta?: Record<string, any>) => void;
   applyForNodesAtCursor: (fn: (node: Node, pos: number) => void) => void;
-  quitEditor: (callback?: (...innerArgs: any[]) => void, ...args: any[]) => void;
+  quitEditor: (
+    callback?: (...innerArgs: any[]) => void,
+    ...args: any[]
+  ) => void;
 }
 
 export interface EditorCompose {
@@ -67,9 +70,9 @@ export interface MarkMenuItem {
   mark: CanToggleMark;
   icon: any;
   isActive: boolean;
-};
+}
 
-export type InsertImageType = 'local' | 'online';
+export type InsertImageType = "local" | "online";
 
 export interface OnlineUser {
   userId: number;
@@ -89,7 +92,7 @@ export interface DocHeading extends DocContentElement {
     level: number;
     [key: string]: any;
   };
-  content: [{ type: 'text'; text: string }];
+  content: [{ type: "text"; text: string }];
 }
 
 export interface DocTableOfContentsUnit {
@@ -99,11 +102,11 @@ export interface DocTableOfContentsUnit {
 }
 
 export type TableCommand =
-  | 'addColumnBefore'
-  | 'addColumnAfter'
-  | 'deleteColumn'
-  | 'addRowBefore'
-  | 'addRowAfter'
-  | 'deleteRow'
-  | 'mergeCells'
-  | 'splitCell';
+  | "addColumnBefore"
+  | "addColumnAfter"
+  | "deleteColumn"
+  | "addRowBefore"
+  | "addRowAfter"
+  | "deleteRow"
+  | "mergeCells"
+  | "splitCell";

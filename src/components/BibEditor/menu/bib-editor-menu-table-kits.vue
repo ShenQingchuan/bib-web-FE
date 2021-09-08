@@ -62,7 +62,7 @@ import IconInsertRowAfter from '../icons/editor__insert-col-before.vue';
 import * as pmutils from 'prosemirror-utils';
 import type { EditorInstance, TableCommand } from '../typings';
 import type { Ref } from 'vue';
-import { guardYjsTrascationEvent } from '../utils';
+import { shieldYjsTrascationEvent } from '../utils';
 
 // @States:
 const editorInstance = inject<EditorInstance>('editorInstance')!;
@@ -71,7 +71,7 @@ const isBibEditorTableMode = inject<Ref<boolean>>('is-bib-editor-table-mode')!;
 // @LifeCycels:
 onMounted(() => {
   editorInstance.onEditorDispatched((tr) => {
-    if (guardYjsTrascationEvent(tr)) return;
+    if (shieldYjsTrascationEvent(tr)) return;
     const isInTable = !!pmutils.findParentNode((node) => [
       EditorSchema.nodes.table,
       EditorSchema.nodes.table_row,

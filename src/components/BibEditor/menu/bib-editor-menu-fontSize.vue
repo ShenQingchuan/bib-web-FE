@@ -30,7 +30,7 @@ import { ref, inject, onMounted } from 'vue';
 import { CaretDownOutlined, CheckOutlined } from "@ant-design/icons-vue";
 import { EditorSchema } from "../editor-schema"
 import type { EditorInstance } from "../typings";
-import { guardYjsTrascationEvent } from '../utils';
+import { shieldYjsTrascationEvent } from '../utils';
 
 const fontSizePoints = [12, 13, 14, 15, 16, 19, 22, 24, 29, 32, 40, 48];
 const fsMarkType = EditorSchema.marks.fontSizeMark;
@@ -43,7 +43,7 @@ const editorInstance = inject<EditorInstance>("editorInstance")!;
 // @LifeCycels:
 onMounted(() => {
   editorInstance.onEditorDispatched((tr) => {
-    if (guardYjsTrascationEvent(tr)) return;
+    if (shieldYjsTrascationEvent(tr)) return;
     editorInstance.applyForNodesAtCursor((node) => {
       if (node.isText) {
         if (node.marks.map(m => m.type).includes(fsMarkType)) {

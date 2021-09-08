@@ -20,7 +20,7 @@ import Icon from "@ant-design/icons-vue";
 import QuoteNodeIcon from '../icons/quote-node-icon.vue';
 import type { EditorInstance } from "../typings";
 import { findParentNode } from 'prosemirror-utils';
-import { guardYjsTrascationEvent } from '../utils';
+import { shieldYjsTrascationEvent } from '../utils';
 
 // @States:
 const isActive = ref(false);
@@ -29,7 +29,7 @@ const editorInstance = inject<EditorInstance>("editorInstance")!;
 // @Lifecycles:
 onMounted(() => {
   editorInstance.onEditorDispatched((tr) => {
-    if (guardYjsTrascationEvent(tr)) return;
+    if (shieldYjsTrascationEvent(tr)) return;
     const { selection } = editorInstance.view.state;
     isActive.value = !!findParentNode(
       node => node.type === EditorSchema.nodes.blockquote

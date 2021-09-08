@@ -21,7 +21,7 @@ import { EditorSchema } from '../editor-schema';
 import { showUpdateLinkModal, updateLinkWithPos } from '../plugins/handle-link-click';
 import { Modal } from 'ant-design-vue';
 import type { EditorInstance } from "../typings";
-import { guardYjsTrascationEvent } from '../utils';
+import { shieldYjsTrascationEvent } from '../utils';
 
 // @States:
 const isActive = ref(false);
@@ -30,7 +30,7 @@ const editorInstance = inject<EditorInstance>("editorInstance")!;
 // @LifeCycles:
 onMounted(() => {
   editorInstance.onEditorDispatched((tr) => {
-    if (guardYjsTrascationEvent(tr)) return;
+    if (shieldYjsTrascationEvent(tr)) return;
     editorInstance.applyForNodesAtCursor((node) => {
       if (node.type === EditorSchema.nodes.text) {
         let markTypes = node.marks.map(m => m.type)

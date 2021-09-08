@@ -23,7 +23,7 @@
     <a-col :span="2">
       <div class="wiki-doc-operations fs-12 tc-n500">
         <a-tooltip title="编辑文档">
-          <Write class="iconpark m-r-10" @click="$router.push(`/doc/${wikiDoc.id}/edit`)" />
+          <Write class="iconpark m-r-10" @click="() => $router.push(`/doc/${wikiDoc.id}/edit`)" />
         </a-tooltip>
         <a-tooltip title="删除文档">
           <Delete class="iconpark m-r-10" />
@@ -34,7 +34,6 @@
 </template>
 
 <script setup lang="ts">
-import { defineProps } from "vue";
 import { ShareSys, Write, Delete } from '@icon-park/vue-next';
 import { useDayjs } from '@/composable/useDayjs';
 import type { DocShowInWikiListDto } from "@/models";

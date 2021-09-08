@@ -34,7 +34,7 @@ const clearNodes: () => Command = () => (
   });
 
   dispatch?.(tr);
-  return true;
+  return false;
 };
 
-export default clearNodes;
+export { clearNodes };

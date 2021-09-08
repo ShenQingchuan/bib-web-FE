@@ -16,6 +16,7 @@
       v-for="item in marksGroup"
       :key="item.mark"
       :mark="item.mark"
+      :is-active="item.isActive"
     >
       <Icon :component="item.icon" />
     </bib-menu-mark>
@@ -37,7 +38,7 @@
 </template>
 
 <script setup lang="ts">
-import { defineProps, provide, ref } from "vue";
+import { provide, ref } from "vue";
 import { BoldOutlined, ItalicOutlined, StrikethroughOutlined, UnderlineOutlined } from "@ant-design/icons-vue";
 import Icon from "@ant-design/icons-vue";
 import CodeMarkIcon from "../icons/code-mark-icon.vue";
@@ -58,9 +59,9 @@ import BibMenuIndent from './bib-editor-menu-indent.vue';
 import BibMenuVideo from './bib-editor-menu-video.vue';
 import BibMenuInsertTable from './bib-editor-menu-insert-table.vue';
 import BibMenuTableKits from './bib-editor-menu-table-kits.vue';
-import type { EditorToggleCategories, EditorInstance } from "../typings";
+import type { CanToggleMark, EditorInstance } from "../typings";
 
-const createMarkMenuItem = (mark: EditorToggleCategories, icon: any) => ({ mark, icon });
+const createMarkMenuItem = (mark: CanToggleMark, icon: any) => ({ mark, icon, isActive: ref(false) });
 const marksGroup = [
   createMarkMenuItem("strong", BoldOutlined),
   createMarkMenuItem("em", ItalicOutlined),

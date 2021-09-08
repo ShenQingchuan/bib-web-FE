@@ -54,7 +54,7 @@
             :src="userAvatarURL"
           ></a-avatar>
           <template #content>
-            <user-action-avatar-overlay />
+            <user-action-avatar-overlay :user-name="userName" />  
           </template>
         </a-popover>
       </div>
@@ -74,7 +74,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, defineProps } from 'vue';
+import { computed } from 'vue';
 import { BellOutlined } from '@ant-design/icons-vue';
 import {
   isBibUserTokenValid,

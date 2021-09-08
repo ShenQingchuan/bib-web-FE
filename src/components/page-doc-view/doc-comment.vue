@@ -45,7 +45,7 @@
 </template>
 
 <script setup lang="ts">
-import { defineProps, ref, computed, defineEmits } from "vue";
+import { ref, computed } from "vue";
 import { LikeFilled, LikeOutlined } from '@ant-design/icons-vue';
 import { useDayjs } from "@/composable/useDayjs";
 import { userAvatarUrlFix } from '@/utils';

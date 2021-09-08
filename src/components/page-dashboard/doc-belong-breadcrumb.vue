@@ -30,7 +30,6 @@
 </template>
 
 <script setup lang="ts">
-import { defineProps } from "vue";
 import { FolderOpen, User } from '@icon-park/vue-next';
 import { DocListItemArchiveType } from './common';
 import type { DocListItem } from './common';

@@ -208,8 +208,10 @@ const createJoinCollaborationRequest = () => {
 const updateJoinRequests = () => {
   requestForViewData().then((resp) => {
     if (resp.data.responseOk) {
-      viewData.value = resp.data.data;
-      savedDocViewData.value[docId] = resp.data.data;
+      if (resp.data.data) {
+        viewData.value = resp.data.data;
+        savedDocViewData.value[docId] = resp.data.data;
+      } else Promise.reject('更新协作加入请求数据失败！');
     }
   });
 }
@@ -247,13 +249,13 @@ Promise.all([
     thumbsUped.value = viewData.value!.thumbsUped;
     thumbsUpedCount.value = viewData.value!.thumbUpUsers.length;
 
-    const editorComposition = useEditor({
+    const EditorCompose = useEditor({
       contentForViewRender: ydocToPmDocJsonString,
       docName: `bib-doc-id${viewData.value!.id}`,
       readonly: true,
       credential
     });
-    const { view } = editorComposition.initEditor(docViewRef.value); // fetch response must after vue component mounted
+    const { view } = EditorCompose.initEditor(docViewRef.value); // fetch response must after vue component mounted
     tableOfContentsData.value = useTableOfContents(
       JSON.stringify(view.state.doc.toJSON())
     )

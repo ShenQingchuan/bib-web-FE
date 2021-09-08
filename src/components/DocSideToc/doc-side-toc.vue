@@ -13,7 +13,7 @@
 </template>
 
 <script setup lang="ts">
-import { defineProps, ref, onMounted, onUnmounted, provide, inject, withDefaults } from "vue";
+import { ref, onMounted, onUnmounted, provide, inject, withDefaults } from "vue";
 import DocSideTocItem from './doc-side-toc-item.vue';
 import type { Ref } from 'vue';
 import type { DocTableOfContentsUnit } from '@/components/BibEditor/typings';

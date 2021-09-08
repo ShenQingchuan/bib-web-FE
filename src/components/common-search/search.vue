@@ -12,7 +12,6 @@
 import {
   SearchOutlined,
 } from "@ant-design/icons-vue";
-import { defineProps } from "vue";
 
 defineProps<{
   onInput?: (e: InputEvent) => void;

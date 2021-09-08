@@ -2,7 +2,6 @@ import {
   wrapIn,
   setBlockType,
   chainCommands,
-  toggleMark,
   exitCode,
   joinUp,
   joinDown,
@@ -24,6 +23,8 @@ import { undo, redo } from 'y-prosemirror';
 import { undoInputRule } from 'prosemirror-inputrules';
 import { keymap } from 'prosemirror-keymap';
 import { mathBackspaceCmd } from '@benrbray/prosemirror-math';
+import { toggleMark } from '../commands'
+import { trKeyMark } from '../trKeys';
 
 const mac =
   typeof navigator != 'undefined' ? /Mac/.test(navigator.platform) : false;
@@ -87,9 +88,9 @@ export function addBibKeymap(schema: Schema, mapKeys?: any) {
   bind('Mod-BracketLeft', lift);
   bind('Escape', selectParentNode);
 
-  if ((type = schema.marks.strong)) bind('Mod-b', toggleMark(type));
-  if ((type = schema.marks.em)) bind('Mod-i', toggleMark(type));
-  if ((type = schema.marks.code)) bind('Mod-`', toggleMark(type));
+  if ((type = schema.marks.strong)) bind('Mod-b', toggleMark('strong', { trKey: trKeyMark, mark: 'strong' }));
+  if ((type = schema.marks.em)) bind('Mod-i', toggleMark('em', { trKey: trKeyMark, mark: 'em' }));
+  if ((type = schema.marks.code)) bind('Mod-`', toggleMark('code', { trKey: trKeyMark, mark: 'code' }));
 
   if ((type = schema.nodes.bullet_list)) bind('Shift-Ctrl-8', wrapInList(type));
   if ((type = schema.nodes.ordered_list))

@@ -17,7 +17,7 @@ export type EditorToggleMethodReturns = (
   state: EditorState<Schema<string, string>>,
   dispatch?: ((tr: Transaction<Schema<string, string>>) => void) | undefined
 ) => boolean;
-export type EditorToggleCategories =
+export type CanToggleMark =
   | 'strong'
   | 'em'
   | 'code'
@@ -43,7 +43,7 @@ export interface EditorInstance {
   toggleAlign: (direction: string) => void;
   updateIndent: (t: '+' | '-') => void;
   toggleList: (listType: NodeType, itemTyp: NodeType) => void;
-  toggleMark: (markName: EditorToggleCategories) => void;
+  toggleMark: (markName: CanToggleMark) => void;
   toggleTextColor: (color: string) => void;
   toggleTextBgColor: (color: string) => void;
   toggleQuoteBlock: () => void;
@@ -57,11 +57,17 @@ export interface EditorInstance {
   quitEditor: (callback?: (...innerArgs: any[]) => void, ...args: any[]) => void;
 }
 
-export interface EditorComposition {
+export interface EditorCompose {
   initEditor: (el: any) => EditorInstance;
   onlineOtherUsers: Ref<OnlineUser[]>;
   cursorColor: Ref<string>;
 }
+
+export interface MarkMenuItem {
+  mark: CanToggleMark;
+  icon: any;
+  isActive: boolean;
+};
 
 export type InsertImageType = 'local' | 'online';
 

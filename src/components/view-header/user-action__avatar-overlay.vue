@@ -16,33 +16,18 @@
   </a-menu>
 </template>
 
-<script lang="ts">
+<script setup lang="ts">
 import {
   UserOutlined,
   SettingOutlined,
   LogoutOutlined,
   ReadOutlined
 } from '@ant-design/icons-vue';
-import { usePayloadFromToken } from '../../utils';
-import { runLogout } from '../../composable/useAuthForm';
+import { runLogout } from '@/composable/useAuthForm';
 
-export default {
-  name: 'user-action__avatar-overlay',
-  components: {
-    UserOutlined,
-    SettingOutlined,
-    LogoutOutlined,
-    ReadOutlined
-  },
-  setup() {
-    const userName = usePayloadFromToken()?.userName ?? '';
-
-    return {
-      userName,
-      runLogout
-    };
-  }
-};
+defineProps<{
+  userName: string;
+}>();
 </script>
 
 <style lang="less" scoped>

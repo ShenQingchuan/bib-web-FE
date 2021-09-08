@@ -2,7 +2,6 @@ import * as pmutils from 'prosemirror-utils';
 import * as Y from 'yjs';
 import randomColor from 'randomcolor';
 import TaskItemView from '../node-views/task-item-view';
-import clearNodes from '../commands/clearNodes';
 import placeholder from '../plugins/placeholder';
 import handleLinkClick from '../plugins/handle-link-click';
 import { EditorState, Transaction } from 'prosemirror-state';
@@ -14,14 +13,14 @@ import { dropCursor } from 'prosemirror-dropcursor';
 import { gapCursor } from 'prosemirror-gapcursor';
 import { history } from 'prosemirror-history';
 import { EditorSchema } from '../editor-schema';
-import { shallowRef, ref } from 'vue';
+import { ref } from 'vue';
 import {
   liftListItem,
   sinkListItem,
   wrapInList
 } from 'prosemirror-schema-list';
 import { WebsocketProvider } from 'y-websocket';
-import { ySyncPlugin, yCursorPlugin, yUndoPlugin, prosemirrorToYDoc } from 'y-prosemirror';
+import { ySyncPlugin, yCursorPlugin, yUndoPlugin } from 'y-prosemirror';
 import { keymap } from 'prosemirror-keymap';
 import {
   baseKeymap,
@@ -37,9 +36,9 @@ import CodeBlockView, {
 import type {
   BibEditorOptions,
   DispatchHook,
-  EditorComposition,
+  EditorCompose,
   EditorInstance,
-  EditorToggleCategories,
+  CanToggleMark,
   InsertImageType,
   OnlineUser,
   TableCommand
@@ -60,8 +59,9 @@ import { mathPlugin, mathSerializer } from '@benrbray/prosemirror-math';
 import VideoIframeView from '../node-views/video-iframe';
 import { insertVideoIframe } from '../helpers/insert-video-iframe';
 import { columnResizing, goToNextCell, tableEditing } from 'prosemirror-tables';
-import insertTableCommand from '../commands/insertTable';
+import { insertTableCommand, clearNodes, toggleMark } from '../commands';
 import execTableCommandFn from '../helpers/exec-table-command';
+import pipeBibEditorDispatch from './pipeBibEditorDispatch';
 import { userDetailsStorageRef } from '@/utils';
 
 function isListNodeType(node: Node, schema: Schema) {
@@ -70,21 +70,6 @@ function isListNodeType(node: Node, schema: Schema) {
     node.type === schema.nodes.ordered_list ||
     node.type === schema.nodes.task_list
   );
-}
-
-export function useViewDispatch(
-  view: EditorView,
-  tr: Transaction,
-  meta?: { [key: string]: any },
-  callback?: (tr: Transaction) => void
-) {
-  if (meta) {
-    for (let key in meta) {
-      key && tr.setMeta(key, meta[key]);
-    }
-  }
-  callback && callback(tr);
-  return view.dispatch(tr);
 }
 
 export function useEditor(options: BibEditorOptions) {
@@ -264,7 +249,7 @@ export function useEditor(options: BibEditorOptions) {
         setBlockType(EditorSchema.nodes.heading, attrs)(
           view.state,
           (tr) =>
-            useViewDispatch(view, tr, {
+            pipeBibEditorDispatch(view.dispatch, tr, {
               trKey: trKeyHeading,
               level
             })
@@ -350,8 +335,8 @@ export function useEditor(options: BibEditorOptions) {
           const listItemType = EditorSchema.nodes.list_item,
             taskItemType = EditorSchema.nodes.task_item;
           const runCommandForListCases = (cmd: Command) => {
-            cmd(state, ($tr) =>
-              useViewDispatch(view, $tr, {
+            cmd(state, (tr) =>
+              pipeBibEditorDispatch(view.dispatch, tr, {
                 trKey: trKeyIndent
               })
             );
@@ -426,14 +411,12 @@ export function useEditor(options: BibEditorOptions) {
         wrapInList(listType)(state, dispatch);
       },
       /** 切换 mark */
-      toggleMark(markName: EditorToggleCategories) {
+      toggleMark(markName: CanToggleMark) {
         view.focus();
-        _tm(EditorSchema.marks[markName])(view.state, (tr) =>
-          useViewDispatch(view, tr, {
-            trKey: trKeyMark,
-            mark: markName
-          })
-        );
+        toggleMark(markName, {
+          trKey: trKeyMark,
+          mark: markName
+        })(view.state, view.dispatch);
       },
       /** 切换 文字颜色 */
       toggleTextColor: createToggleColorCommand(
@@ -457,7 +440,7 @@ export function useEditor(options: BibEditorOptions) {
         })(selection);
         let command = parentHasQuote ? lift : wrapIn(EditorSchema.nodes.blockquote);
         command(view.state, (tr) =>
-          useViewDispatch(view, tr, {
+          pipeBibEditorDispatch(view.dispatch, tr, {
             trKey: trKeyQuote
           })
         );
@@ -497,7 +480,7 @@ export function useEditor(options: BibEditorOptions) {
       /** 插入 表格 */
       insertTable(rowsCount: number, colsCount: number) {
         view.focus();
-        insertTableCommand(view.state, view.dispatch, { rowsCount, colsCount });
+        insertTableCommand({ rowsCount, colsCount })(view.state, view.dispatch);
       },
       /** 表格工具集：execTableCommand */
       execTableCommand(cmdName: TableCommand) {
@@ -537,5 +520,5 @@ export function useEditor(options: BibEditorOptions) {
     initEditor,
     onlineOtherUsers,
     cursorColor
-  } as EditorComposition;
+  } as EditorCompose;
 }

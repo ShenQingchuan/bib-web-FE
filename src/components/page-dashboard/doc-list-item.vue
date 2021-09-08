@@ -38,7 +38,6 @@
 </template>
 
 <script setup lang="ts">
-import { defineProps } from "vue";
 import { Eyes } from '@icon-park/vue-next';
 import { useDayjs } from "@/composable/useDayjs";
 import DocBelongBreadcrumb from './doc-belong-breadcrumb.vue';

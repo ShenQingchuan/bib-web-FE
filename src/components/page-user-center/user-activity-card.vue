@@ -247,7 +247,6 @@
 </template>
 
 <script setup lang="ts">
-import { defineProps } from "vue";
 import { GoodTwo, WritingFluently, Rss, People, Newlybuild, Peoples } from '@icon-park/vue-next';
 import { UserActivityType } from '@/models';
 import { userAvatarUrlFix } from '@/utils';

@@ -1,12 +1,16 @@
-import { EditorState, TextSelection, Transaction } from 'prosemirror-state';
-import createTable, { CreateTableArgs } from '../helpers/create-table';
-import { trKeyInsertTable } from '../trKeys';
+import { EditorState, TextSelection, Transaction } from "prosemirror-state";
+import createTable, { CreateTableArgs } from "../helpers/create-table";
+import { trKeyInsertTable } from "../trKeys";
 
-export default function insertTable(
+const insertTableCommand = ({
+  rowsCount,
+  colsCount,
+  withHeaderRow,
+  cellContent,
+}: CreateTableArgs) => (
   state: EditorState,
-  dispatch: (tr: Transaction) => void,
-  { rowsCount, colsCount, withHeaderRow, cellContent }: CreateTableArgs
-) {
+  dispatch: (tr: Transaction) => void
+) => {
   const offset = state.tr.selection.anchor + 1;
 
   const nodes = createTable(
@@ -20,6 +24,8 @@ export default function insertTable(
   const resolvedPos = tr.doc.resolve(offset);
 
   tr.setSelection(TextSelection.near(resolvedPos));
-  tr.setMeta('trKey', trKeyInsertTable);
+  tr.setMeta("trKey", trKeyInsertTable);
   dispatch(tr);
-}
+};
+
+export { insertTableCommand };

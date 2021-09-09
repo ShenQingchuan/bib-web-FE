@@ -148,11 +148,9 @@ export default new Plugin({
           href: attrs.href,
           text: attrs.text
         });
-
-        return false;
       }
 
-      return true;
+      return false;
     }
   }
 });

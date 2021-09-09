@@ -96,7 +96,7 @@ export default class CodeBlockView {
   incomingChanges: boolean;
   cm: CodeMirror.Editor;
   updating: boolean;
-  lang?: string;
+  lang: string;
   langSwitcher: HTMLElement;
   tryDeleting: boolean;
 
@@ -105,7 +105,7 @@ export default class CodeBlockView {
     this.view = view;
     this.getPos = getPos;
     this.incomingChanges = false;
-    this.lang = node.attrs.lang;
+    this.lang = node.attrs.lang || "";
     this.tryDeleting = false;
 
     // 新建一个 CodeMirror 实例
@@ -118,11 +118,11 @@ export default class CodeBlockView {
       viewportMargin: Infinity,
     });
 
+    // 创建最外层 wrapper
     const dom = document.createElement("div");
-    dom.style.cssText =
-      `position: relative; width: 100%; ` +
-      `font-family: 'JetBrains Mono', 'Fira Code', Menlo, Monaco, 'Courier New', monospace !important;`;
+    dom.style.cssText = `position: relative; max-width: 800px;`;
     const cmDom = this.cm.getWrapperElement();
+    cmDom.classList.add("bib-editor__code-block");
     dom.appendChild(cmDom);
     this.dom = dom;
 
@@ -145,14 +145,14 @@ export default class CodeBlockView {
     });
     this.cm.on("focus", () => this.forwardSelection());
 
-    // 在 code block 右上角显示一个用来表示语法模式的块
+    // 在 code block 右上角显示一个用来表示语法模式的标签
     const ls = document.createElement("div");
     ls.style.cssText =
-      "position: absolute; right: 4px; top: 4px;" +
-      "border-radius: 4px; cursor: pointer;" +
-      "width: fit-content; background-color: rgba(0,0,0,5%); color: #4e4f4f;" +
-      "padding: 2px 6px; font-size: 14px; z-index: 2;";
-    ls.textContent = this.lang || "Plain Text";
+      "position: absolute; left: 0; top: -27px;" +
+      "border-radius: 4px 4px 0 0; cursor: pointer;" +
+      "width: fit-content; background-color: rgb(222 239 253);; color: #4e4f4f;" +
+      "padding: 2px 6px; font-size: 14px; z-index: 3; user-select: none;";
+    ls.textContent = (this.lang[0].toUpperCase() + this.lang.slice(1)) || "Plain Text";
     this.langSwitcher = ls;
     this.dom.appendChild(this.langSwitcher);
   }

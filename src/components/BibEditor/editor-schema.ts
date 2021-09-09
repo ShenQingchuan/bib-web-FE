@@ -48,9 +48,13 @@ const extendsTextBlockStyleAttrs = (
   computeOther?: (_dom: HTMLElement) => Record<string, any>
 ) => (dom: HTMLElement) => {
   let textBlockStylesAttrs: Record<string, any> = {};
+
+  // 对其方向
   if (!!dom.style.textAlign) {
     textBlockStylesAttrs.textAlign = dom.style.textAlign;
   }
+
+  // 缩进
   if (!!dom.style.paddingLeft) {
     if (dom.style.paddingLeft.endsWith("px")) {
       const paddingNumber = Number(dom.style.paddingLeft.slice(0, -2));
@@ -68,8 +72,8 @@ const getCommentAttrs = (el: HTMLElement) => {
   const id = el.getAttribute("bib-comment-id");
   const content = el.getAttribute("bib-comment-content");
   if (!id && !content) return false;
-  return { id, content }
-}
+  return { id, content };
+};
 export const listTypeNames = ["ordered_list", "bullet_list", "task_list"];
 
 // :: Object
@@ -169,8 +173,20 @@ export const nodes: {
     code: true,
     defining: true,
     attrs: { lang: { default: "" } },
-    toDOM() {
-      return ["code_block", 0];
+    parseDOM: [
+      {
+        tag: "code_block",
+        preserveWhitespace: 'full',
+        getAttrs(dom: HTMLElement) {
+          return {
+            lang: dom.getAttribute('lang') || "",
+          };
+        },
+      },
+    ],
+    toDOM(node: Node) {
+      const { attrs } = node;
+      return ["code_block", { lang: attrs.lang }, node.textContent];
     },
   },
 
@@ -543,7 +559,7 @@ export const marks: {
   commented: {
     attrs: {
       id: { default: "" },
-      content: { default: {} }
+      content: { default: {} },
     },
     parseDOM: [
       {
@@ -552,12 +568,16 @@ export const marks: {
       },
     ],
     toDOM(mark: Mark) {
-      const { id, content } = mark.attrs
-      return ['span', {
-        'bib-comment-id': id,
-        'bib-comment-content': JSON.stringify(content)
-      }, 0]
-    }
+      const { id, content } = mark.attrs;
+      return [
+        "span",
+        {
+          "bib-comment-id": id,
+          "bib-comment-content": JSON.stringify(content),
+        },
+        0,
+      ];
+    },
   },
 };
 

@@ -27,8 +27,6 @@ const { isActive, mark: markName } = defineProps<{
 }>();
 
 const editorInstance = inject<EditorInstance>("editorInstance")!;
-const toggleTo = ref<"on" | "off">("on");
-const needUpdate = ref(false);
 const excludes = EditorSchema.marks[markName].spec.excludes;
 
 // @LifeCycles:
@@ -55,17 +53,11 @@ onMounted(() => {
   });
 });
 const toggleFn = () => {
-  toggleTo.value = isActive.value ? "off" : "on";
-  needUpdate.value = true;
+  isActive.value = !isActive.value;
   editorInstance?.toggleMark(markName);
-  needUpdate.value = false;
   // magic: 由于必须设置 inclusive 属性为 true 保证 Mark 状态下输入连续性
   // 但有了 inclusive 关闭该 Mark 后会仍然显示处于该 Mark 中，但输入后续内容不会再带
   // 所以这里的逻辑是：若之前是 true，click 了一定切为 false 保证按钮高亮正确性
-  if (isActive.value && toggleTo.value === 'off') {
-    // 按钮 active 亮着，toggleTo 又确认为要关闭
-    isActive.value = false;
-  }
 }
 </script>
 

@@ -10,24 +10,25 @@ import {
   Command,
   deleteSelection,
   selectNodeBackward,
-  joinBackward
-} from 'prosemirror-commands';
+  joinBackward,
+} from "prosemirror-commands";
 import {
   wrapInList,
   splitListItem,
   liftListItem,
-  sinkListItem
-} from 'prosemirror-schema-list';
-import { Schema, NodeType, MarkType } from 'prosemirror-model';
-import { undo, redo } from 'y-prosemirror';
-import { undoInputRule } from 'prosemirror-inputrules';
-import { keymap } from 'prosemirror-keymap';
-import { mathBackspaceCmd } from '@benrbray/prosemirror-math';
-import { toggleMark } from '../commands'
-import { trKeyMark } from '../trKeys';
+  sinkListItem,
+} from "prosemirror-schema-list";
+import { Schema, NodeType, MarkType } from "prosemirror-model";
+import { undo, redo } from "y-prosemirror";
+import { undoInputRule } from "prosemirror-inputrules";
+import { keymap } from "prosemirror-keymap";
+import { mathBackspaceCmd } from "@benrbray/prosemirror-math";
+import { toggleMark } from "../commands";
+import { trKeyToggleMark } from "../trKeys";
+import { toggleMarkState as toggleActive } from "../composable/useToggleableMarksState";
 
 const mac =
-  typeof navigator != 'undefined' ? /Mac/.test(navigator.platform) : false;
+  typeof navigator != "undefined" ? /Mac/.test(navigator.platform) : false;
 
 // :: (Schema, ?Object) → Object
 // Inspect the given schema looking for marks and nodes from the
@@ -69,10 +70,10 @@ export function addBibKeymap(schema: Schema, mapKeys?: any) {
     keys[key] = cmd;
   }
 
-  bind('Mod-z', undo);
-  bind('Shift-Mod-z', redo);
+  bind("Mod-z", undo);
+  bind("Shift-Mod-z", redo);
   bind(
-    'Backspace',
+    "Backspace",
     chainCommands(
       undoInputRule,
       deleteSelection,
@@ -81,58 +82,76 @@ export function addBibKeymap(schema: Schema, mapKeys?: any) {
       selectNodeBackward
     )
   );
-  if (!mac) bind('Mod-y', redo);
+  if (!mac) bind("Mod-y", redo);
 
-  bind('Alt-ArrowUp', joinUp);
-  bind('Alt-ArrowDown', joinDown);
-  bind('Mod-BracketLeft', lift);
-  bind('Escape', selectParentNode);
+  bind("Alt-ArrowUp", joinUp);
+  bind("Alt-ArrowDown", joinDown);
+  bind("Mod-BracketLeft", lift);
+  bind("Escape", selectParentNode);
 
-  if ((type = schema.marks.strong)) bind('Mod-b', toggleMark('strong', { trKey: trKeyMark, mark: 'strong' }));
-  if ((type = schema.marks.em)) bind('Mod-i', toggleMark('em', { trKey: trKeyMark, mark: 'em' }));
-  if ((type = schema.marks.code)) bind('Mod-`', toggleMark('code', { trKey: trKeyMark, mark: 'code' }));
+  if ((type = schema.marks.strong))
+    bind(
+      "Mod-b",
+      toggleMark("strong", { trKey: trKeyToggleMark, mark: "strong" }, () =>
+        toggleActive("strong")
+      )
+    );
+  if ((type = schema.marks.em))
+    bind(
+      "Mod-i",
+      toggleMark("em", { trKey: trKeyToggleMark, mark: "em" }, () =>
+        toggleActive("em")
+      )
+    );
+  if ((type = schema.marks.code))
+    bind(
+      "Mod-`",
+      toggleMark("code", { trKey: trKeyToggleMark, mark: "code" }, () =>
+        toggleActive("code")
+      )
+    );
 
-  if ((type = schema.nodes.bullet_list)) bind('Shift-Ctrl-8', wrapInList(type));
+  if ((type = schema.nodes.bullet_list)) bind("Shift-Ctrl-8", wrapInList(type));
   if ((type = schema.nodes.ordered_list))
-    bind('Shift-Ctrl-9', wrapInList(type));
-  if ((type = schema.nodes.blockquote)) bind('Ctrl->', wrapIn(type));
+    bind("Shift-Ctrl-9", wrapInList(type));
+  if ((type = schema.nodes.blockquote)) bind("Ctrl->", wrapIn(type));
   if ((type = schema.nodes.hard_break)) {
     let br = type,
       cmd = chainCommands(exitCode, (state, dispatch) => {
         dispatch!(state.tr.replaceSelectionWith(br.create()).scrollIntoView());
         return true;
       });
-    bind('Mod-Enter', cmd);
-    bind('Shift-Enter', cmd);
-    if (mac) bind('Ctrl-Enter', cmd);
+    bind("Mod-Enter", cmd);
+    bind("Shift-Enter", cmd);
+    if (mac) bind("Ctrl-Enter", cmd);
   }
   bind(
-    'Tab',
+    "Tab",
     chainCommands(
       sinkListItem(schema.nodes.list_item),
       sinkListItem(schema.nodes.task_item)
     )
   );
   bind(
-    'Shift-Tab',
+    "Shift-Tab",
     chainCommands(
       liftListItem(schema.nodes.list_item),
       liftListItem(schema.nodes.task_item)
     )
   );
   bind(
-    'Enter',
+    "Enter",
     chainCommands(
       splitListItem(schema.nodes.task_item),
       splitListItem(schema.nodes.list_item)
     )
   );
-  if ((type = schema.nodes.paragraph)) bind('Shift-Ctrl-0', setBlockType(type));
+  if ((type = schema.nodes.paragraph)) bind("Shift-Ctrl-0", setBlockType(type));
   if ((type = schema.nodes.code_block))
-    bind('Shift-Ctrl-\\', setBlockType(type));
+    bind("Shift-Ctrl-\\", setBlockType(type));
   if ((type = schema.nodes.heading))
     for (let i = 1; i <= 6; i++)
-      bind('Shift-Ctrl-' + i, setBlockType(type, { level: i }));
+      bind("Shift-Ctrl-" + i, setBlockType(type, { level: i }));
 
   return keymap(keys);
 }

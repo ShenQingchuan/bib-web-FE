@@ -45,7 +45,7 @@ import type {
 } from '../typings';
 import { insertOnlineImage } from '../helpers/insert-online-img';
 import {
-  trKeyMark,
+  trKeyToggleMark,
   trKeyHeading,
   trKeyAlign,
   trKeyList,
@@ -414,7 +414,7 @@ export function useEditor(options: BibEditorOptions) {
       toggleMark(markName: CanToggleMark) {
         view.focus();
         toggleMark(markName, {
-          trKey: trKeyMark,
+          trKey: trKeyToggleMark,
           mark: markName
         })(view.state, view.dispatch);
       },

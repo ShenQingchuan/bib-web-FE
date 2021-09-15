@@ -39,11 +39,8 @@
 
 <script setup lang="ts">
 import { provide, ref } from "vue";
-import { BoldOutlined, ItalicOutlined, StrikethroughOutlined, UnderlineOutlined } from "@ant-design/icons-vue";
+import { useMarks } from "../composable/useToggleableMarksState";
 import Icon from "@ant-design/icons-vue";
-import CodeMarkIcon from "../icons/code-mark-icon.vue";
-import SuperScriptIcon from "../icons/superscript-mark-icon.vue";
-import SubScriptIcon from "../icons/subscript-mark-icon.vue";
 import BibMenuMark from "./bib-editor-menu-mark.vue";
 import BibMenuHeading from "./bib-editor-menu-heading.vue";
 import BibMenuFontSize from './bib-editor-menu-fontSize.vue';
@@ -59,18 +56,9 @@ import BibMenuIndent from './bib-editor-menu-indent.vue';
 import BibMenuVideo from './bib-editor-menu-video.vue';
 import BibMenuInsertTable from './bib-editor-menu-insert-table.vue';
 import BibMenuTableKits from './bib-editor-menu-table-kits.vue';
-import type { CanToggleMark, EditorInstance } from "../typings";
+import type { EditorInstance } from "../typings";
 
-const createMarkMenuItem = (mark: CanToggleMark, icon: any) => ({ mark, icon, isActive: ref(false) });
-const marksGroup = [
-  createMarkMenuItem("strong", BoldOutlined),
-  createMarkMenuItem("em", ItalicOutlined),
-  createMarkMenuItem("u", UnderlineOutlined),
-  createMarkMenuItem("del", StrikethroughOutlined),
-  createMarkMenuItem("code", CodeMarkIcon),
-  createMarkMenuItem("sup", SuperScriptIcon),
-  createMarkMenuItem("sub", SubScriptIcon),
-]
+const marksGroup = useMarks();
 
 const props = defineProps<{
   editorInstance: EditorInstance;

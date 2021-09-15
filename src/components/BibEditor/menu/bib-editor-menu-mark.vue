@@ -15,11 +15,13 @@
 </template>
 
 <script setup lang="ts">
-import { inject, ref, onMounted, Ref } from "vue";
+import { inject, onMounted, Ref } from "vue";
 import type { EditorInstance, CanToggleMark } from "../typings";
 import us from "underscore";
 import { EditorSchema } from "../editor-schema";
 import { shieldYjsTrascationEvent } from "../utils";
+import { toggleMarkState } from "../composable/useToggleableMarksState";
+import { trKeyToggleMark } from "../trKeys";
 
 const { isActive, mark: markName } = defineProps<{
   mark: CanToggleMark;
@@ -33,6 +35,8 @@ const excludes = EditorSchema.marks[markName].spec.excludes;
 onMounted(() => {
   editorInstance.onEditorDispatched((tr) => {
     if (shieldYjsTrascationEvent(tr)) return;
+    if (tr.getMeta('trKey') === trKeyToggleMark) return;
+
     if (excludes) {
       const storedMarksNames = tr.storedMarks?.map(m => m.type.name);
       for (let ex of excludes.split(" ")) {
@@ -53,7 +57,8 @@ onMounted(() => {
   });
 });
 const toggleFn = () => {
-  isActive.value = !isActive.value;
+  toggleMarkState(markName);
+  console.log(isActive.value);
   editorInstance?.toggleMark(markName);
   // magic: 由于必须设置 inclusive 属性为 true 保证 Mark 状态下输入连续性
   // 但有了 inclusive 关闭该 Mark 后会仍然显示处于该 Mark 中，但输入后续内容不会再带

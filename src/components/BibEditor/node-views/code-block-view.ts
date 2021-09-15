@@ -152,7 +152,8 @@ export default class CodeBlockView {
       "border-radius: 4px 4px 0 0; cursor: pointer;" +
       "width: fit-content; background-color: rgb(222 239 253);; color: #4e4f4f;" +
       "padding: 2px 6px; font-size: 14px; z-index: 3; user-select: none;";
-    ls.textContent = (this.lang[0].toUpperCase() + this.lang.slice(1)) || "Plain Text";
+    ls.classList.add('code-style-text');
+    ls.textContent = 'language: ' + (this.lang[0].toUpperCase() + this.lang.slice(1)) || "Plain Text";
     this.langSwitcher = ls;
     this.dom.appendChild(this.langSwitcher);
   }

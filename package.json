@@ -4,7 +4,8 @@
   "scripts": {
     "dev": "vite & bib-web-yjs-server",
     "build": "vuedx-typecheck . && vite build",
-    "serve": "vite preview"
+    "serve": "vite preview",
+    "clean": "rm -rf node_modules/.vite"
   },
   "license": "MIT",
   "dependencies": {

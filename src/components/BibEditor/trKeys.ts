@@ -1,4 +1,4 @@
-export const trKeyMark = 'tr-mark';
+export const trKeyToggleMark = 'tr-toggle-mark';
 export const trKeyHeading = 'tr-heading';
 export const trKeyFontSize = 'tr-fontSize';
 export const trKeyAlign = 'tr-align';

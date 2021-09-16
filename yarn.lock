@@ -684,10 +684,10 @@
   dependencies:
     "@types/node" "*"
 
-"@vitejs/plugin-vue-jsx@^1.1.6":
+"@vitejs/plugin-vue-jsx@^1.1.8":
   version "1.1.8"
-  resolved "https://registry.nlark.com/@vitejs/plugin-vue-jsx/download/@vitejs/plugin-vue-jsx-1.1.8.tgz?cache=0&sync_timestamp=1631016429294&other_urls=https%3A%2F%2Fregistry.nlark.com%2F%40vitejs%2Fplugin-vue-jsx%2Fdownload%2F%40vitejs%2Fplugin-vue-jsx-1.1.8.tgz#c7b9efd94efe8801635f755b6fd0d0a3a70cf596"
-  integrity sha1-x7nv2U7+iAFjX3Vbb9DQo6cM9ZY=
+  resolved "https://registry.npmjs.org/@vitejs/plugin-vue-jsx/-/plugin-vue-jsx-1.1.8.tgz#c7b9efd94efe8801635f755b6fd0d0a3a70cf596"
+  integrity sha512-2ah1PuLf2fFdfJO91VLOPNHlNkhpOEgOY0/yNjJwhGNdWec5f2D4hrGdf4vUFIFcNw6D6SXEUhE4Fva5+TmKLA==
   dependencies:
     "@babel/core" "^7.14.8"
     "@babel/plugin-syntax-import-meta" "^7.10.4"

@@ -112,7 +112,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, defineProps, defineEmits } from 'vue';
+import { ref, computed } from 'vue';
 import { userAvatarUrlFix } from '@/utils';
 import { Search } from '@icon-park/vue-next';
 import { fusions } from '@/fusions';

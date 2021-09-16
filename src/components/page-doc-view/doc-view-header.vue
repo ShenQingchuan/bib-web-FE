@@ -110,7 +110,7 @@
 </template>
 
 <script setup lang="ts">
-import { defineEmits, defineProps, ref } from 'vue';
+import { ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { Lock, PeoplePlus } from '@icon-park/vue-next';
 import { editingDocViewData, savedDocViewData } from '@/pages/document/editing-doc-storage-ref';

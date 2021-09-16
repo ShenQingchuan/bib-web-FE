@@ -1,3 +1,4 @@
+import { ref, createApp, watch } from 'vue';
 import { Node } from "prosemirror-model";
 import { EditorView } from "prosemirror-view";
 import { exitCode } from "prosemirror-commands";
@@ -11,7 +12,8 @@ import {
 } from "prosemirror-state";
 import { EditorSchema } from "../editor-schema";
 import { keymap } from "prosemirror-keymap";
-import { Keys } from "@/utils";
+import { omit } from "underscore";
+import CodeBlockLangSwitcher from '@/components/BibEditor/components/code-block-lang-switcher.vue';
 
 function computeChange(oldVal: any, newVal: any) {
   if (oldVal == newVal) return null;
@@ -54,7 +56,7 @@ function arrowHandler(
   };
 }
 
-const MIMEMap: Record<string, string> = {
+const MIMEMap = {
   c: "text/x-csrc",
   cpp: "text/x-c++src",
   "c++": "text/x-c++src",
@@ -79,8 +81,15 @@ const MIMEMap: Record<string, string> = {
   jsx: "text/jsx",
   tsx: "text/typescript-jsx",
   dart: "dart",
+  '': 'text/plain'
 };
-const MIMEReflect = (lang?: string) => (lang ? MIMEMap[lang] || "" : "");
+export const supportLangs: Array<Omit<
+  keyof typeof MIMEMap,
+  "cpp" | "csharp" | "js" | "ts" | "objc" | "py"
+>> = Object.keys(omit(MIMEMap, "cpp", "csharp", "js", "ts", "objc", "py"));
+export const langSpec = ref<keyof typeof MIMEMap>('');
+export const MIMEReflect = (lang?: keyof typeof MIMEMap) =>
+  lang ? MIMEMap[lang] || "" : "";
 
 export const arrowHandlersInCodeBlock = keymap({
   ArrowLeft: arrowHandler("left"),
@@ -97,7 +106,7 @@ export default class CodeBlockView {
   incomingChanges: boolean;
   cm: CodeMirror.Editor;
   updating: boolean;
-  lang: string;
+  lang: keyof typeof MIMEMap;
   langSwitcher: HTMLElement;
   tryDeleting: boolean;
 
@@ -106,7 +115,8 @@ export default class CodeBlockView {
     this.view = view;
     this.getPos = getPos;
     this.incomingChanges = false;
-    this.lang = node.attrs.lang || "";
+    langSpec.value = node.attrs.lang || ''
+    this.lang = langSpec.value;
     this.tryDeleting = false;
 
     // 新建一个 CodeMirror 实例
@@ -148,13 +158,10 @@ export default class CodeBlockView {
 
     // 在 code block 右上角显示一个用来表示语法模式的标签
     const ls = document.createElement("div");
-    ls.style.cssText =
-      "position: absolute; left: 0; top: -27px;" +
-      "border-radius: 4px 4px 0 0; cursor: pointer;" +
-      "width: fit-content; background-color: rgb(222 239 253);; color: #4e4f4f;" +
-      "padding: 2px 6px; font-size: 14px; z-index: 3; user-select: none;";
-    ls.classList.add('code-style-text');
-    ls.textContent = 'language: ' + (this.lang[0].toUpperCase() + this.lang.slice(1)) || "Plain Text";
+    createApp(CodeBlockLangSwitcher).mount(ls);
+    watch(langSpec, (newValue) => {
+      this.cm.setOption('mode', MIMEReflect(newValue));
+    })
     this.langSwitcher = ls;
     this.dom.appendChild(this.langSwitcher);
   }
@@ -257,23 +264,29 @@ export default class CodeBlockView {
       }
     }
   }
-  
-  // handleXXEvent 方法都会 统一返回 false 表示事件已经被处理，无需编辑器再处理
+
+  // handleXXEvent 事件说明：
+  // 返回 true 表示编辑器不处理该事件，事件处理到此为止。
+  // 返回 false 表示交给编辑器继续处理
   handleKeydownEvent(e: KeyboardEvent) {
     if (e.key === "Backspace") {
       this.onDelete();
     }
- 
-    return false;
+    return false; // 交给编辑器执行删除动作
   }
   handleCopyEvent(e: ClipboardEvent) {
-    // todo
-    return false;
+    const codeContent = this.cm.getValue();
+    e.clipboardData?.setData(
+      "text/html",
+      `<meta charset="utf-8"><code_block lang="${this.lang}">${codeContent}</code_block>`
+    );
+    e.preventDefault();
+    return true;
   }
   stopEvent(e: Event) {
-    if (e.type === 'keydown') {
+    if (e.type === "keydown") {
       return this.handleKeydownEvent(e as KeyboardEvent);
-    } else if (e.type === 'copy') {
+    } else if (e.type === "copy") {
       return this.handleCopyEvent(e as ClipboardEvent);
     }
     // 其他情况下只要 tryDeleting 曾被置为过 true，

@@ -1,48 +1,31 @@
-<script lang="tsx">
-import { defineComponent, computed } from "vue";
-import { Dropdown, Menu } from "ant-design-vue";
-import {
-  langSpec,
-  supportLangs,
-} from "@/components/BibEditor/node-views/code-block-view";
+<template>
+  <a-dropdown overlayClassName="bib-editor__code-block-lang-switcher-overlay">
+    <div class="bib-editor__code-block-lang-switcher code-style-text">
+      {{ `language: ${displayLangSpec}` }}
+    </div>
+    <template #overlay>
+      <a-menu>
+        <a-menu-item v-for="lang in supportLangs" @click="setLangSpec(lang)">
+          {{ lang }}
+        </a-menu-item>
+      </a-menu>
+    </template>
+  </a-dropdown>
+</template>
 
-export default defineComponent({
-  setup() {
-    const capitalizeLangSpec = (str: string) =>
-      str[0].toUpperCase() + str.slice(1);
-    const slots = {
-      overlay: () => (
-        <Menu>
-          {supportLangs.map((lang) => (
-            <Menu.Item
-              key={lang as string}
-              onClick={() => {
-                langSpec.value = lang as any;
-              }}
-            >
-              {lang}
-            </Menu.Item>
-          ))}
-        </Menu>
-      ),
-    };
-    const displayLangSpec = computed(() =>
-      langSpec.value ? capitalizeLangSpec(langSpec.value) : "Plain Text"
-    );
+<script setup lang="tsx">
+import { computed } from "vue";
+import { supportLangs } from "@/components/BibEditor/node-views/code-block-view";
 
-    return () => (
-      <Dropdown
-        v-slots={slots}
-        overlayClassName="bib-editor__code-block-lang-switcher-overlay"
-      >
-        <div class="bib-editor__code-block-lang-switcher code-style-text">
-          {"language: "}
-          {displayLangSpec.value}
-        </div>
-      </Dropdown>
-    );
-  },
-});
+const props = defineProps<{
+  lang: string;
+  setLangSpec: (s: string) => void;
+}>();
+
+const capitalizeLangSpec = (str: string) => str[0].toUpperCase() + str.slice(1);
+const displayLangSpec = computed(() =>
+  props.lang ? capitalizeLangSpec(props.lang) : "Plain Text"
+);
 </script>
 
 <style lang="less">

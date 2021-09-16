@@ -1,4 +1,4 @@
-import { ref, createApp, watch } from 'vue';
+import { Ref, ref, createApp, watch } from "vue";
 import { Node } from "prosemirror-model";
 import { EditorView } from "prosemirror-view";
 import { exitCode } from "prosemirror-commands";
@@ -13,7 +13,7 @@ import {
 import { EditorSchema } from "../editor-schema";
 import { keymap } from "prosemirror-keymap";
 import { omit } from "underscore";
-import CodeBlockLangSwitcher from '@/components/BibEditor/components/code-block-lang-switcher.vue';
+import CodeBlockLangSwitcher from "@/components/BibEditor/components/code-block-lang-switcher.vue";
 
 function computeChange(oldVal: any, newVal: any) {
   if (oldVal == newVal) return null;
@@ -69,7 +69,7 @@ const MIMEMap = {
   typescript: "text/typescript",
   ts: "text/typescript",
   objc: "text/x-objectivec",
-  objectivec: "text/x-objectivec",
+  "objective-c": "text/x-objectivec",
   php: "application/x-httpd-php",
   py: "text/x-python",
   python: "text/x-python",
@@ -81,13 +81,17 @@ const MIMEMap = {
   jsx: "text/jsx",
   tsx: "text/typescript-jsx",
   dart: "dart",
-  '': 'text/plain'
+  "": "text/plain",
 };
-export const supportLangs: Array<Omit<
-  keyof typeof MIMEMap,
-  "cpp" | "csharp" | "js" | "ts" | "objc" | "py"
->> = Object.keys(omit(MIMEMap, "cpp", "csharp", "js", "ts", "objc", "py"));
-export const langSpec = ref<keyof typeof MIMEMap>('');
+const langSimplify: Record<string, string> = {
+  cpp: "c++",
+  csharp: "c#",
+  js: "javascript",
+  ts: "typescript",
+  objc: "objective-c",
+  py: "python",
+};
+export const supportLangs: Array<string> = Object.keys(omit(MIMEMap));
 export const MIMEReflect = (lang?: keyof typeof MIMEMap) =>
   lang ? MIMEMap[lang] || "" : "";
 
@@ -105,8 +109,8 @@ export default class CodeBlockView {
   getPos: any;
   incomingChanges: boolean;
   cm: CodeMirror.Editor;
+  lang: Ref<keyof typeof MIMEMap>;
   updating: boolean;
-  lang: keyof typeof MIMEMap;
   langSwitcher: HTMLElement;
   tryDeleting: boolean;
 
@@ -115,8 +119,10 @@ export default class CodeBlockView {
     this.view = view;
     this.getPos = getPos;
     this.incomingChanges = false;
-    langSpec.value = node.attrs.lang || ''
-    this.lang = langSpec.value;
+    const langAttr = node.attrs.lang;
+    this.lang = ref<keyof typeof MIMEMap>(
+      langAttr ? langSimplify[langAttr] || langAttr : ""
+    );
     this.tryDeleting = false;
 
     // 新建一个 CodeMirror 实例
@@ -124,7 +130,7 @@ export default class CodeBlockView {
       value: this.node.textContent,
       lineNumbers: true,
       extraKeys: this.codeMirrorKeymap(),
-      mode: MIMEReflect(this.lang),
+      mode: MIMEReflect(this.lang.value),
       scrollbarStyle: "null",
       viewportMargin: Infinity,
     });
@@ -158,10 +164,15 @@ export default class CodeBlockView {
 
     // 在 code block 右上角显示一个用来表示语法模式的标签
     const ls = document.createElement("div");
-    createApp(CodeBlockLangSwitcher).mount(ls);
-    watch(langSpec, (newValue) => {
-      this.cm.setOption('mode', MIMEReflect(newValue));
-    })
+    createApp(CodeBlockLangSwitcher, {
+      lang: this.lang.value,
+      setLangSpec: (s: string) => {
+        this.lang.value = s as any;
+      },
+    }).mount(ls);
+    watch(this.lang, (newValue) => {
+      this.cm.setOption("mode", MIMEReflect(newValue));
+    });
     this.langSwitcher = ls;
     this.dom.appendChild(this.langSwitcher);
   }
@@ -268,7 +279,7 @@ export default class CodeBlockView {
   // handleXXEvent 事件说明：
   // 返回 true 表示编辑器不处理该事件，事件处理到此为止。
   // 返回 false 表示交给编辑器继续处理
-  handleKeydownEvent(e: KeyboardEvent) {
+  handleKeyboardEvent(e: KeyboardEvent) {
     if (e.key === "Backspace") {
       this.onDelete();
     }
@@ -278,14 +289,15 @@ export default class CodeBlockView {
     const codeContent = this.cm.getValue();
     e.clipboardData?.setData(
       "text/html",
-      `<meta charset="utf-8"><code_block lang="${this.lang}">${codeContent}</code_block>`
+      `<meta charset="utf-8"><code_block lang="${this.lang.value}">${codeContent}</code_block>`
     );
     e.preventDefault();
     return true;
   }
   stopEvent(e: Event) {
-    if (e.type === "keydown") {
-      return this.handleKeydownEvent(e as KeyboardEvent);
+    console.log("[tmy e ]", e.type);
+    if (e.type.startsWith("key")) {
+      return this.handleKeyboardEvent(e as KeyboardEvent);
     } else if (e.type === "copy") {
       return this.handleCopyEvent(e as ClipboardEvent);
     }

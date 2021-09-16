@@ -58,7 +58,6 @@ import BibMenuInsertTable from './bib-editor-menu-insert-table.vue';
 import BibMenuTableKits from './bib-editor-menu-table-kits.vue';
 import type { EditorInstance } from "../typings";
 
-const marksGroup = useMarks();
 
 const props = defineProps<{
   editorInstance: EditorInstance;
@@ -68,6 +67,7 @@ const props = defineProps<{
 provide("editorInstance", props.editorInstance);
 
 const isInTable = ref(false);
+const marksGroup = useMarks();
 provide('is-bib-editor-table-mode', isInTable);
 </script>
 

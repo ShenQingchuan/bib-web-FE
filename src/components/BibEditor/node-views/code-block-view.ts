@@ -11,6 +11,7 @@ import {
 } from "prosemirror-state";
 import { EditorSchema } from "../editor-schema";
 import { keymap } from "prosemirror-keymap";
+import { Keys } from "@/utils";
 
 function computeChange(oldVal: any, newVal: any) {
   if (oldVal == newVal) return null;
@@ -243,7 +244,7 @@ export default class CodeBlockView {
   selectNode() {
     this.cm.focus();
   }
-  handleDeleteEmptyBlock() {
+  onDelete() {
     if (this.node.textContent.length === 0) {
       if (!this.tryDeleting) {
         this.tryDeleting = true; // 刚刚全部删除时留一个可以再编辑的机会
@@ -256,10 +257,24 @@ export default class CodeBlockView {
       }
     }
   }
-  stopEvent(event: Event) {
-    if ((event as KeyboardEvent).key === "Backspace") {
-      this.handleDeleteEmptyBlock();
-      return false;
+  
+  // handleXXEvent 方法都会 统一返回 false 表示事件已经被处理，无需编辑器再处理
+  handleKeydownEvent(e: KeyboardEvent) {
+    if (e.key === "Backspace") {
+      this.onDelete();
+    }
+ 
+    return false;
+  }
+  handleCopyEvent(e: ClipboardEvent) {
+    // todo
+    return false;
+  }
+  stopEvent(e: Event) {
+    if (e.type === 'keydown') {
+      return this.handleKeydownEvent(e as KeyboardEvent);
+    } else if (e.type === 'copy') {
+      return this.handleCopyEvent(e as ClipboardEvent);
     }
     // 其他情况下只要 tryDeleting 曾被置为过 true，
     // 都降回到 false

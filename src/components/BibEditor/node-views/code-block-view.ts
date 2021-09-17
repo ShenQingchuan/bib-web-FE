@@ -14,6 +14,7 @@ import { EditorSchema } from "../editor-schema";
 import { keymap } from "prosemirror-keymap";
 import { omit } from "underscore";
 import CodeBlockLangSwitcher from "@/components/BibEditor/components/code-block-lang-switcher.vue";
+import { Dropdown, Menu } from "ant-design-vue";
 
 function computeChange(oldVal: any, newVal: any) {
   if (oldVal == newVal) return null;
@@ -91,7 +92,7 @@ const langSimplify: Record<string, string> = {
   objc: "objective-c",
   py: "python",
 };
-export const supportLangs: Array<string> = Object.keys(omit(MIMEMap));
+export const supportLangs: Array<string> = Object.keys(omit(MIMEMap, ...Object.keys(langSimplify)));
 export const MIMEReflect = (lang?: keyof typeof MIMEMap) =>
   lang ? MIMEMap[lang] || "" : "";
 
@@ -165,11 +166,11 @@ export default class CodeBlockView {
     // 在 code block 右上角显示一个用来表示语法模式的标签
     const ls = document.createElement("div");
     createApp(CodeBlockLangSwitcher, {
-      lang: this.lang.value,
+      lang: this.lang,
       setLangSpec: (s: string) => {
         this.lang.value = s as any;
       },
-    }).mount(ls);
+    }).use(Dropdown).use(Menu).mount(ls);
     watch(this.lang, (newValue) => {
       this.cm.setOption("mode", MIMEReflect(newValue));
     });
@@ -295,7 +296,6 @@ export default class CodeBlockView {
     return true;
   }
   stopEvent(e: Event) {
-    console.log("[tmy e ]", e.type);
     if (e.type.startsWith("key")) {
       return this.handleKeyboardEvent(e as KeyboardEvent);
     } else if (e.type === "copy") {

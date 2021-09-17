@@ -18,7 +18,7 @@
     </a-tooltip>
     <a-tooltip placement="top" title="只读" v-else>
       <eyes
-        class="page-dashboard__doc-list-item-edit-icon m-l-12 fs-16 tc-n500 iconpark-fix"
+        class="page-dashboard__doc-list-item-edit-icon m-l-12 fs-16 tc-n500 iconpark"
         @click="$router.push(`/doc/${docItem.id}`)"
       />
     </a-tooltip>

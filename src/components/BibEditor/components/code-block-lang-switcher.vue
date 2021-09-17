@@ -1,7 +1,11 @@
 <template>
-  <a-dropdown overlayClassName="bib-editor__code-block-lang-switcher-overlay">
+  <a-dropdown overlayClassName="bib-editor__code-block-lang-switcher-overlay" trigger="click">
     <div class="bib-editor__code-block-lang-switcher code-style-text">
       {{ `language: ${displayLangSpec}` }}
+      <DownOne
+        theme="filled"
+        class="bib-editor__code-block-lang-switcher-arrow iconpark"
+      />
     </div>
     <template #overlay>
       <a-menu>
@@ -13,18 +17,19 @@
   </a-dropdown>
 </template>
 
-<script setup lang="tsx">
-import { computed } from "vue";
+<script setup lang="ts">
+import { computed, Ref } from "vue";
 import { supportLangs } from "@/components/BibEditor/node-views/code-block-view";
+import { DownOne } from "@icon-park/vue-next";
 
 const props = defineProps<{
-  lang: string;
+  lang: Ref<string>;
   setLangSpec: (s: string) => void;
 }>();
 
 const capitalizeLangSpec = (str: string) => str[0].toUpperCase() + str.slice(1);
 const displayLangSpec = computed(() =>
-  props.lang ? capitalizeLangSpec(props.lang) : "Plain Text"
+  props.lang.value ? capitalizeLangSpec(props.lang.value) : "Plain Text"
 );
 </script>
 

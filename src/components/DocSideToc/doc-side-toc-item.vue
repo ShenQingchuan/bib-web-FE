@@ -9,7 +9,7 @@
     <div
       class="doc-side-toc__item-title p-tb-6 m-b-2 fs-12 p-lr-6 to-ellipsis"
       :class="{
-        'active': activeIndexKey === index
+        'active': !needScrolling && activeIndexKey === index
       }"
       @click.self="updateIndexKey(index)"
     >{{ item.title }}</div>
@@ -34,6 +34,7 @@ defineProps<{
 
 // @States:
 const activeIndexKey = inject<Ref<string>>('doc-side-toc__active-index')!;
+const needScrolling = inject<Ref<boolean>>('doc-side-toc__need-scrolling')!;
 const updateIndexKey = inject<(indexKey: string) => void>('update:doc-side-toc__active-index')!;
 
 // @Methods:

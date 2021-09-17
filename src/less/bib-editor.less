@@ -189,3 +189,27 @@
   width: 100%;
   min-height: 560px;
 }
+
+.ProseMirror h1.bib__active-highlight-heading,
+.ProseMirror h2.bib__active-highlight-heading,
+.ProseMirror h3.bib__active-highlight-heading, 
+.ProseMirror h4.bib__active-highlight-heading,
+.ProseMirror h5.bib__active-highlight-heading {
+  transition: all 0.5s ease;
+  background-color: @B100;
+  border-radius: 4px;
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
+.ProseMirror h1:not(.bib__active-highlight-heading),
+.ProseMirror h2:not(.bib__active-highlight-heading),
+.ProseMirror h3:not(.bib__active-highlight-heading),
+.ProseMirror h4:not(.bib__active-highlight-heading),
+.ProseMirror h5:not(.bib__active-highlight-heading) {
+  transition: all 0.5s ease;
+  background-color: unset;
+  border-radius: none;
+  padding-left: 0;
+  padding-right: 0;
+}

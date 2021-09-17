@@ -5,6 +5,7 @@ import {
 } from '../typings';
 import type { Ref } from 'vue';
 
+const activeHighlightClassName = 'bib__active-highlight-heading';
 const decodeContentJSON = (content: string): DocContentElement => {
   return JSON.parse(content) as DocContentElement;
 };
@@ -84,6 +85,10 @@ export const bindClickScrollHandler = (
         top: target.offsetTop - target.clientHeight,
         behavior: "smooth",
       });
+      target.classList.add(activeHighlightClassName);
+      setTimeout(() => {
+        target.classList.remove(activeHighlightClassName);
+      }, 2000);
       e.stopPropagation();
     };
   });

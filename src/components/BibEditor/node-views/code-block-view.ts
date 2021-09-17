@@ -167,6 +167,7 @@ export default class CodeBlockView {
     const ls = document.createElement("div");
     createApp(CodeBlockLangSwitcher, {
       lang: this.lang,
+      disabled: !this.view.editable,
       setLangSpec: (s: string) => {
         this.lang.value = s as any;
       },

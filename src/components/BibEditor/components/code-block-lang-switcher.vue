@@ -1,8 +1,9 @@
 <template>
-  <a-dropdown overlayClassName="bib-editor__code-block-lang-switcher-overlay" trigger="click">
+  <a-dropdown overlayClassName="bib-editor__code-block-lang-switcher-overlay" trigger="click" :disabled="disabled">
     <div class="bib-editor__code-block-lang-switcher code-style-text">
       {{ `language: ${displayLangSpec}` }}
       <DownOne
+        v-show="!disabled"
         theme="filled"
         class="bib-editor__code-block-lang-switcher-arrow iconpark"
       />
@@ -24,6 +25,7 @@ import { DownOne } from "@icon-park/vue-next";
 
 const props = defineProps<{
   lang: Ref<string>;
+  disabled: boolean;
   setLangSpec: (s: string) => void;
 }>();
 

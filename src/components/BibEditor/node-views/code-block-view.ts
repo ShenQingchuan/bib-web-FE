@@ -173,7 +173,12 @@ export default class CodeBlockView {
       },
     }).use(Dropdown).use(Menu).mount(ls);
     watch(this.lang, (newValue) => {
+      const { tr } = this.view.state;
       this.cm.setOption("mode", MIMEReflect(newValue));
+      tr.setNodeMarkup(this.getPos(), EditorSchema.nodes.code_block, {
+        lang: newValue
+      });
+      view.dispatch(tr);
     });
     this.langSwitcher = ls;
     this.dom.appendChild(this.langSwitcher);
@@ -288,13 +293,16 @@ export default class CodeBlockView {
     return false; // 交给编辑器执行删除动作
   }
   handleCopyEvent(e: ClipboardEvent) {
-    const codeContent = this.cm.getValue();
-    e.clipboardData?.setData(
-      "text/html",
-      `<meta charset="utf-8"><code_block lang="${this.lang.value}">${codeContent}</code_block>`
-    );
-    e.preventDefault();
-    return true;
+    if (window.getSelection()?.toString() === this.cm.getValue()) {
+      const codeContent = this.cm.getValue();
+      e.clipboardData?.setData(
+        "text/html",
+        `<meta charset="utf-8"><code_block lang="${this.lang.value}">${codeContent}</code_block>`
+      );
+      e.preventDefault();
+      return true;
+    }
+    return false;
   }
   stopEvent(e: Event) {
     if (e.type.startsWith("key")) {

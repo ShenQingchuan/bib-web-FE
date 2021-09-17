@@ -31,7 +31,7 @@ const props = defineProps<{
 
 const capitalizeLangSpec = (str: string) => str[0].toUpperCase() + str.slice(1);
 const displayLangSpec = computed(() =>
-  props.lang.value ? capitalizeLangSpec(props.lang.value) : "Plain Text"
+  props.lang.value ? capitalizeLangSpec(props.lang.value).trim() : "Plain Text"
 );
 </script>
 
@@ -45,7 +45,7 @@ const displayLangSpec = computed(() =>
   width: fit-content;
   background-color: rgb(222 239 253);
   color: #4e4f4f;
-  padding: 2px 6px;
+  padding: 2px 6px 2px 12px;
   font-size: 14px;
   z-index: 3;
   user-select: none;

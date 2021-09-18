@@ -23,6 +23,5 @@ export function useMarks() {
 }
 /** toggle 某个 Mark 的状态 */
 export function toggleMarkState(markName: CanToggleMark) {
-  console.log('[tmy toggleMarkState ]');
   marksGroup[markName].isActive.value = !marksGroup[markName].isActive.value;
 }

@@ -1,3 +1,4 @@
+import { getUUID } from "@/utils";
 import { Schema, Node, Mark } from "prosemirror-model";
 import { tableNodes } from "prosemirror-tables";
 import us from "underscore";
@@ -20,7 +21,7 @@ const extends_textBlockAttrs = (
   let textBlockAttrs: Record<string, any> = us.extend(
     {
       textAlign: { default: "" },
-      textIndent: { default: 0 },
+      textIndent: { default: 0 }
     },
     others
   );
@@ -47,15 +48,15 @@ const stylesOfTextBlock = (node: Node, append?: (node: Node) => string) => {
 const extendsTextBlockStyleAttrs = (
   computeOther?: (_dom: HTMLElement) => Record<string, any>
 ) => (dom: HTMLElement) => {
-  let textBlockStylesAttrs: Record<string, any> = {};
+  const textBlockStylesAttrs: Record<string, any> = {};
 
   // 对其方向
-  if (!!dom.style.textAlign) {
+  if (dom.style.textAlign) {
     textBlockStylesAttrs.textAlign = dom.style.textAlign;
   }
 
   // 缩进
-  if (!!dom.style.paddingLeft) {
+  if (dom.style.paddingLeft) {
     if (dom.style.paddingLeft.endsWith("px")) {
       const paddingNumber = Number(dom.style.paddingLeft.slice(0, -2));
       textBlockStylesAttrs.textIndent = paddingNumber;
@@ -65,7 +66,7 @@ const extendsTextBlockStyleAttrs = (
   const otherAttrs = computeOther ? computeOther(dom) : {};
   return {
     ...otherAttrs,
-    ...textBlockStylesAttrs,
+    ...textBlockStylesAttrs
   };
 };
 const getCommentAttrs = (el: HTMLElement) => {
@@ -83,7 +84,7 @@ export const nodes: {
 } = {
   // :: NodeSpec The top level document node.
   doc: {
-    content: "block+",
+    content: "block+"
   },
 
   // :: NodeSpec A plain paragraph textblock. Represented in the DOM
@@ -95,13 +96,13 @@ export const nodes: {
     parseDOM: [
       {
         tag: "p",
-        getAttrs: extendsTextBlockStyleAttrs(),
-      },
+        getAttrs: extendsTextBlockStyleAttrs()
+      }
     ],
     toDOM(node: Node) {
       const style = stylesOfTextBlock(node);
       return ["p", { style }, 0];
-    },
+    }
   },
 
   // :: NodeSpec A blockquote (`<blockquote>`) wrapping one or more blocks.
@@ -112,7 +113,7 @@ export const nodes: {
     parseDOM: [{ tag: "blockquote" }],
     toDOM() {
       return blockquoteDOM;
-    },
+    }
   },
 
   // :: NodeSpec A horizontal line (`<hr>`).
@@ -121,7 +122,7 @@ export const nodes: {
     parseDOM: [{ tag: "hr" }],
     toDOM() {
       return ["hr", { contenteditable: "false" }];
-    },
+    }
   },
 
   // :: NodeSpec A heading textblock, with a `level` attribute that
@@ -135,33 +136,33 @@ export const nodes: {
     parseDOM: [
       {
         tag: "h1",
-        getAttrs: extendsTextBlockStyleAttrs(() => ({ level: 1 })),
+        getAttrs: extendsTextBlockStyleAttrs(() => ({ level: 1 }))
       },
       {
         tag: "h2",
-        getAttrs: extendsTextBlockStyleAttrs(() => ({ level: 2 })),
+        getAttrs: extendsTextBlockStyleAttrs(() => ({ level: 2 }))
       },
       {
         tag: "h3",
-        getAttrs: extendsTextBlockStyleAttrs(() => ({ level: 3 })),
+        getAttrs: extendsTextBlockStyleAttrs(() => ({ level: 3 }))
       },
       {
         tag: "h4",
-        getAttrs: extendsTextBlockStyleAttrs(() => ({ level: 4 })),
+        getAttrs: extendsTextBlockStyleAttrs(() => ({ level: 4 }))
       },
       {
         tag: "h5",
-        getAttrs: extendsTextBlockStyleAttrs(() => ({ level: 5 })),
+        getAttrs: extendsTextBlockStyleAttrs(() => ({ level: 5 }))
       },
       {
         tag: "h6",
-        getAttrs: extendsTextBlockStyleAttrs(() => ({ level: 6 })),
-      },
+        getAttrs: extendsTextBlockStyleAttrs(() => ({ level: 6 }))
+      }
     ],
     toDOM(node: Node) {
       const style = stylesOfTextBlock(node);
       return ["h" + node.attrs.level, { style }, 0];
-    },
+    }
   },
 
   // :: NodeSpec A code listing. Disallows marks or non-text inline
@@ -172,27 +173,34 @@ export const nodes: {
     group: "block",
     code: true,
     defining: true,
-    attrs: { lang: { default: "" } },
+    attrs: {
+      uuid: { default: getUUID(6) },
+      lang: { default: "" },
+    },
     parseDOM: [
       {
         tag: "code_block",
-        preserveWhitespace: 'full',
+        preserveWhitespace: "full",
         getAttrs(dom: HTMLElement) {
           return {
-            lang: dom.getAttribute('lang') || "",
+            lang: dom.getAttribute("lang") || ""
           };
-        },
-      },
+        }
+      }
     ],
     toDOM(node: Node) {
       const { attrs } = node;
-      return ["code_block", { lang: attrs.lang }, node.textContent];
-    },
+      return [
+        "code_block",
+        { lang: attrs.lang, uuid: attrs.uuid },
+        node.textContent
+      ];
+    }
   },
 
   // :: NodeSpec The text node.
   text: {
-    group: "inline",
+    group: "inline"
   },
 
   // :: NodeSpec An inline image (`<img>`) node. Supports `src`,
@@ -203,7 +211,7 @@ export const nodes: {
     attrs: {
       src: {},
       alt: { default: undefined },
-      title: { default: undefined },
+      title: { default: undefined }
     },
     group: "inline",
     draggable: true,
@@ -214,15 +222,15 @@ export const nodes: {
           return {
             src: dom.getAttribute("src"),
             title: dom.getAttribute("title"),
-            alt: dom.getAttribute("alt"),
+            alt: dom.getAttribute("alt")
           };
-        },
-      },
+        }
+      }
     ],
     toDOM(node: Node) {
-      let { src, alt, title } = node.attrs;
+      const { src, alt, title } = node.attrs;
       return ["img", { src, alt, title, class: "bib-editor-doc-img" }];
-    },
+    }
   },
 
   // :: NodeSpec A hard line break, represented in the DOM as `<br>`.
@@ -233,7 +241,7 @@ export const nodes: {
     parseDOM: [{ tag: "br" }],
     toDOM() {
       return brDOM;
-    },
+    }
   },
 
   ordered_list: {
@@ -245,16 +253,16 @@ export const nodes: {
         tag: "ol",
         getAttrs(dom: any) {
           return {
-            order: dom.hasAttribute("start") ? +dom.getAttribute("start") : 1,
+            order: dom.hasAttribute("start") ? +dom.getAttribute("start") : 1
           };
-        },
-      },
+        }
+      }
     ],
     toDOM(node: Node) {
       return node.attrs.order == 1
         ? olDOM
         : ["ol", { start: node.attrs.order }, 0];
-    },
+    }
   },
   bullet_list: {
     attrs: { textIndent: { default: 0 } },
@@ -263,7 +271,7 @@ export const nodes: {
     parseDOM: [{ tag: "ul" }],
     toDOM() {
       return ["ul", 0];
-    },
+    }
   },
   task_list: {
     attrs: { textIndent: { default: 0 } },
@@ -272,12 +280,12 @@ export const nodes: {
     parseDOM: [
       {
         tag: 'ul[data-type="task-list"]',
-        priority: 51,
-      },
+        priority: 51
+      }
     ],
     toDOM() {
       return ["ul", { "data-type": "task-list" }, 0];
-    },
+    }
   },
   list_item: {
     attrs: extends_textBlockAttrs(undefined, ["textIndent"]),
@@ -286,17 +294,17 @@ export const nodes: {
     parseDOM: [
       {
         tag: "li",
-        getAttrs: extendsTextBlockStyleAttrs(),
-      },
+        getAttrs: extendsTextBlockStyleAttrs()
+      }
     ],
     toDOM(node: Node) {
       const style = stylesOfTextBlock(node);
       return ["li", { style }, 0];
-    },
+    }
   },
   task_item: {
     attrs: extends_textBlockAttrs({ checked: { default: false } }, [
-      "textIndent",
+      "textIndent"
     ]),
     content: "paragraph block*",
     defining: true,
@@ -304,16 +312,16 @@ export const nodes: {
       {
         tag: 'li[data-type="task-item"][data-checked]',
         priority: 51,
-        getAttrs: extendsTextBlockStyleAttrs((dom) => {
+        getAttrs: extendsTextBlockStyleAttrs(dom => {
           return {
-            checked: dom.getAttribute("data-checked") === "true",
+            checked: dom.getAttribute("data-checked") === "true"
           };
-        }),
-      },
+        })
+      }
     ],
     toDOM() {
       return ["task_item", 0];
-    },
+    }
   },
 
   // prosemirror-math:
@@ -325,9 +333,9 @@ export const nodes: {
     toDOM: () => ["math-inline", { class: "math-node" }, 0],
     parseDOM: [
       {
-        tag: "math-inline", // important!
-      },
-    ],
+        tag: "math-inline" // important!
+      }
+    ]
   },
   math_display: {
     group: "block math",
@@ -337,9 +345,9 @@ export const nodes: {
     toDOM: () => ["math-display", { class: "math-node" }, 0],
     parseDOM: [
       {
-        tag: "math-display", // important!
-      },
-    ],
+        tag: "math-display" // important!
+      }
+    ]
   },
 
   // video-iframe:
@@ -352,14 +360,14 @@ export const nodes: {
         tag: 'iframe[class="prosemirror-video-iframe"]',
         getAttrs(dom: HTMLIFrameElement) {
           return {
-            src: dom.src,
+            src: dom.src
           };
-        },
-      },
+        }
+      }
     ],
     toDOM() {
       return ["video_iframe", 0];
-    },
+    }
   },
 
   ...tableNodes({
@@ -375,10 +383,10 @@ export const nodes: {
           if (value) {
             attrs.style = (attrs.style || "") + `background-color: ${value};`;
           }
-        },
-      },
-    },
-  }),
+        }
+      }
+    }
+  })
 };
 
 // :: Object [Specs](#model.MarkSpec) for the marks in the schema.
@@ -391,7 +399,7 @@ export const marks: {
   link: {
     attrs: {
       href: { default: "" },
-      text: { default: "" },
+      text: { default: "" }
     },
     inclusive: false,
     parseDOM: [
@@ -402,15 +410,15 @@ export const marks: {
           const text = dom.textContent;
           return {
             href,
-            text,
+            text
           };
-        },
-      },
+        }
+      }
     ],
     toDOM(mark: Mark) {
-      let { href, text } = mark.attrs;
+      const { href, text } = mark.attrs;
       return ["a", { href }, text];
-    },
+    }
   },
 
   colored: {
@@ -423,10 +431,10 @@ export const marks: {
         style: "color",
         getAttrs(el: HTMLElement) {
           return {
-            color: el.style.color,
+            color: el.style.color
           };
-        },
-      },
+        }
+      }
     ],
     toDOM(mark: Mark) {
       let style = "";
@@ -434,7 +442,7 @@ export const marks: {
         style += `color: ${mark.attrs.color};`;
       }
       return ["span", { style }, 0];
-    },
+    }
   },
   fontSizeMark: {
     attrs: { size: { default: 14 } },
@@ -446,10 +454,10 @@ export const marks: {
         style: "font-size",
         getAttrs(el: HTMLElement) {
           return {
-            fontSize: el.style.fontSize,
+            fontSize: el.style.fontSize
           };
-        },
-      },
+        }
+      }
     ],
     toDOM(mark: Mark) {
       let style = "";
@@ -457,7 +465,7 @@ export const marks: {
         style += `font-size: ${mark.attrs.size}px;`;
       }
       return ["span", { style }, 0];
-    },
+    }
   },
   hightlighted: {
     attrs: { color: { default: "" } },
@@ -469,10 +477,10 @@ export const marks: {
         style: "background-color",
         getAttrs(el: HTMLElement) {
           return {
-            color: el.style.backgroundColor,
+            color: el.style.backgroundColor
           };
-        },
-      },
+        }
+      }
     ],
     toDOM(mark: Mark) {
       let style = "";
@@ -480,7 +488,7 @@ export const marks: {
         style += `background-color: ${mark.attrs.color};`;
       }
       return ["span", { style }, 0];
-    },
+    }
   },
 
   // :: MarkSpec An emphasis mark. Rendered as an `<em>` element.
@@ -489,21 +497,21 @@ export const marks: {
     parseDOM: [{ tag: "i" }, { tag: "em" }, { style: "font-style=italic" }],
     toDOM() {
       return emDOM;
-    },
+    }
   },
 
   u: {
     parseDOM: [{ tag: "u" }],
     toDOM() {
       return uDOM;
-    },
+    }
   },
   // :: MarkSpec An delete mark. Rendered as an `<del>` element.
   del: {
     parseDOM: [{ tag: "del" }],
     toDOM() {
       return delDOM;
-    },
+    }
   },
   // :: MarkSpec An superscript mark. Rendered as an `<sup>` element.
   sup: {
@@ -511,7 +519,7 @@ export const marks: {
     parseDOM: [{ tag: "sup" }],
     toDOM() {
       return supDOM;
-    },
+    }
   },
   // :: MarkSpec An subscript mark. Rendered as an `<sub>` element.
   sub: {
@@ -519,7 +527,7 @@ export const marks: {
     parseDOM: [{ tag: "sub" }],
     toDOM() {
       return subDOM;
-    },
+    }
   },
 
   // :: MarkSpec A strong mark. Rendered as `<strong>`, parse rules
@@ -532,17 +540,17 @@ export const marks: {
       // tags with a font-weight normal.
       {
         tag: "b",
-        getAttrs: (node: any) => node.style.fontWeight != "normal" && null,
+        getAttrs: (node: any) => node.style.fontWeight != "normal" && null
       },
       {
         style: "font-weight",
         getAttrs: (value: any) =>
-          /^(bold(er)?|[5-9]\d{2,})$/.test(value) && null,
-      },
+          /^(bold(er)?|[5-9]\d{2,})$/.test(value) && null
+      }
     ],
     toDOM() {
       return strongDOM;
-    },
+    }
   },
 
   // :: MarkSpec Code font mark. Represented as a `<code>` element.
@@ -551,7 +559,7 @@ export const marks: {
     parseDOM: [{ tag: "code" }],
     toDOM() {
       return codeDOM;
-    },
+    }
   },
 
   // :: Commented mark. Rendered as original element but with comment content
@@ -559,13 +567,13 @@ export const marks: {
   commented: {
     attrs: {
       id: { default: "" },
-      content: { default: {} },
+      content: { default: {} }
     },
     parseDOM: [
       {
         tag: "span",
-        getAttrs: getCommentAttrs,
-      },
+        getAttrs: getCommentAttrs
+      }
     ],
     toDOM(mark: Mark) {
       const { id, content } = mark.attrs;
@@ -573,15 +581,15 @@ export const marks: {
         "span",
         {
           "bib-comment-id": id,
-          "bib-comment-content": JSON.stringify(content),
+          "bib-comment-content": JSON.stringify(content)
         },
-        0,
+        0
       ];
-    },
-  },
+    }
+  }
 };
 
 export const EditorSchema = new Schema({
   marks,
-  nodes,
+  nodes
 });

@@ -10,20 +10,20 @@ import {
   Command,
   deleteSelection,
   selectNodeBackward,
-  joinBackward,
+  joinBackward
 } from "prosemirror-commands";
 import {
   wrapInList,
   splitListItem,
   liftListItem,
-  sinkListItem,
+  sinkListItem
 } from "prosemirror-schema-list";
 import { Schema, NodeType, MarkType } from "prosemirror-model";
 import { undo, redo } from "y-prosemirror";
 import { undoInputRule } from "prosemirror-inputrules";
 import { keymap } from "prosemirror-keymap";
 import { mathBackspaceCmd } from "@benrbray/prosemirror-math";
-import { toggleMark } from "../commands";
+import { toggleMark, mayDeleteCodeBlock } from "../commands";
 import { trKeyToggleMark } from "../trKeys";
 import { toggleMarkState as toggleActive } from "../composable/useToggleableMarksState";
 
@@ -63,7 +63,7 @@ export function addBibKeymap(schema: Schema, mapKeys?: any) {
     type: NodeType | MarkType;
   function bind(key: string, cmd: Command) {
     if (mapKeys) {
-      let mapped = mapKeys[key];
+      const mapped = mapKeys[key];
       if (mapped === false) return;
       if (mapped) key = mapped;
     }
@@ -77,6 +77,7 @@ export function addBibKeymap(schema: Schema, mapKeys?: any) {
     chainCommands(
       undoInputRule,
       deleteSelection,
+      mayDeleteCodeBlock,
       mathBackspaceCmd,
       joinBackward,
       selectNodeBackward
@@ -116,7 +117,7 @@ export function addBibKeymap(schema: Schema, mapKeys?: any) {
     bind("Shift-Ctrl-9", wrapInList(type));
   if ((type = schema.nodes.blockquote)) bind("Ctrl->", wrapIn(type));
   if ((type = schema.nodes.hard_break)) {
-    let br = type,
+    const br = type,
       cmd = chainCommands(exitCode, (state, dispatch) => {
         dispatch!(state.tr.replaceSelectionWith(br.create()).scrollIntoView());
         return true;

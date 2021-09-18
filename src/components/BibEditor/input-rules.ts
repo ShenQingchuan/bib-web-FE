@@ -6,7 +6,7 @@ import {
   emDash,
   ellipsis,
   InputRule
-} from 'prosemirror-inputrules';
+} from "prosemirror-inputrules";
 import {
   Schema,
   NodeType,
@@ -14,15 +14,15 @@ import {
   Slice,
   Fragment,
   Node
-} from 'prosemirror-model';
-import { EditorState, Plugin, PluginKey } from 'prosemirror-state';
+} from "prosemirror-model";
+import { EditorState, Plugin, PluginKey } from "prosemirror-state";
 import {
   makeBlockMathInputRule,
   makeInlineMathInputRule,
   REGEX_INLINE_MATH_DOLLARS,
   REGEX_BLOCK_MATH_DOLLARS
-} from '@benrbray/prosemirror-math';
-import { URL_REGEX } from '@/utils';
+} from "@benrbray/prosemirror-math";
+import { URL_REGEX, getUUID } from "@/utils";
 
 function nodeInputRule(
   regexp: RegExp,
@@ -57,7 +57,7 @@ export function orderedListRule(nodeType: NodeType) {
   return wrappingInputRule(
     /^(\d+)[\.。]\s$/,
     nodeType,
-    (match) => ({ order: +match[1] }),
+    match => ({ order: +match[1] }),
     (match, node) => node.childCount + node.attrs.order == +match[1]
   );
 }
@@ -78,8 +78,8 @@ export function taskListRule(nodeType: NodeType) {
 // Given a code block node type, returns an input rule that turns a
 // textblock starting with three backticks into a code block.
 export function codeBlockRule(nodeType: NodeType) {
-  return textblockTypeInputRule(/^```(\w+)?\s$/, nodeType, (match) => {
-    return { lang: match[1] };
+  return textblockTypeInputRule(/^(```|···)(\w+)?\s$/, nodeType, match => {
+    return { lang: match[2], uuid: getUUID(6) };
   });
 }
 
@@ -90,9 +90,9 @@ export function codeBlockRule(nodeType: NodeType) {
 // the number of `#` signs.
 export function headingRule(nodeType: NodeType, maxLevel: number) {
   return textblockTypeInputRule(
-    new RegExp('^(#{1,' + maxLevel + '})\\s$'),
+    new RegExp("^(#{1," + maxLevel + "})\\s$"),
     nodeType,
-    (match) => ({ level: match[1].length })
+    match => ({ level: match[1].length })
   );
 }
 
@@ -106,7 +106,7 @@ function getMarksBetween(start: number, end: number, state: EditorState) {
   state.doc.nodesBetween(start, end, (node, pos) => {
     marks = [
       ...marks,
-      ...node.marks.map((mark) => ({
+      ...node.marks.map(mark => ({
         start: pos,
         end: pos + node.nodeSize,
         mark
@@ -138,11 +138,11 @@ export function markInputRule(
         const textEnd = textStart + match[m].length;
 
         const excludedMarks = getMarksBetween(start, end, state)
-          .filter((item) => {
+          .filter(item => {
             const { excluded } = item.mark.type;
             return excluded.find((type: any) => type.name === markType.name);
           })
-          .filter((item) => item.end > matchStart);
+          .filter(item => item.end > matchStart);
 
         if (excludedMarks.length) {
           return null;
@@ -173,7 +173,7 @@ export function markPasteRule(
   const handler = (fragment: Fragment, parent?: any) => {
     const nodes: Node[] = [];
 
-    fragment.forEach((child) => {
+    fragment.forEach(child => {
       if (child.isText && child.text) {
         const { text } = child;
         let pos = 0;
@@ -231,9 +231,9 @@ export function markPasteRule(
   };
 
   return new Plugin({
-    key: new PluginKey('markPasteRule'),
+    key: new PluginKey("markPasteRule"),
     props: {
-      transformPasted: (slice) => {
+      transformPasted: slice => {
         return new Slice(
           handler(slice.content),
           slice.openStart,

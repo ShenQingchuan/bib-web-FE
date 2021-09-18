@@ -56,7 +56,10 @@ let editorInstance = shallowRef({} as EditorInstance);
 
 // @Methods:
 const initEditorViewRef = (el: any) => {
-  editorInstance.value = initEditor(el)
+  editorInstance.value = initEditor(el);
+  if (process.env.NODE_ENV === 'development') {
+    (window as any).bibEditor = editorInstance.value;
+  }
   editorViewMounted.value = true;
 }
 const onQuitDocumentEdit = () => {

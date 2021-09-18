@@ -4,7 +4,8 @@ import randomColor from 'randomcolor';
 import TaskItemView from '../node-views/task-item-view';
 import placeholder from '../plugins/placeholder';
 import handleLinkClick from '../plugins/handle-link-click';
-import { EditorState, Transaction } from 'prosemirror-state';
+import codeBlockPlugin, { removeCodeBlockOverlay } from '../plugins/code-view-plugin';
+import { EditorState } from 'prosemirror-state';
 import { EditorView } from 'prosemirror-view';
 import { Node, NodeType, MarkType, Schema } from 'prosemirror-model';
 import { addBibKeymap } from '../helpers/add-bib-keymap';
@@ -27,7 +28,6 @@ import {
   Command,
   lift,
   setBlockType,
-  toggleMark as _tm,
   wrapIn
 } from 'prosemirror-commands';
 import CodeBlockView, {
@@ -74,7 +74,7 @@ function isListNodeType(node: Node, schema: Schema) {
 
 export function useEditor(options: BibEditorOptions) {
   const onlineOtherUsers = ref<OnlineUser[]>([]);
-  let cursorColor = ref('');
+  const cursorColor = ref('');
 
   // inner helper: 创建切换颜色的 Command，分别用于文字颜色和高亮颜色
   const createToggleColorCommand = (view: EditorView, markType: MarkType, trKey: string) => {
@@ -126,11 +126,12 @@ export function useEditor(options: BibEditorOptions) {
       arrowHandlersInCodeBlock,
       handleLinkClick,
       mathPlugin,
+      codeBlockPlugin(),
     ];
 
     // 编辑模式 启用协同相关插件
     if (!options.readonly) {
-      let ydoc = new Y.Doc();
+      const ydoc = new Y.Doc();
       // Y.js 协同配置：
       provider = new WebsocketProvider(
         process.env.NODE_ENV === 'production'
@@ -435,10 +436,9 @@ export function useEditor(options: BibEditorOptions) {
         view.focus();
         const { selection } = view.state;
         const parentHasQuote = pmutils.findParentNode((node) => {
-          console.log(node.type.name);
           return ['blockquote'].includes(node.type.name);
         })(selection);
-        let command = parentHasQuote ? lift : wrapIn(EditorSchema.nodes.blockquote);
+        const command = parentHasQuote ? lift : wrapIn(EditorSchema.nodes.blockquote);
         command(view.state, (tr) =>
           pipeBibEditorDispatch(view.dispatch, tr, {
             trKey: trKeyQuote
@@ -512,6 +512,13 @@ export function useEditor(options: BibEditorOptions) {
 
     // onViewCreated Hook
     options.onViewCreated?.(view);
+
+    // editor pointer trasaction handle
+    editorInstance.onEditorDispatched((tr) => {
+      if (tr.getMeta('pointer') === true) {
+        removeCodeBlockOverlay();
+      }
+    });
     return editorInstance;
   };
   

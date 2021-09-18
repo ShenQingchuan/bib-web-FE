@@ -192,7 +192,7 @@
 
 .ProseMirror h1.bib__active-highlight-heading,
 .ProseMirror h2.bib__active-highlight-heading,
-.ProseMirror h3.bib__active-highlight-heading, 
+.ProseMirror h3.bib__active-highlight-heading,
 .ProseMirror h4.bib__active-highlight-heading,
 .ProseMirror h5.bib__active-highlight-heading {
   transition: all 0.5s ease;
@@ -212,4 +212,21 @@
   border-radius: none;
   padding-left: 0;
   padding-right: 0;
+}
+
+.bib-editor__code-block-overlay {
+  &::before {
+    content: " ";
+    width: auto;
+    height: calc(100% + 30px);
+    top: -30px;
+    left: 0;
+    right: 0;
+    position: absolute;
+    background-color: @B200;
+    border: 2px solid @B800;
+    z-index: 9;
+    opacity: 0.5;
+    user-select: none;
+  }
 }

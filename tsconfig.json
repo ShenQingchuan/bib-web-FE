@@ -11,11 +11,12 @@
     "baseUrl": ".",
     "paths": {
       "@/*": ["./src/*"],
-      "~/*": ["./*"]
+      "~/*": ["./*"],
+      "@editor/*": ["./packages/bib-editor/*"]
     },
     "types": ["vite/client", "node"],
     "allowSyntheticDefaultImports": true
   },
-  "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue"],
+  "include": ["src/**/*", "packages/**/*"],
   "exclude": ["node_modules"]
 }

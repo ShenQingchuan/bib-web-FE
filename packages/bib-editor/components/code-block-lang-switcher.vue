@@ -1,5 +1,9 @@
 <template>
-  <a-dropdown overlayClassName="bib-editor__code-block-lang-switcher-overlay" trigger="click" :disabled="disabled">
+  <a-dropdown
+    overlayClassName="bib-editor__code-block-lang-switcher-overlay"
+    trigger="click"
+    :disabled="disabled"
+  >
     <div class="bib-editor__code-block-lang-switcher code-style-text">
       {{ `language: ${displayLangSpec}` }}
       <DownOne
@@ -10,7 +14,11 @@
     </div>
     <template #overlay>
       <a-menu>
-        <a-menu-item v-for="lang in supportLangs" @click="setLangSpec(lang)">
+        <a-menu-item
+          v-for="lang in supportLangs"
+          @click="setLangSpec(lang)"
+          :key="lang"
+        >
           {{ lang }}
         </a-menu-item>
       </a-menu>
@@ -20,7 +28,7 @@
 
 <script setup lang="ts">
 import { computed, Ref } from "vue";
-import { supportLangs } from "@/components/BibEditor/node-views/code-block-view";
+import { supportLangs } from "@editor/node-views/code-block-view";
 import { DownOne } from "@icon-park/vue-next";
 
 const props = defineProps<{

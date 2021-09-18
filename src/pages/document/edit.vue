@@ -31,11 +31,11 @@ import { useRoute, useRouter } from 'vue-router';
 import { usePayloadFromToken } from "@/utils";
 import { fusions } from '@/fusions';
 import { editingDocViewData, savedDocViewData } from './editing-doc-storage-ref';
-import { useEditor } from "@/components/BibEditor/composable/useEditor";
+import { useEditor } from "@editor/composable/useEditor";
 import DocViewHeader from '@/components/page-doc-view/doc-view-header.vue';
-import BibEditorMenu from '@/components/BibEditor/menu/bib-editor-menu.vue';
+import BibEditorMenu from '@editor/menu/bib-editor-menu.vue';
 import us from 'underscore';
-import type { EditorInstance } from '@/components/BibEditor/typings';
+import type { EditorInstance } from '@editor/typings';
 import type { DocumentViewData } from '@/models';
 import { message } from 'ant-design-vue';
 

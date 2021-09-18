@@ -13,7 +13,7 @@ import {
 import { EditorSchema } from "../editor-schema";
 import { keymap } from "prosemirror-keymap";
 import { omit } from "underscore";
-import CodeBlockLangSwitcher from "@/components/BibEditor/components/code-block-lang-switcher.vue";
+import CodeBlockLangSwitcher from "@editor/components/code-block-lang-switcher.vue";
 import { Dropdown, Menu } from "ant-design-vue";
 
 function computeChange(oldVal: any, newVal: any) {

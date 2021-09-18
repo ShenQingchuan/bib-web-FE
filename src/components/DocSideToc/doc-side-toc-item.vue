@@ -25,7 +25,7 @@
 <script setup lang="ts">
 import { inject } from "vue";
 import type { Ref } from 'vue';
-import type { DocTableOfContentsUnit } from '@/components/BibEditor/typings';
+import type { DocTableOfContentsUnit } from '@editor/typings';
 
 defineProps<{
   item: DocTableOfContentsUnit;

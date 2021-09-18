@@ -19,7 +19,8 @@
         <a
           class="tc-primary"
           :href="logined ? `/user/${credential.userName}` : '/login'"
-        >{{ logined ? credential.userName : '未登录' }}</a>
+          >{{ logined ? credential.userName : "未登录" }}</a
+        >
       </span>
       <template v-if="logined">
         <template v-if="!sendedJoinRequest">
@@ -28,33 +29,53 @@
             <a
               class="tc-primary fw-500"
               :href="`/user/${viewData?.creator.userName}`"
-            >{{ viewData?.creator.userName }}</a>
+              >{{ viewData?.creator.userName }}</a
+            >
             申请权限
           </span>
           <div class="flex-row anis-center jyct-center m-tb-16">
-            <a-button type="primary" class="m-lr-20" @click="createJoinCollaborationRequest">申请</a-button>
+            <a-button
+              type="primary"
+              class="m-lr-20"
+              @click="createJoinCollaborationRequest"
+              >申请</a-button
+            >
             <a-button class="m-lr-20">取消</a-button>
           </div>
         </template>
-        <span v-else class="p-tb-12 tc-n500 text-center fs-16">已经申请权限，请等待回复后刷新页面。</span>
+        <span v-else class="p-tb-12 tc-n500 text-center fs-16"
+          >已经申请权限，请等待回复后刷新页面。</span
+        >
       </template>
     </div>
   </div>
 
   <!-- 有权限则渲染文档视图 -->
   <div v-else class="page-document-view__wrapper flex-col">
-    <doc-view-header :view-data="viewData" :editable="editable" @inviting="updateJoinRequests" />
+    <doc-view-header
+      :view-data="viewData"
+      :editable="editable"
+      @inviting="updateJoinRequests"
+    />
 
     <div class="flex-row m-t-100 pos-rel">
       <doc-side-toc :toc="tableOfContentsData" />
       <!-- 通过 readonly ProseMirror 加载出文档 -->
       <div class="page-document-view__content m-lr-auto">
-        <a-skeleton class="m-t-40" active v-if="loadingViewData" :paragraph="{ rows: 20 }" />
+        <a-skeleton
+          class="m-t-40"
+          active
+          v-if="loadingViewData"
+          :paragraph="{ rows: 20 }"
+        />
         <div v-show="!loadingViewData" ref="docViewRef"></div>
       </div>
     </div>
 
-    <div v-if="!loadingViewData" class="page-document-view__meta-section m-t-32 m-b-64">
+    <div
+      v-if="!loadingViewData"
+      class="page-document-view__meta-section m-t-32 m-b-64"
+    >
       <!-- 点赞 -->
       <div
         class="page-document-view__thumbs-up-btn flex-row jyct-center anis-center m-lr-auto"
@@ -65,9 +86,9 @@
       >
         <thumbs-up theme="filled" :size="24" class="iconpark" />
       </div>
-      <div
-        class="page-document-view__thumbs-up-divider m-lr-auto m-tb-20"
-      >点赞 {{ thumbsUpedCount }} 人</div>
+      <div class="page-document-view__thumbs-up-divider m-lr-auto m-tb-20">
+        点赞 {{ thumbsUpedCount }} 人
+      </div>
 
       <!-- 评论 -->
       <div class="page-document-view__comments p-20 m-lr-auto">
@@ -86,8 +107,8 @@
             replyTo
               ? `回复 ${replyTo.creator.userName}：`
               : userTokenPayload
-                ? '评论文章，按回车键提交...'
-                : '请登录后评论...'
+              ? '评论文章，按回车键提交...'
+              : '请登录后评论...'
           "
           @press-enter="onSubmitComment"
           :disabled="!userTokenPayload"
@@ -101,9 +122,9 @@
 import { nextTick, provide, readonly, ref } from "vue";
 import { useRoute } from 'vue-router';
 import { ThumbsUp, FileLock } from '@icon-park/vue-next';
-import { fetchDocFromPersistence, fusions, mocker } from '@/fusions';
-import { useEditor } from "@/components/BibEditor/composable/useEditor";
-import { useTableOfContents, bindClickScrollHandler } from '@/components/BibEditor/composable/useTableOfContents';
+import { fetchDocFromPersistence, fusions } from '@/fusions';
+import { useEditor } from "@editor/composable/useEditor";
+import { useTableOfContents, bindClickScrollHandler } from '@editor/composable/useTableOfContents';
 import { usePayloadFromToken, isBibUserTokenValid } from "@/utils";
 import { savedDocViewData } from "./editing-doc-storage-ref";
 import { message } from "ant-design-vue";
@@ -112,7 +133,7 @@ import DocComment from '@/components/page-doc-view/doc-comment.vue';
 import DocSideToc from '@/components/DocSideToc/doc-side-toc.vue';
 import us from 'underscore';
 import type { DocumentCommentDto, DocumentViewData, UserSimpleDto } from "@/models";
-import type { DocTableOfContentsUnit } from "@/components/BibEditor/typings";
+import type { DocTableOfContentsUnit } from "@editor/typings";
 
 // @Utils:
 const requestForViewData = () => fusions.get(`/docs/${docId}?userId=${credential?.userId || -1}`);

@@ -6,7 +6,7 @@ import { ref } from "vue";
 import { EditorSchema } from "../editor-schema";
 import { trKeyLinkChange } from "../trKeys";
 import { EditorView } from "prosemirror-view";
-import { URL_REGEX } from "../../../utils";
+import { URL_REGEX } from "@/utils";
 import getMarkRange from "../helpers/get-mark-range";
 
 const {

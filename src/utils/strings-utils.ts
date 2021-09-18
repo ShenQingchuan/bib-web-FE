@@ -17,7 +17,7 @@ export const random = (length: number = 6) => {
  */
 export enum CamelCaseType {
   UPPER = "upper",
-  LOWER = "lower",
+  LOWER = "lower"
 }
 
 /**
@@ -102,7 +102,7 @@ export const isUrl = (url: string) => {
   }
 
   if (
-    !!["http:", "https:", "data:", "ftp:"].some((protocol) => {
+    !!["http:", "https:", "data:", "ftp:"].some(protocol => {
       return url.startsWith(protocol);
     })
   ) {

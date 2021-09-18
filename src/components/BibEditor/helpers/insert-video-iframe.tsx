@@ -1,9 +1,9 @@
-import { ref } from 'vue';
-import { Modal, Form, Input } from 'ant-design-vue';
-import { Transaction } from 'prosemirror-state';
-import { EditorSchema } from '../editor-schema';
-import { trKeyInsertVideo } from '../trKeys';
-import getIframeSrc from './getIframeSrc';
+import { ref } from "vue";
+import { Modal, Form, Input } from "ant-design-vue";
+import { Transaction } from "prosemirror-state";
+import { EditorSchema } from "../editor-schema";
+import { trKeyInsertVideo } from "../trKeys";
+import getIframeSrc from "./getIframeSrc";
 
 export function insertVideoIframe(
   icon: string,
@@ -11,17 +11,17 @@ export function insertVideoIframe(
   tr: Transaction,
   dispatch: (tr: Transaction) => void
 ) {
-  const html = ref('');
+  const html = ref("");
 
   Modal.confirm({
     title: `插入${label}`,
-    cancelText: '取消',
-    okText: '确认',
+    cancelText: "取消",
+    okText: "确认",
     icon: <img src={icon} width={32} />,
     content: (
       <Form>
         <Form.Item
-          label='请粘贴 iframe 代码：'
+          label="请粘贴 iframe 代码："
           labelCol={{ span: 9 }}
           colon
           wrapperCol={{
@@ -30,7 +30,7 @@ export function insertVideoIframe(
         >
           <Input
             value={html.value}
-            onInput={(e) => {
+            onInput={e => {
               html.value = e.target.value;
             }}
           ></Input>
@@ -41,7 +41,7 @@ export function insertVideoIframe(
       const src = getIframeSrc(html.value);
 
       tr.replaceSelectionWith(EditorSchema.nodes.video_iframe.create({ src }));
-      tr.setMeta('trKey', trKeyInsertVideo);
+      tr.setMeta("trKey", trKeyInsertVideo);
       dispatch(tr);
     }
   });

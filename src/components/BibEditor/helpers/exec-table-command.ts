@@ -1,4 +1,4 @@
-import { TableCommand } from '../typings';
+import { TableCommand } from "../typings";
 
 import {
   addColumnAfter,
@@ -11,8 +11,8 @@ import {
   splitCell,
   setCellAttr,
   deleteTable
-} from 'prosemirror-tables';
-import { EditorState, Transaction } from 'prosemirror-state';
+} from "prosemirror-tables";
+import { EditorState, Transaction } from "prosemirror-state";
 
 const tableToolkits = {
   addColumnAfter,

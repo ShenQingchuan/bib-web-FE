@@ -6,7 +6,7 @@ const insertTableCommand = ({
   rowsCount,
   colsCount,
   withHeaderRow,
-  cellContent,
+  cellContent
 }: CreateTableArgs) => (
   state: EditorState,
   dispatch: (tr: Transaction) => void

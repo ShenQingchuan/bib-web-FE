@@ -73,12 +73,12 @@ export interface DocumentCommentDto {
 }
 
 export enum UserActivityType {
-  THUMBS_UP_DOC = 'THUMBS_UP_DOC',
-  FOCUS_USER = 'FOCUS_USER',
-  FOCUS_WIKI = 'FOCUS_WIKI',
-  CREATE_DOC = 'CREATE_DOC',
-  CREATE_WIKI = 'CREATE_WIKI',
-  CREATE_ORG = 'CREATE_ORG'
+  THUMBS_UP_DOC = "THUMBS_UP_DOC",
+  FOCUS_USER = "FOCUS_USER",
+  FOCUS_WIKI = "FOCUS_WIKI",
+  CREATE_DOC = "CREATE_DOC",
+  CREATE_WIKI = "CREATE_WIKI",
+  CREATE_ORG = "CREATE_ORG"
 }
 
 export type UserActivityData =

@@ -1,6 +1,6 @@
-import { EditorState } from 'prosemirror-state';
-import { Mark, MarkType } from 'prosemirror-model';
-import getMarkType from './get-mark-type';
+import { EditorState } from "prosemirror-state";
+import { Mark, MarkType } from "prosemirror-model";
+import getMarkType from "./get-mark-type";
 
 export default function getMarkAttributes(
   state: EditorState,
@@ -13,12 +13,12 @@ export default function getMarkAttributes(
   if (empty) {
     marks = state.selection.$head.marks();
   } else {
-    state.doc.nodesBetween(from, to, (node) => {
+    state.doc.nodesBetween(from, to, node => {
       marks = [...marks, ...node.marks];
     });
   }
 
-  const mark = marks.find((markItem) => markItem.type.name === type.name);
+  const mark = marks.find(markItem => markItem.type.name === type.name);
 
   if (mark) {
     return { ...mark.attrs };

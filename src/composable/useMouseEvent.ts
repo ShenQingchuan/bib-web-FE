@@ -1,6 +1,5 @@
 import { onUnmounted } from "vue";
 
-// eslint-disable-next-line @typescript-eslint/interface-name-prefix
 interface IMouseEvent {
   (event: MouseEvent): void;
 }

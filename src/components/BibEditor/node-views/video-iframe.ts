@@ -1,5 +1,5 @@
-import { Node } from 'prosemirror-model';
-import { EditorView, NodeView } from 'prosemirror-view';
+import { Node } from "prosemirror-model";
+import { EditorView, NodeView } from "prosemirror-view";
 
 export default class VideoIframeView implements NodeView {
   dom: HTMLElement;
@@ -12,10 +12,10 @@ export default class VideoIframeView implements NodeView {
     this.view = view;
     this.getPos = getPos;
 
-    const iframe = document.createElement('iframe');
-    iframe.classList.add('prosemirror-video-iframe');
-    iframe.src = node.attrs.src || '';
-    iframe.style.border = '0';
+    const iframe = document.createElement("iframe");
+    iframe.classList.add("prosemirror-video-iframe");
+    iframe.src = node.attrs.src || "";
+    iframe.style.border = "0";
     iframe.allowFullscreen = true;
 
     this.dom = iframe;

@@ -175,7 +175,7 @@ export const nodes: {
     defining: true,
     attrs: {
       uuid: { default: getUUID(6) },
-      lang: { default: "" },
+      lang: { default: "" }
     },
     parseDOM: [
       {

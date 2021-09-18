@@ -1,4 +1,4 @@
-import { MarkType, ResolvedPos } from 'prosemirror-model';
+import { MarkType, ResolvedPos } from "prosemirror-model";
 
 export default function getMarkRange(
   $pos: ResolvedPos,
@@ -17,7 +17,7 @@ export default function getMarkRange(
     return;
   }
 
-  const link = start.node.marks.find((mark) => mark.type === type);
+  const link = start.node.marks.find(mark => mark.type === type);
 
   if (!link) {
     return;

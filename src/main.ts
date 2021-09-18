@@ -1,39 +1,39 @@
-import { createApp } from 'vue';
-import App from './App.vue';
-import router from './router';
-import 'ant-design-vue/dist/antd.less';
-import 'prosemirror-view/style/prosemirror.css';
-import 'codemirror/lib/codemirror.css';
-import 'prosemirror-gapcursor/style/gapcursor.css';
+import { createApp } from "vue";
+import App from "./App.vue";
+import router from "./router";
+import "ant-design-vue/dist/antd.less";
+import "prosemirror-view/style/prosemirror.css";
+import "codemirror/lib/codemirror.css";
+import "prosemirror-gapcursor/style/gapcursor.css";
 
 // project scoped
-import './less/global.less';
+import "./less/global.less";
 
 // CodeMirror Language Modes
-import 'codemirror/mode/javascript/javascript.js';
-import 'codemirror/mode/php/php.js';
-import 'codemirror/mode/python/python.js';
-import 'codemirror/mode/clike/clike.js';
-import 'codemirror/mode/swift/swift.js';
-import 'codemirror/mode/go/go.js';
-import 'codemirror/mode/dart/dart.js';
-import 'codemirror/mode/dockerfile/dockerfile.js';
-import 'codemirror/mode/jsx/jsx.js';
-import 'codemirror/mode/lua/lua.js';
-import 'codemirror/mode/shell/shell.js';
-import 'codemirror/mode/css/css.js';
-import 'codemirror/mode/sass/sass.js';
-import 'codemirror/mode/rust/rust.js';
+import "codemirror/mode/javascript/javascript.js";
+import "codemirror/mode/php/php.js";
+import "codemirror/mode/python/python.js";
+import "codemirror/mode/clike/clike.js";
+import "codemirror/mode/swift/swift.js";
+import "codemirror/mode/go/go.js";
+import "codemirror/mode/dart/dart.js";
+import "codemirror/mode/dockerfile/dockerfile.js";
+import "codemirror/mode/jsx/jsx.js";
+import "codemirror/mode/lua/lua.js";
+import "codemirror/mode/shell/shell.js";
+import "codemirror/mode/css/css.js";
+import "codemirror/mode/sass/sass.js";
+import "codemirror/mode/rust/rust.js";
 
-import colorPicker from 'vue3-colorpicker';
-import 'vue3-colorpicker/bundle.css';
+import colorPicker from "vue3-colorpicker";
+import "vue3-colorpicker/bundle.css";
 
 // prosemirro-math for mathjax
-import 'katex/dist/katex.min.css';
-import '@benrbray/prosemirror-math/style/math.css';
+import "katex/dist/katex.min.css";
+import "@benrbray/prosemirror-math/style/math.css";
 
 // prosemirror-tables:
-import 'prosemirror-tables/style/tables.css';
+import "prosemirror-tables/style/tables.css";
 
 import {
   Space,
@@ -63,7 +63,7 @@ import {
   Spin,
   Badge,
   Modal
-} from 'ant-design-vue';
+} from "ant-design-vue";
 
 createApp(App)
   .use(router)
@@ -97,4 +97,4 @@ createApp(App)
   .use(Modal)
   // for vue3-colorpicker
   .use(colorPicker)
-  .mount('#app');
+  .mount("#app");

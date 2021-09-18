@@ -17,7 +17,7 @@
     "@types/randomcolor": "^0.5.5",
     "@vitejs/plugin-vue-jsx": "^1.1.8",
     "@vueuse/core": "^4.11.2",
-    "ant-design-vue": "^2.2.6",
+    "ant-design-vue": "^2.2.8",
     "axios": "^0.21.4",
     "codemirror": "^5.62.0",
     "dayjs": "^1.10.6",

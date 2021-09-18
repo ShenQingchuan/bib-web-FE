@@ -248,8 +248,8 @@ export function markPasteRule(
 // A set of input rules for creating the basic block quotes, lists,
 // code blocks, and heading.
 export function buildInputRules(schema: Schema) {
-  let rules = smartQuotes.concat(ellipsis, emDash),
-    type;
+  const rules = smartQuotes.concat(ellipsis, emDash);
+  let type;
 
   // nodes rules:
   if ((type = schema.nodes.blockquote)) rules.push(blockQuoteRule(type));
@@ -280,8 +280,8 @@ export function buildInputRules(schema: Schema) {
 }
 
 export function buildPasteRules(schema: Schema) {
-  let type,
-    rules: Plugin[] = [];
+  let type;
+  const rules: Plugin[] = [];
 
   if ((type = schema.marks.code))
     rules.push(markPasteRule(/(?:`)([^`]+)(?:`)/g, type));

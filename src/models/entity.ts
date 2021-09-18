@@ -19,7 +19,7 @@ export interface Organization {
   id: number;
   name: string;
   description: string;
-  scope: 'PUBLIC' | 'PRIVATE';
+  scope: "PUBLIC" | "PRIVATE";
   avatarURL: string;
   creator: UserAccount;
   memberList: UserAccount[];

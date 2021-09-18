@@ -374,7 +374,8 @@ export function useEditor(options: BibEditorOptions) {
       },
       /** 切换 列表类型 */
       toggleList(listType: NodeType, itemType: NodeType) {
-        let { state, dispatch } = view;
+        let { state } = view;
+        const { dispatch } = view;
         const { schema, selection, tr } = state;
         const { $from, $to } = selection;
         const range = $from.blockRange($to);

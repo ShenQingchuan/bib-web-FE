@@ -25,7 +25,7 @@ export const url = Object.freeze({
   decode: (base64url: string) => {
     const base64 = base64url.replace(/-/g, "+").replace(/_/g, "/");
     return decode(base64);
-  },
+  }
 });
 
 function addEqualsPadding(base64: string) {

@@ -1,6 +1,6 @@
-import { Command } from 'prosemirror-commands';
-import { EditorState, Transaction } from 'prosemirror-state';
-import { liftTarget } from 'prosemirror-transform';
+import { Command } from "prosemirror-commands";
+import { EditorState, Transaction } from "prosemirror-state";
+import { liftTarget } from "prosemirror-transform";
 
 const clearNodes: () => Command = () => (
   state: EditorState,

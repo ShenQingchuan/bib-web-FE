@@ -1,14 +1,14 @@
-import axios from 'axios';
+import axios from "axios";
 import {
   axiosInstanceBaseConfig,
   requestInterceptorCallback,
   requestInterceptorErrCallback
-} from './common';
+} from "./common";
 
 const FETCH_DOC_BASEURL =
-  process.env.NODE_ENV === 'production'
-    ? 'https://bibyjs.techdict.pro'
-    : 'http://localhost:3000/yjs-api';
+  process.env.NODE_ENV === "production"
+    ? "https://bibyjs.techdict.pro"
+    : "http://localhost:3000/yjs-api";
 
 const fetchDocAxiosInstance = axios.create(axiosInstanceBaseConfig);
 fetchDocAxiosInstance.interceptors.request.use(

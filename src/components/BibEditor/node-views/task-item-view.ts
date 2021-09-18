@@ -1,6 +1,6 @@
-import { Node } from 'prosemirror-model';
-import { EditorView, NodeView } from 'prosemirror-view';
-import { EditorSchema } from '../editor-schema';
+import { Node } from "prosemirror-model";
+import { EditorView, NodeView } from "prosemirror-view";
+import { EditorSchema } from "../editor-schema";
 
 export default class TaskItemView implements NodeView {
   dom: HTMLElement;
@@ -8,7 +8,7 @@ export default class TaskItemView implements NodeView {
   node: Node;
   view: EditorView;
   getPos: any;
-  textAlign: string = '';
+  textAlign: string = "";
   checked: boolean = false;
   checkbox?: HTMLInputElement;
 
@@ -17,17 +17,17 @@ export default class TaskItemView implements NodeView {
     this.view = view;
     this.getPos = getPos;
 
-    const listItem = document.createElement('li');
-    listItem.dataset.type = 'task-item';
+    const listItem = document.createElement("li");
+    listItem.dataset.type = "task-item";
 
-    const checkbox = document.createElement('input');
-    checkbox.type = 'checkbox';
-    checkbox.contentEditable = 'false';
+    const checkbox = document.createElement("input");
+    checkbox.type = "checkbox";
+    checkbox.contentEditable = "false";
     checkbox.tabIndex = -1;
-    checkbox.addEventListener('change', (event) => {
+    checkbox.addEventListener("change", event => {
       const { checked } = event.target as any;
 
-      if (typeof getPos === 'function') {
+      if (typeof getPos === "function") {
         view.dispatch(
           view.state.tr.setNodeMarkup(getPos(), undefined, {
             checked
@@ -37,8 +37,8 @@ export default class TaskItemView implements NodeView {
     });
     checkbox.dataset.checked = `${node.attrs.checked}`;
 
-    const content = document.createElement('div');
-    content.classList.add('task-content');
+    const content = document.createElement("div");
+    content.classList.add("task-content");
 
     listItem.style.textAlign = node.attrs.textAlign;
     listItem.append(checkbox, content);

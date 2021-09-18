@@ -16,7 +16,7 @@ export const useTableOfContents = (
   _doc: string | DocContentElement
 ): DocTableOfContentsUnit[] => {
   const headings: DocHeading[] = [];
-  let doc: DocContentElement =
+  const doc: DocContentElement =
     typeof _doc === 'string' ? decodeContentJSON(_doc) : _doc;
 
   const getHeadingBlock = (content: DocContentElement[]) => {

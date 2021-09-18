@@ -1,6 +1,6 @@
-import { MarkType } from 'prosemirror-model';
-import { EditorState, Transaction } from 'prosemirror-state';
-import getMarkRange from '../helpers/get-mark-range';
+import { MarkType } from "prosemirror-model";
+import { EditorState, Transaction } from "prosemirror-state";
+import getMarkRange from "../helpers/get-mark-range";
 
 const updateMark = (type: MarkType, attrs?: Record<string, any>) => {
   return (state: EditorState, dispatch: (tr: Transaction) => void) => {
@@ -16,7 +16,7 @@ const updateMark = (type: MarkType, attrs?: Record<string, any>) => {
 
       tr.addMark(from, to, type.create(attrs));
     } else {
-      ranges.forEach((ref$1) => {
+      ranges.forEach(ref$1 => {
         const { $to, $from } = ref$1;
 
         if (doc.rangeHasMark($from.pos, $to.pos, type)) {
@@ -30,6 +30,6 @@ const updateMark = (type: MarkType, attrs?: Record<string, any>) => {
     dispatch(tr);
     return false;
   };
-}
+};
 
 export { updateMark };

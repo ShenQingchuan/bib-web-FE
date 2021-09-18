@@ -59,8 +59,8 @@ const mac =
 // argument, which maps key names (say `"Mod-B"` to either `false`, to
 // remove the binding, or a new key name string.
 export function addBibKeymap(schema: Schema, mapKeys?: any) {
-  let keys: any = {},
-    type: NodeType | MarkType;
+  const keys: any = {};
+  let type: NodeType | MarkType;
   function bind(key: string, cmd: Command) {
     if (mapKeys) {
       const mapped = mapKeys[key];

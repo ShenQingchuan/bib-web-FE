@@ -1,6 +1,6 @@
-import { EditorState } from 'prosemirror-state';
-import { NodeType, Node } from 'prosemirror-model';
-import { tableNodeTypes } from 'prosemirror-tables';
+import { EditorState } from "prosemirror-state";
+import { NodeType, Node } from "prosemirror-model";
+import { tableNodeTypes } from "prosemirror-tables";
 
 export interface CreateTableArgs {
   rowsCount: number;

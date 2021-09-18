@@ -1,12 +1,21 @@
 import { ref, Ref } from "vue";
 import { CanToggleMark } from "../typings";
-import { BoldOutlined, ItalicOutlined, StrikethroughOutlined, UnderlineOutlined } from "@ant-design/icons-vue";
+import {
+  BoldOutlined,
+  ItalicOutlined,
+  StrikethroughOutlined,
+  UnderlineOutlined
+} from "@ant-design/icons-vue";
 import CodeMarkIcon from "../icons/code-mark-icon.vue";
 import SuperScriptIcon from "../icons/superscript-mark-icon.vue";
 import SubScriptIcon from "../icons/subscript-mark-icon.vue";
 
 type MarkCompose = { mark: CanToggleMark; icon: any; isActive: Ref };
-const createMarkMenuItem = (mark: CanToggleMark, icon: any) => ({ mark, icon, isActive: ref(false) });
+const createMarkMenuItem = (mark: CanToggleMark, icon: any) => ({
+  mark,
+  icon,
+  isActive: ref(false)
+});
 const marksGroup: Record<CanToggleMark, MarkCompose> = {
   strong: createMarkMenuItem("strong", BoldOutlined),
   em: createMarkMenuItem("em", ItalicOutlined),
@@ -14,8 +23,8 @@ const marksGroup: Record<CanToggleMark, MarkCompose> = {
   del: createMarkMenuItem("del", StrikethroughOutlined),
   code: createMarkMenuItem("code", CodeMarkIcon),
   sup: createMarkMenuItem("sup", SuperScriptIcon),
-  sub: createMarkMenuItem("sub", SubScriptIcon),
-}
+  sub: createMarkMenuItem("sub", SubScriptIcon)
+};
 
 /** 可切换 Mark 的响应式状态表 */
 export function useMarks() {

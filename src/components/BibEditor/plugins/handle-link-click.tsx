@@ -1,13 +1,13 @@
-import getMarkAttributes from '../helpers/get-mark-attributes';
-import { Plugin, PluginKey } from 'prosemirror-state';
-import { Modal, Form, Input } from 'ant-design-vue';
-import { Node, Mark } from 'prosemirror-model';
-import { ref } from 'vue';
-import { EditorSchema } from '../editor-schema';
-import { trKeyLinkChange } from '../trKeys';
-import { EditorView } from 'prosemirror-view';
-import { URL_REGEX } from '../../../utils';
-import getMarkRange from '../helpers/get-mark-range';
+import getMarkAttributes from "../helpers/get-mark-attributes";
+import { Plugin, PluginKey } from "prosemirror-state";
+import { Modal, Form, Input } from "ant-design-vue";
+import { Node, Mark } from "prosemirror-model";
+import { ref } from "vue";
+import { EditorSchema } from "../editor-schema";
+import { trKeyLinkChange } from "../trKeys";
+import { EditorView } from "prosemirror-view";
+import { URL_REGEX } from "../../../utils";
+import getMarkRange from "../helpers/get-mark-range";
 
 const {
   marks: { link: linkMarkType }
@@ -22,7 +22,7 @@ export function updateLinkWithRange(
 ) {
   const { tr } = view.state;
   tr.replaceRangeWith(from, to, EditorSchema.text(text, marks));
-  tr.setMeta('trKey', trKeyLinkChange);
+  tr.setMeta("trKey", trKeyLinkChange);
   view.dispatch(tr);
 }
 
@@ -37,13 +37,10 @@ export function updateLinkWithPos(
   const { doc, tr } = view.state;
   if (!stored) {
     const resolvedPos = doc.resolve(pos);
-    const markRange = getMarkRange(resolvedPos, EditorSchema.marks.link)
+    const markRange = getMarkRange(resolvedPos, EditorSchema.marks.link);
     if (markRange) {
-      const { from, to } = markRange
-      tr.replaceWith(
-        from, to,
-        EditorSchema.text(text, marks)
-      );
+      const { from, to } = markRange;
+      tr.replaceWith(from, to, EditorSchema.text(text, marks));
     } else {
       tr.insert(pos, EditorSchema.text(text, marks));
     }
@@ -55,7 +52,7 @@ export function updateLinkWithPos(
     tr.addStoredMark(linkMark);
     tr.insertText(text);
   }
-  tr.setMeta('trKey', trKeyLinkChange);
+  tr.setMeta("trKey", trKeyLinkChange);
   view.dispatch(tr);
 }
 
@@ -68,22 +65,22 @@ export function showUpdateLinkModal(
     href: string;
   }
 ) {
-  const text = ref<string>(attrs?.text || currentTextNode?.textContent || ''),
+  const text = ref<string>(attrs?.text || currentTextNode?.textContent || ""),
     href = ref<string>(
       attrs?.href ||
-      (URL_REGEX.test(currentTextNode?.textContent)
-        ? currentTextNode?.textContent
-        : 'https://')
+        (URL_REGEX.test(currentTextNode?.textContent)
+          ? currentTextNode?.textContent
+          : "https://")
     );
 
   Modal.confirm({
-    title: '更改链接',
-    cancelText: '取消',
-    okText: '确认',
+    title: "更改链接",
+    cancelText: "取消",
+    okText: "确认",
     content: (
       <Form>
         <Form.Item
-          label='链接文本：'
+          label="链接文本："
           labelCol={{ span: 5 }}
           wrapperCol={{
             span: 19
@@ -91,13 +88,13 @@ export function showUpdateLinkModal(
         >
           <Input
             value={text.value}
-            onInput={(e) => {
+            onInput={e => {
               text.value = e.target.value;
             }}
           ></Input>
         </Form.Item>
         <Form.Item
-          label='链接地址：'
+          label="链接地址："
           labelCol={{ span: 5 }}
           wrapperCol={{
             span: 19
@@ -105,7 +102,7 @@ export function showUpdateLinkModal(
         >
           <Input
             value={href.value}
-            onInput={(e) => {
+            onInput={e => {
               href.value = e.target.value;
             }}
           ></Input>
@@ -135,13 +132,13 @@ export function showUpdateLinkModal(
 }
 
 export default new Plugin({
-  key: new PluginKey('handleLinkClick'),
+  key: new PluginKey("handleLinkClick"),
   props: {
     handleClick(view, pos, event) {
       const { doc } = view.state;
       const currentTextNode = doc.nodeAt(pos);
       if (!currentTextNode) return true;
-      const attrs = getMarkAttributes(view.state, 'link');
+      const attrs = getMarkAttributes(view.state, "link");
 
       if (attrs.href && event.target instanceof HTMLAnchorElement) {
         showUpdateLinkModal(view, pos, currentTextNode, {

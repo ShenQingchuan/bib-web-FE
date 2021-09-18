@@ -1,16 +1,16 @@
-import { useStorage } from '@vueuse/core';
-import decode, { BibTokenPayload } from './crypto/token-decode';
+import { useStorage } from "@vueuse/core";
+import decode, { BibTokenPayload } from "./crypto/token-decode";
 
-const tokenDefaultValue = '__$bT:default';
+const tokenDefaultValue = "__$bT:default";
 export const tokenStorageRef = useStorage<string | null>(
-  '__$bT',
+  "__$bT",
   tokenDefaultValue
 );
-export const userDetailsStorageRef = useStorage('__$bib_user_details', {
-  avatarURL: '',
-  address: '',
-  profession: '',
-  introduce: ''
+export const userDetailsStorageRef = useStorage("__$bib_user_details", {
+  avatarURL: "",
+  address: "",
+  profession: "",
+  introduce: ""
 });
 
 /** 检查当前 Token 是否可用 */

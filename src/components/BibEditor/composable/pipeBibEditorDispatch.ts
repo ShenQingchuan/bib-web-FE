@@ -7,7 +7,7 @@ export default function pipeBibEditorDispatch(
   callback?: (tr: Transaction) => void
 ) {
   if (meta) {
-    for (let key in meta) {
+    for (const key in meta) {
       key && tr.setMeta(key, meta[key]);
     }
   }

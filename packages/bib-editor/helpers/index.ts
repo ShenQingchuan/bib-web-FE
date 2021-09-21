@@ -4,7 +4,7 @@ export * from "./exec-table-command";
 export * from "./get-mark-attributes";
 export * from "./get-mark-range";
 export * from "./get-mark-type";
-export * from "./getIframeSrc";
+export * from "./get-iframe-src";
 export * from "./insert-online-img";
 export * from "./insert-video-iframe";
 export * from "./create-toggle-color-command";

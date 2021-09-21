@@ -34,6 +34,7 @@ export interface EditorInstance {
   view: EditorView;
   dispatchHooks: DispatchHook[];
   options: BibEditorOptions;
+  tableOfContents: Ref<DocTableOfContentsUnit[]>;
   toJSON: () => {
     [key: string]: any;
   };
@@ -54,6 +55,7 @@ export interface EditorInstance {
   execTableCommand: (cmdName: TableCommand) => void;
   onEditorDispatched: (fn: DispatchHook, meta?: Record<string, any>) => void;
   applyForNodesAtCursor: (fn: (node: Node, pos: number) => void) => void;
+  getTableOfContents: () => void;
   quitEditor: (
     callback?: (...innerArgs: any[]) => void,
     ...args: any[]

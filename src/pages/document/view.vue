@@ -124,7 +124,7 @@ import { useRoute } from 'vue-router';
 import { ThumbsUp, FileLock } from '@icon-park/vue-next';
 import { fetchDocFromPersistence, fusions } from '@/fusions';
 import { useEditor } from "@editor/composable/useEditor";
-import { useTableOfContents, bindClickScrollHandler } from '@editor/composable/useTableOfContents';
+import { bindClickScrollHandler } from '@editor/composable/useTableOfContents';
 import { usePayloadFromToken, isBibUserTokenValid } from "@/utils";
 import { savedDocViewData } from "./editing-doc-storage-ref";
 import { message } from "ant-design-vue";
@@ -132,7 +132,7 @@ import DocViewHeader from '@/components/page-doc-view/doc-view-header.vue';
 import DocComment from '@/components/page-doc-view/doc-comment.vue';
 import DocSideToc from '@/components/DocSideToc/doc-side-toc.vue';
 import us from 'underscore';
-import type { DocumentCommentDto, DocumentViewData, UserSimpleDto } from "@/models";
+import type { DocumentCommentDto, DocumentViewData } from "@/models";
 import type { DocTableOfContentsUnit } from "@editor/typings";
 
 // @Utils:
@@ -164,9 +164,9 @@ const sendedJoinRequest = ref(false);
 // # doc-side-toc
 const headingRefs = ref<HTMLHeadingElement[]>([]);
 const tocItemRefs = ref<HTMLElement[]>([]);
-
 provide('doc-view-heading-refs', readonly(headingRefs));
 provide('doc-view-toc-items-refs', tocItemRefs);
+provide('doc-toc-data', tableOfContentsData);
 
 // @LifeCycles:
 loadingViewData.value = true;
@@ -276,10 +276,8 @@ Promise.all([
       readonly: true,
       credential
     });
-    const { view } = EditorCompose.initEditor(docViewRef.value); // fetch response must after vue component mounted
-    tableOfContentsData.value = useTableOfContents(
-      JSON.stringify(view.state.doc.toJSON())
-    )
+    const { tableOfContents: _toc } = EditorCompose.initEditor(docViewRef.value); // fetch response must after vue component mounted
+    tableOfContentsData.value = _toc.value;
 
     // 将文章标题替换到 Tab
     document.title = `${viewData.value!.title} ｜查看文档 · Bib`

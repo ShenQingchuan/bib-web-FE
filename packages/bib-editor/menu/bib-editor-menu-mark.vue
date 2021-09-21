@@ -20,16 +20,17 @@ import type { EditorInstance, CanToggleMark } from "@editor/typings";
 import us from "underscore";
 import { EditorSchema } from "@editor/editor-schema";
 import { shieldYjsTrascationEvent } from "@editor/utils";
-import { toggleMarkState } from "@editor/composable/useToggleableMarksState";
+import { toggleMarkState, useMarks } from "@editor/composable/useToggleableMarksState";
 import { trKeyToggleMark } from "@editor/trKeys";
 
-const { isActive, mark: markName } = defineProps<{
+const props = defineProps<{
   mark: CanToggleMark;
-  isActive: Ref<boolean>;
+  isActive: boolean;
 }>();
 
 const editorInstance = inject<EditorInstance>("editorInstance")!;
-const excludes = EditorSchema.marks[markName].spec.excludes;
+const excludes = EditorSchema.marks[props.mark].spec.excludes;
+const marksGroup = useMarks()
 
 // @LifeCycles:
 onMounted(() => {
@@ -41,7 +42,7 @@ onMounted(() => {
       const storedMarksNames = tr.storedMarks?.map(m => m.type.name);
       for (let ex of excludes.split(" ")) {
         if (storedMarksNames?.includes(ex)) {
-          isActive.value = false;
+          marksGroup[props.mark].isActive.value = false;
           return;
         }
       }
@@ -53,13 +54,12 @@ onMounted(() => {
       || [];
     let concated = storedMarks.concat($from.marks());
     if (!empty) concated = concated.concat($to.marks());
-    isActive.value = us.uniq(concated).map(m => m.type.name).includes(markName);
+    marksGroup[props.mark].isActive.value = us.uniq(concated).map(m => m.type.name).includes(props.mark);
   });
 });
 const toggleFn = () => {
-  toggleMarkState(markName);
-  console.log(isActive.value);
-  editorInstance?.toggleMark(markName);
+  toggleMarkState(props.mark);
+  editorInstance?.toggleMark(props.mark);
   // magic: 由于必须设置 inclusive 属性为 true 保证 Mark 状态下输入连续性
   // 但有了 inclusive 关闭该 Mark 后会仍然显示处于该 Mark 中，但输入后续内容不会再带
   // 所以这里的逻辑是：若之前是 true，click 了一定切为 false 保证按钮高亮正确性
@@ -67,8 +67,8 @@ const toggleFn = () => {
 </script>
 
 <style lang="less" scoped>
-@import '@/less/color.less';
-@import './menu-btn-common.less';
+@import "@/less/color.less";
+@import "./menu-btn-common.less";
 .bib-editor-menu-item__btn {
   .menu-btn-common;
 }

@@ -19,7 +19,9 @@ import {
   CanToggleMark,
   InsertImageType,
   OnlineUser,
-  TableCommand
+  TableCommand,
+  DocContentElement,
+  DocTableOfContentsUnit
 } from "@editor/typings";
 import {
   trKeyToggleMark,
@@ -50,6 +52,7 @@ import {
   createToggleColorCommand
 } from "@editor/helpers";
 import { pipeBibEditorDispatch } from "@editor/utils";
+import { useTableOfContents } from "./useTableOfContents";
 
 function isListNodeType(node: Node, schema: Schema) {
   return (
@@ -62,6 +65,7 @@ function isListNodeType(node: Node, schema: Schema) {
 export function useEditor(options: BibEditorOptions) {
   const onlineOtherUsers = ref<OnlineUser[]>([]);
   const cursorColor = ref("");
+  const tableOfContents = ref<DocTableOfContentsUnit[]>([]);
 
   /** 初始化 EditorView 方法（可通过 ref hook） */
   const initEditor = (el: any) => {
@@ -78,15 +82,16 @@ export function useEditor(options: BibEditorOptions) {
         schema: EditorSchema,
         plugins: plugins.concat(yjsPlugins)
       });
-    } else {
+    }
+    // 只读模式
+    else {
+      const docJSON = JSON.parse(options.contentForViewRender!);
       initState = EditorState.create({
-        doc: Node.fromJSON(
-          EditorSchema,
-          JSON.parse(options.contentForViewRender!)
-        ),
+        doc: Node.fromJSON(EditorSchema, docJSON),
         schema: EditorSchema,
         plugins
       });
+      tableOfContents.value = useTableOfContents(docJSON);
     }
 
     const view = new EditorView(el as HTMLDivElement, {
@@ -126,6 +131,7 @@ export function useEditor(options: BibEditorOptions) {
       dispatchHooks: [],
       view,
       options,
+      tableOfContents,
       /** 强制聚焦该编辑器 */
       focus() {
         view.focus();
@@ -395,6 +401,11 @@ export function useEditor(options: BibEditorOptions) {
       toJSON() {
         return view.state.doc.toJSON();
       },
+      getTableOfContents() {
+        this.tableOfContents.value = useTableOfContents(
+          this.view.state.doc.toJSON() as DocContentElement
+        );
+      },
       /** 退出编辑 */
       quitEditor(callback?: (...innerArgs: any[]) => void, ...args: any[]) {
         provider.disconnect();
@@ -405,10 +416,12 @@ export function useEditor(options: BibEditorOptions) {
     // onViewCreated Hook
     options.onViewCreated?.(view);
 
-    // editor pointer trasaction handle
     editorInstance.onEditorDispatched(tr => {
+      // editor pointer trasaction handle
       if (tr.getMeta("pointer") === true) {
-        removeCodeBlockOverlay();
+        removeCodeBlockOverlay(); // 清除代码块的全选状态
+      } else if (tr.getMeta("y-sync$")) {
+        editorInstance.getTableOfContents();
       }
     });
     return editorInstance;

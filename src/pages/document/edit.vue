@@ -13,6 +13,8 @@
     top="65px"
   />
 
+  <doc-side-toc :top="150" fixed />
+
   <div class="page-doc-edit__bib-editor-wrapper">
     <input
       v-if="viewData"
@@ -26,16 +28,18 @@
 </template>
 
 <script setup lang="ts">
-import { ref, shallowRef, nextTick } from 'vue';
+import { ref, shallowRef, nextTick, provide, readonly, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
+import { bindClickScrollHandler } from "@editor/composable";
 import { usePayloadFromToken } from "@/utils";
 import { fusions } from '@/fusions';
 import { editingDocViewData, savedDocViewData } from './editing-doc-storage-ref';
 import { useEditor } from "@editor/composable/useEditor";
 import DocViewHeader from '@/components/page-doc-view/doc-view-header.vue';
+import DocSideToc from '@/components/DocSideToc/doc-side-toc.vue';
 import BibEditorMenu from '@editor/menu/bib-editor-menu.vue';
 import us from 'underscore';
-import type { EditorInstance } from '@editor/typings';
+import type { DocTableOfContentsUnit, EditorInstance } from '@editor/typings';
 import type { DocumentViewData } from '@/models';
 import { message } from 'ant-design-vue';
 
@@ -46,6 +50,14 @@ const credential = usePayloadFromToken()!;
 const editorViewMounted = ref(false);
 const editableGuardPass = ref(false);
 const viewData = ref<DocumentViewData>();
+
+// # doc-side-toc
+let tableOfContentsData = ref<DocTableOfContentsUnit[]>([]);
+const headingRefs = ref<HTMLHeadingElement[]>([]);
+const tocItemRefs = ref<HTMLElement[]>([]);
+provide('doc-view-heading-refs', readonly(headingRefs));
+provide('doc-view-toc-items-refs', tocItemRefs);
+provide('doc-toc-data', tableOfContentsData);
 
 // 初始化 editor view
 const { initEditor, onlineOtherUsers } = useEditor({
@@ -61,6 +73,17 @@ const initEditorViewRef = (el: any) => {
     (window as any).bibEditor = editorInstance.value;
   }
   editorViewMounted.value = true;
+  watch(editorInstance.value.tableOfContents, (newVal) => {
+    tableOfContentsData.value = newVal;
+    headingRefs.value = Array.from(
+      el.querySelectorAll(
+        '.ProseMirror h1,h2,h3,h4,h5,h6'
+      ) as NodeListOf<HTMLHeadingElement>
+    );
+    nextTick(() => {
+      bindClickScrollHandler(headingRefs, tocItemRefs);
+    });
+  });
 }
 const onQuitDocumentEdit = () => {
   if (viewData.value) {

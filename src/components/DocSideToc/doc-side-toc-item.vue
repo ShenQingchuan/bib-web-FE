@@ -2,17 +2,19 @@
   <div
     class="doc-side-toc__item"
     :style="{
-      paddingLeft: `${(item.level - 1) * 10}px`
+      paddingLeft: `${(item.level - 1) * 10}px`,
     }"
     :data-toc-index="index"
   >
     <div
       class="doc-side-toc__item-title p-tb-6 m-b-2 fs-12 p-lr-6 to-ellipsis"
       :class="{
-        'active': !needScrolling && activeIndexKey === index
+        active: !needScrolling && activeIndexKey === index,
       }"
       @click.self="updateIndexKey(index)"
-    >{{ item.title }}</div>
+    >
+      {{ item.title }}
+    </div>
     <doc-side-toc-item
       v-for="(child, i) in item.children"
       :key="i"

@@ -30,7 +30,7 @@ export const useTableOfContents = (
       }
     });
   };
-  const _text = (h: DocHeading) => h.content[0].text;
+  const _text = (h: DocHeading) => h.content?.[0].text || "";
   const _level = (h: DocHeading) => h.attrs.level;
 
   doc.content && getHeadingBlock(doc.content);
@@ -88,7 +88,7 @@ export const bindClickScrollHandler = (
       target.classList.add(activeHighlightClassName);
       setTimeout(() => {
         target.classList.remove(activeHighlightClassName);
-      }, 2000);
+      }, 1000);
       e.stopPropagation();
     };
   });

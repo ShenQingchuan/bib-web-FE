@@ -214,8 +214,62 @@
   padding-right: 0;
 }
 
+.bib-editor-heading-decoration {
+  position: absolute;
+  left: -36px;
+  top: 3px;
+  color: @N400;
+  user-select: none;
+}
+.ProseMirror h1 {
+  position: relative;
+  &:hover::before,
+  &.bib__active-highlight::before {
+    content: "H1";
+    font-size: 20px;
+    .bib-editor-heading-decoration;
+  }
+}
+.ProseMirror h2 {
+  position: relative;
+  &:hover::before,
+  &.bib__active-highlight::before {
+    content: "H2";
+    font-size: 18px;
+    .bib-editor-heading-decoration;
+  }
+}
+.ProseMirror h3 {
+  position: relative;
+  &:hover::before,
+  &.bib__active-highlight::before {
+    content: "H3";
+    font-size: 16px;
+    .bib-editor-heading-decoration;
+  }
+}
+.ProseMirror h4 {
+  position: relative;
+  &:hover::before,
+  &.bib__active-highlight::before {
+    content: "H4";
+    font-size: 14px;
+    .bib-editor-heading-decoration;
+  }
+}
+.ProseMirror h5 {
+  position: relative;
+  &:hover::before,
+  &.bib__active-highlight::before {
+    content: "H5";
+    font-size: 12px;
+    .bib-editor-heading-decoration;
+  }
+}
+
 .bib-editor__code-block-overlay {
-  &::before {
+  &:hover::before,
+  &.bib__active-highlight::before {
     content: " ";
     width: auto;
     height: calc(100% + 30px);

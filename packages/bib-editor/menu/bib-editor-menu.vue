@@ -16,7 +16,7 @@
       v-for="item in marksGroup"
       :key="item.mark"
       :mark="item.mark"
-      :is-active="item.isActive"
+      :is-active="item.isActive.value"
     >
       <Icon :component="item.icon" />
     </bib-menu-mark>

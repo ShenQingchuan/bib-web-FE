@@ -4,12 +4,13 @@
     :style="{
       top: `${top}px`,
       left: `${left}px`,
+      position: fixed ? 'fixed' : undefined
     }"
   >
     <h3>目录</h3>
     <doc-side-toc-item
       v-for="(unit, i) in toc"
-      :key="i"
+      :key="`${unit.title}-key:${i}`"
       :item="unit"
       :index="`${i}`"
     />
@@ -17,13 +18,13 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted, provide, inject, withDefaults } from "vue";
+import { ref, onMounted, onUnmounted, provide, inject, withDefaults, watch } from "vue";
 import DocSideTocItem from './doc-side-toc-item.vue';
 import type { Ref } from 'vue';
 import type { DocTableOfContentsUnit } from '@editor/typings';
 
-const props = withDefaults(defineProps<{
-  toc: DocTableOfContentsUnit[],
+withDefaults(defineProps<{
+  fixed?: boolean;
   top?: number,
   left?: number
 }>(), {
@@ -32,10 +33,11 @@ const props = withDefaults(defineProps<{
 });
 
 // @States:
-const needScrolling = ref(false);
-const activeItemIndex = ref(props.toc.length > 0 ? '0' : ''); // 默认首个
 const headingRefs = inject<Ref<HTMLHeadingElement[]>>('doc-view-heading-refs')!;
 const tocItemRefs = inject<Ref<HTMLHeadingElement[]>>('doc-view-toc-items-refs')!;
+const toc = inject<Ref<DocTableOfContentsUnit[]>>('doc-toc-data')!;
+const needScrolling = ref(false);
+const activeItemIndex = ref(toc.value.length > 0 ? '0' : ''); // 默认首个
 
 // 滚动所需的上下文
 let rafTimer: number;
@@ -87,14 +89,13 @@ onMounted(() => {
 onUnmounted(() => {
   window.removeEventListener('scroll', onDocumentScroll);
 });
-
 </script>
 
 <style lang="less" scoped>
 @import "../../less/color.less";
 .doc-side-toc__wrapper {
   width: 170px;
-  height: 100%;
+  height: fit-content;
   position: sticky;
   border-left: 2px solid #dee0e3;
 }

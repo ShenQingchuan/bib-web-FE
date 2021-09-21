@@ -33,10 +33,10 @@
 import { computed, inject, onMounted, ref } from "vue";
 import { CaretDownOutlined } from "@ant-design/icons-vue";
 import { setBlockType } from 'prosemirror-commands';
-import { EditorSchema } from "../editor-schema";
-import { trKeyHeading } from '../trKeys';
+import { EditorSchema } from "@editor/editor-schema";
+import { trKeyHeading } from '@editor/trKeys';
 import { findParentNode } from "prosemirror-utils";
-import type { EditorInstance } from "../typings";
+import type { EditorInstance } from "@editor/typings";
 
 type DisplayLevelEnumItem = { label: string, fs?: number, attrs?: { level: number } };
 const DisplayLevelEnum: Record<string, DisplayLevelEnumItem> = {

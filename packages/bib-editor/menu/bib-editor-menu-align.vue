@@ -20,9 +20,9 @@
 <script setup lang="ts">
 import { inject, onMounted, ref } from "vue";
 import { AlignLeftOutlined, AlignCenterOutlined, AlignRightOutlined } from "@ant-design/icons-vue";
-import type { EditorInstance } from "../typings";
+import type { EditorInstance } from "@editor/typings";
 import { findParentNode } from "prosemirror-utils";
-import { shieldYjsTrascationEvent } from "../utils";
+import { shieldYjsTrascationEvent } from "@editor/utils";
 
 const alignOptions = [
   { direction: "left", icon: AlignLeftOutlined },

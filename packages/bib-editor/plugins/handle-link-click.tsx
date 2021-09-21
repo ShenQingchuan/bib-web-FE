@@ -3,8 +3,8 @@ import { Plugin, PluginKey } from "prosemirror-state";
 import { Modal, Form, Input } from "ant-design-vue";
 import { Node, Mark } from "prosemirror-model";
 import { ref } from "vue";
-import { EditorSchema } from "../editor-schema";
-import { trKeyLinkChange } from "../trKeys";
+import { EditorSchema } from "@editor/editor-schema";
+import { trKeyLinkChange } from "@editor/trKeys";
 import { EditorView } from "prosemirror-view";
 import { URL_REGEX } from "@/utils";
 

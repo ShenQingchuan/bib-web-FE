@@ -39,7 +39,7 @@
 
 <script setup lang="ts">
 import { provide, ref } from "vue";
-import { useMarks } from "../composable/useToggleableMarksState";
+import { useMarks } from "@editor/composable/useToggleableMarksState";
 import Icon from "@ant-design/icons-vue";
 import BibMenuMark from "./bib-editor-menu-mark.vue";
 import BibMenuHeading from "./bib-editor-menu-heading.vue";
@@ -56,7 +56,7 @@ import BibMenuIndent from './bib-editor-menu-indent.vue';
 import BibMenuVideo from './bib-editor-menu-video.vue';
 import BibMenuInsertTable from './bib-editor-menu-insert-table.vue';
 import BibMenuTableKits from './bib-editor-menu-table-kits.vue';
-import type { EditorInstance } from "../typings";
+import type { EditorInstance } from "@editor/typings";
 
 
 const props = defineProps<{

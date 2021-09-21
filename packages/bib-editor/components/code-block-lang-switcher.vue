@@ -28,7 +28,10 @@
 
 <script setup lang="ts">
 import { computed, Ref } from "vue";
-import { supportLangs } from "@editor/node-views/code-block-view";
+import {
+  capitalizeLangSpec,
+  supportLangs
+} from "@editor/node-views/code-block-view";
 import { DownOne } from "@icon-park/vue-next";
 
 const props = defineProps<{
@@ -37,9 +40,8 @@ const props = defineProps<{
   setLangSpec: (s: string) => void;
 }>();
 
-const capitalizeLangSpec = (str: string) => str[0].toUpperCase() + str.slice(1);
 const displayLangSpec = computed(() =>
-  props.lang.value ? capitalizeLangSpec(props.lang.value).trim() : "Plain Text"
+  props.lang.value ? capitalizeLangSpec(props.lang.value) : "Plain Text"
 );
 </script>
 

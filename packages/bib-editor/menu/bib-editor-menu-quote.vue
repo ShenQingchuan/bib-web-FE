@@ -15,12 +15,12 @@
 
 <script setup lang="ts">
 import { inject, ref, onMounted } from 'vue';
-import { EditorSchema } from '../editor-schema';
+import { EditorSchema } from '@editor/editor-schema';
 import Icon from "@ant-design/icons-vue";
-import QuoteNodeIcon from '../icons/quote-node-icon.vue';
-import type { EditorInstance } from "../typings";
+import QuoteNodeIcon from '@editor/icons/quote-node-icon.vue';
+import type { EditorInstance } from "@editor/typings";
 import { findParentNode } from 'prosemirror-utils';
-import { shieldYjsTrascationEvent } from '../utils';
+import { shieldYjsTrascationEvent } from '@editor/utils';
 
 // @States:
 const isActive = ref(false);

@@ -17,11 +17,11 @@
 import { ref, inject, onMounted, createVNode } from 'vue';
 import { ExclamationCircleOutlined } from '@ant-design/icons-vue';
 import { LinkOutlined } from "@ant-design/icons-vue";
-import { EditorSchema } from '../editor-schema';
+import { EditorSchema } from '@editor/editor-schema';
 import { showUpdateLinkModal, updateLinkWithPos } from '@editor/plugins';
 import { Modal } from 'ant-design-vue';
-import type { EditorInstance } from "../typings";
-import { shieldYjsTrascationEvent } from '../utils';
+import type { EditorInstance } from "@editor/typings";
+import { shieldYjsTrascationEvent } from '@editor/utils';
 
 // @States:
 const isActive = ref(false);

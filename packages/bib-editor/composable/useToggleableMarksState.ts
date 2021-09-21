@@ -1,14 +1,14 @@
 import { ref, Ref } from "vue";
-import { CanToggleMark } from "../typings";
+import { CanToggleMark } from "@editor/typings";
 import {
   BoldOutlined,
   ItalicOutlined,
   StrikethroughOutlined,
   UnderlineOutlined
 } from "@ant-design/icons-vue";
-import CodeMarkIcon from "../icons/code-mark-icon.vue";
-import SuperScriptIcon from "../icons/superscript-mark-icon.vue";
-import SubScriptIcon from "../icons/subscript-mark-icon.vue";
+import CodeMarkIcon from "@editor/icons/code-mark-icon.vue";
+import SuperScriptIcon from "@editor/icons/superscript-mark-icon.vue";
+import SubScriptIcon from "@editor/icons/subscript-mark-icon.vue";
 
 type MarkCompose = { mark: CanToggleMark; icon: any; isActive: Ref };
 const createMarkMenuItem = (mark: CanToggleMark, icon: any) => ({

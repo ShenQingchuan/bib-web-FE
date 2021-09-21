@@ -24,7 +24,7 @@
 <script setup lang="ts">
 import { inject } from 'vue';
 import { Video } from '@icon-park/vue-next';
-import type { EditorInstance } from '../typings';
+import type { EditorInstance } from '@editor/typings';
 
 const videoTypes = [
   { icon: '/assets/svg/editor__video-bilibili.svg', label: '哔哩哔哩视频' },

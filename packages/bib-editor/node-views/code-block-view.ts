@@ -10,7 +10,7 @@ import {
   TextSelection,
   Transaction
 } from "prosemirror-state";
-import { EditorSchema } from "../editor-schema";
+import { EditorSchema } from "@editor/editor-schema";
 import { keymap } from "prosemirror-keymap";
 import { omit } from "underscore";
 import CodeBlockLangSwitcher from "@editor/components/code-block-lang-switcher.vue";
@@ -58,6 +58,7 @@ function arrowHandler(
 }
 
 const MIMEMap = {
+  "": "text/plain",
   c: "text/x-csrc",
   cpp: "text/x-c++src",
   "c++": "text/x-c++src",
@@ -81,8 +82,7 @@ const MIMEMap = {
   rust: "text/x-rustsrc",
   jsx: "text/jsx",
   tsx: "text/typescript-jsx",
-  dart: "dart",
-  "": "text/plain"
+  dart: "dart"
 };
 const langSimplify: Record<string, string> = {
   cpp: "c++",
@@ -92,9 +92,12 @@ const langSimplify: Record<string, string> = {
   objc: "objective-c",
   py: "python"
 };
+export const capitalizeLangSpec = (str: string) => {
+  return str ? (str[0].toUpperCase() + str.slice(1)).trim() : "Plain Text";
+};
 export const supportLangs: Array<string> = Object.keys(
   omit(MIMEMap, ...Object.keys(langSimplify))
-);
+).map(capitalizeLangSpec);
 export const MIMEReflect = (lang?: keyof typeof MIMEMap) =>
   lang ? MIMEMap[lang] || "" : "";
 

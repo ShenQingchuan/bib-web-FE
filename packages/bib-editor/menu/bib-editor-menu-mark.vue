@@ -16,12 +16,12 @@
 
 <script setup lang="ts">
 import { inject, onMounted, Ref } from "vue";
-import type { EditorInstance, CanToggleMark } from "../typings";
+import type { EditorInstance, CanToggleMark } from "@editor/typings";
 import us from "underscore";
-import { EditorSchema } from "../editor-schema";
-import { shieldYjsTrascationEvent } from "../utils";
-import { toggleMarkState } from "../composable/useToggleableMarksState";
-import { trKeyToggleMark } from "../trKeys";
+import { EditorSchema } from "@editor/editor-schema";
+import { shieldYjsTrascationEvent } from "@editor/utils";
+import { toggleMarkState } from "@editor/composable/useToggleableMarksState";
+import { trKeyToggleMark } from "@editor/trKeys";
 
 const { isActive, mark: markName } = defineProps<{
   mark: CanToggleMark;

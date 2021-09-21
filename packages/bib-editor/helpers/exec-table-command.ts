@@ -1,4 +1,4 @@
-import { TableCommand } from "../typings";
+import { TableCommand } from "@editor/typings";
 
 import {
   addColumnAfter,

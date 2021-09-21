@@ -38,7 +38,7 @@
 <script setup lang="ts">
 import { inject, ref } from 'vue';
 import Icon, { DesktopOutlined, GlobalOutlined } from '@ant-design/icons-vue';
-import insertImageIcon from '../icons/insert-image-icon.vue';
+import insertImageIcon from '@editor/icons/insert-image-icon.vue';
 import { fusions } from '@/fusions';
 import {
   usePayloadFromToken,
@@ -47,9 +47,9 @@ import {
   multiplePartFormContentType
 } from '@/utils';
 import { message } from 'ant-design-vue';
-import { trKeyInsertImage } from '../trKeys';
-import { EditorSchema } from '../editor-schema';
-import type { EditorInstance, InsertImageType } from '../typings';
+import { trKeyInsertImage } from '@editor/trKeys';
+import { EditorSchema } from '@editor/editor-schema';
+import type { EditorInstance, InsertImageType } from '@editor/typings';
 
 // @States:
 const editorInstance = inject<EditorInstance>("editorInstance")!;

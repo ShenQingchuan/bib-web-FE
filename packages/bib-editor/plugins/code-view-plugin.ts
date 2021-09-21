@@ -1,5 +1,5 @@
 import { Plugin } from "prosemirror-state";
-import { overlayClassName as codeBlockOverlayClassName } from "../node-views/code-block-view";
+import { overlayClassName as codeBlockOverlayClassName } from "@editor/node-views/code-block-view";
 
 export const removeCodeBlockOverlay = () => {
   const allOverlays = Array.from(

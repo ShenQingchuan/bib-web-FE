@@ -2,10 +2,10 @@ import {
   DocContentElement,
   DocHeading,
   DocTableOfContentsUnit
-} from '../typings';
-import type { Ref } from 'vue';
+} from "@editor/typings";
+import { Ref } from "vue";
 
-const activeHighlightClassName = 'bib__active-highlight-heading';
+const activeHighlightClassName = "bib__active-highlight-heading";
 const decodeContentJSON = (content: string): DocContentElement => {
   return JSON.parse(content) as DocContentElement;
 };
@@ -17,11 +17,11 @@ export const useTableOfContents = (
 ): DocTableOfContentsUnit[] => {
   const headings: DocHeading[] = [];
   const doc: DocContentElement =
-    typeof _doc === 'string' ? decodeContentJSON(_doc) : _doc;
+    typeof _doc === "string" ? decodeContentJSON(_doc) : _doc;
 
   const getHeadingBlock = (content: DocContentElement[]) => {
-    content.forEach((e) => {
-      if (e.type === 'heading') {
+    content.forEach(e => {
+      if (e.type === "heading") {
         headings.push(e as DocHeading);
         return;
       }
@@ -48,7 +48,7 @@ export const useTableOfContents = (
   let stackTop,
     tail = stack[stack.length - 1];
 
-  headings.slice(1).forEach((h) => {
+  headings.slice(1).forEach(h => {
     stackTop = stack[stack.length - 1];
     if (_level(h) > stackTop.level) {
       const g = generateTocUnit(h);
@@ -79,11 +79,11 @@ export const bindClickScrollHandler = (
     document.querySelectorAll(".doc-side-toc__item")
   );
   tocItemRefs.value.forEach((tocItem, i) => {
-    tocItem.onclick = (e) => {
+    tocItem.onclick = e => {
       const target = headingRefs.value[i];
       window.scrollTo({
         top: target.offsetTop - target.clientHeight,
-        behavior: "smooth",
+        behavior: "smooth"
       });
       target.classList.add(activeHighlightClassName);
       setTimeout(() => {

@@ -28,9 +28,9 @@
 <script setup lang="ts">
 import { ref, inject, onMounted } from 'vue';
 import { CaretDownOutlined, CheckOutlined } from "@ant-design/icons-vue";
-import { EditorSchema } from "../editor-schema"
-import type { EditorInstance } from "../typings";
-import { shieldYjsTrascationEvent } from '../utils';
+import { EditorSchema } from "@editor/editor-schema"
+import type { EditorInstance } from "@editor/typings";
+import { shieldYjsTrascationEvent } from '@editor/utils';
 
 const fontSizePoints = [12, 13, 14, 15, 16, 19, 22, 24, 29, 32, 40, 48];
 const fsMarkType = EditorSchema.marks.fontSizeMark;

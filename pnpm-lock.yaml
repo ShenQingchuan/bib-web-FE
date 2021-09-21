@@ -1,6 +1,7 @@
 lockfileVersion: 5.3
 
 specifiers:
+  '@ant-design/icons-vue': ^6.0.1
   '@benrbray/prosemirror-math': ^0.1.4
   '@icon-park/vue-next': ^1.3.1
   '@types/codemirror': ^0.0.107
@@ -47,6 +48,7 @@ specifiers:
   prosemirror-history: ^1.1.3
   prosemirror-inputrules: ^1.1.3
   prosemirror-keymap: ^1.1.4
+  prosemirror-model: ^1.14.3
   prosemirror-schema-basic: ^1.1.2
   prosemirror-schema-list: ^1.1.5
   prosemirror-state: ^1.3.4
@@ -67,7 +69,8 @@ specifiers:
   yjs: ^13.5.11
 
 dependencies:
-  '@benrbray/prosemirror-math': registry.nlark.com/@benrbray/prosemirror-math/0.1.4_947717fb3e98457b6f5e3f7b19f1a1f8
+  '@ant-design/icons-vue': registry.nlark.com/@ant-design/icons-vue/6.0.1_vue@3.2.12
+  '@benrbray/prosemirror-math': registry.nlark.com/@benrbray/prosemirror-math/0.1.4_b118a5e7d51a6d321e0a2ebbfb14416b
   '@icon-park/vue-next': registry.nlark.com/@icon-park/vue-next/1.3.5_vue@3.2.12
   '@types/prosemirror-dev-tools': registry.nlark.com/@types/prosemirror-dev-tools/3.0.2
   '@types/prosemirror-schema-basic': registry.nlark.com/@types/prosemirror-schema-basic/1.0.2
@@ -88,19 +91,20 @@ dependencies:
   prosemirror-history: registry.nlark.com/prosemirror-history/1.2.0
   prosemirror-inputrules: registry.nlark.com/prosemirror-inputrules/1.1.3
   prosemirror-keymap: registry.nlark.com/prosemirror-keymap/1.1.4
+  prosemirror-model: registry.nlark.com/prosemirror-model/1.14.3
   prosemirror-schema-basic: registry.nlark.com/prosemirror-schema-basic/1.1.2
   prosemirror-schema-list: registry.nlark.com/prosemirror-schema-list/1.1.5
   prosemirror-state: registry.nlark.com/prosemirror-state/1.3.4
   prosemirror-tables: registry.nlark.com/prosemirror-tables/1.1.1
   prosemirror-transform: registry.nlark.com/prosemirror-transform/1.3.2
-  prosemirror-utils: registry.nlark.com/prosemirror-utils/0.9.6_87ca06b3142c7ed9ea271d2b49e100bd
+  prosemirror-utils: registry.nlark.com/prosemirror-utils/0.9.6_81e766e3389d14617552a44d566cf7ce
   prosemirror-view: registry.nlark.com/prosemirror-view/1.20.1
   randomcolor: registry.nlark.com/randomcolor/0.6.2
   underscore: registry.nlark.com/underscore/1.13.1
   vue: registry.nlark.com/vue/3.2.12
   vue-router: registry.nlark.com/vue-router/4.0.11_vue@3.2.12
   vue3-colorpicker: registry.nlark.com/vue3-colorpicker/1.0.5
-  y-prosemirror: registry.nlark.com/y-prosemirror/1.0.9_c36d81cd8d20ecdefbea3bc0b78bed5a
+  y-prosemirror: registry.nlark.com/y-prosemirror/1.0.9_6d32a8176ef7db431be4183dba248ee5
   y-websocket: registry.nlark.com/y-websocket/1.3.16_yjs@13.5.12
   yjs: registry.nlark.com/yjs/13.5.12
 
@@ -215,6 +219,8 @@ packages:
       json5: registry.nlark.com/json5/2.2.0
       semver: registry.nlark.com/semver/6.3.0
       source-map: registry.nlark.com/source-map/0.5.7
+    transitivePeerDependencies:
+      - supports-color
     dev: false
 
   registry.nlark.com/@babel/generator/7.15.4:
@@ -528,6 +534,8 @@ packages:
       '@babel/types': registry.nlark.com/@babel/types/7.15.6
       debug: registry.nlark.com/debug/4.3.2
       globals: registry.nlark.com/globals/11.12.0
+    transitivePeerDependencies:
+      - supports-color
     dev: false
 
   registry.nlark.com/@babel/types/7.12.1:
@@ -549,7 +557,7 @@ packages:
       '@babel/helper-validator-identifier': registry.nlark.com/@babel/helper-validator-identifier/7.15.7
       to-fast-properties: registry.nlark.com/to-fast-properties/2.0.0
 
-  registry.nlark.com/@benrbray/prosemirror-math/0.1.4_947717fb3e98457b6f5e3f7b19f1a1f8:
+  registry.nlark.com/@benrbray/prosemirror-math/0.1.4_b118a5e7d51a6d321e0a2ebbfb14416b:
     resolution: {integrity: sha1-I5C3qUaWxtHYcAxraocSuoEgiVg=, registry: https://registry.npm.taobao.org/, tarball: https://registry.nlark.com/@benrbray/prosemirror-math/download/@benrbray/prosemirror-math-0.1.4.tgz}
     id: registry.nlark.com/@benrbray/prosemirror-math/0.1.4
     name: '@benrbray/prosemirror-math'
@@ -572,6 +580,7 @@ packages:
       prosemirror-history: registry.nlark.com/prosemirror-history/1.2.0
       prosemirror-inputrules: registry.nlark.com/prosemirror-inputrules/1.1.3
       prosemirror-keymap: registry.nlark.com/prosemirror-keymap/1.1.4
+      prosemirror-model: registry.nlark.com/prosemirror-model/1.14.3
       prosemirror-state: registry.nlark.com/prosemirror-state/1.3.4
       prosemirror-transform: registry.nlark.com/prosemirror-transform/1.3.2
       prosemirror-view: registry.nlark.com/prosemirror-view/1.20.1
@@ -599,6 +608,8 @@ packages:
       js-yaml: registry.nlark.com/js-yaml/3.14.1
       minimatch: registry.nlark.com/minimatch/3.0.4
       strip-json-comments: registry.nlark.com/strip-json-comments/3.1.1
+    transitivePeerDependencies:
+      - supports-color
     dev: true
 
   registry.nlark.com/@humanwhocodes/config-array/0.5.0:
@@ -610,6 +621,8 @@ packages:
       '@humanwhocodes/object-schema': registry.nlark.com/@humanwhocodes/object-schema/1.2.0
       debug: registry.nlark.com/debug/4.3.2
       minimatch: registry.nlark.com/minimatch/3.0.4
+    transitivePeerDependencies:
+      - supports-color
     dev: true
 
   registry.nlark.com/@humanwhocodes/object-schema/1.2.0:
@@ -1050,6 +1063,10 @@ packages:
     peerDependencies:
       '@typescript-eslint/parser': ^4.0.0
       eslint: ^5.0.0 || ^6.0.0 || ^7.0.0
+      typescript: '*'
+    peerDependenciesMeta:
+      typescript:
+        optional: true
     dependencies:
       '@typescript-eslint/experimental-utils': registry.nlark.com/@typescript-eslint/experimental-utils/4.31.1_eslint@7.32.0+typescript@4.4.3
       '@typescript-eslint/parser': registry.nlark.com/@typescript-eslint/parser/4.31.1_eslint@7.32.0+typescript@4.4.3
@@ -1060,8 +1077,9 @@ packages:
       regexpp: registry.nlark.com/regexpp/3.2.0
       semver: registry.nlark.com/semver/7.3.5
       tsutils: registry.nlark.com/tsutils/3.21.0_typescript@4.4.3
+      typescript: registry.nlark.com/typescript/4.4.3
     transitivePeerDependencies:
-      - typescript
+      - supports-color
     dev: true
 
   registry.nlark.com/@typescript-eslint/experimental-utils/4.31.1_eslint@7.32.0+typescript@4.4.3:
@@ -1081,6 +1099,7 @@ packages:
       eslint-scope: registry.nlark.com/eslint-scope/5.1.1
       eslint-utils: registry.nlark.com/eslint-utils/3.0.0_eslint@7.32.0
     transitivePeerDependencies:
+      - supports-color
       - typescript
     dev: true
 
@@ -1092,14 +1111,19 @@ packages:
     engines: {node: ^10.12.0 || >=12.0.0}
     peerDependencies:
       eslint: ^5.0.0 || ^6.0.0 || ^7.0.0
+      typescript: '*'
+    peerDependenciesMeta:
+      typescript:
+        optional: true
     dependencies:
       '@typescript-eslint/scope-manager': registry.nlark.com/@typescript-eslint/scope-manager/4.31.1
       '@typescript-eslint/types': registry.nlark.com/@typescript-eslint/types/4.31.1
       '@typescript-eslint/typescript-estree': registry.nlark.com/@typescript-eslint/typescript-estree/4.31.1_typescript@4.4.3
       debug: registry.nlark.com/debug/4.3.2
       eslint: registry.nlark.com/eslint/7.32.0
+      typescript: registry.nlark.com/typescript/4.4.3
     transitivePeerDependencies:
-      - typescript
+      - supports-color
     dev: true
 
   registry.nlark.com/@typescript-eslint/scope-manager/4.31.1:
@@ -1125,6 +1149,11 @@ packages:
     name: '@typescript-eslint/typescript-estree'
     version: 4.31.1
     engines: {node: ^10.12.0 || >=12.0.0}
+    peerDependencies:
+      typescript: '*'
+    peerDependenciesMeta:
+      typescript:
+        optional: true
     dependencies:
       '@typescript-eslint/types': registry.nlark.com/@typescript-eslint/types/4.31.1
       '@typescript-eslint/visitor-keys': registry.nlark.com/@typescript-eslint/visitor-keys/4.31.1
@@ -1133,8 +1162,9 @@ packages:
       is-glob: registry.nlark.com/is-glob/4.0.1
       semver: registry.nlark.com/semver/7.3.5
       tsutils: registry.nlark.com/tsutils/3.21.0_typescript@4.4.3
+      typescript: registry.nlark.com/typescript/4.4.3
     transitivePeerDependencies:
-      - typescript
+      - supports-color
     dev: true
 
   registry.nlark.com/@typescript-eslint/visitor-keys/4.31.1:
@@ -1159,6 +1189,8 @@ packages:
       '@rollup/pluginutils': registry.nlark.com/@rollup/pluginutils/4.1.1
       '@vue/babel-plugin-jsx': registry.nlark.com/@vue/babel-plugin-jsx/1.0.7_@babel+core@7.15.5
       hash-sum: registry.nlark.com/hash-sum/2.0.0
+    transitivePeerDependencies:
+      - supports-color
     dev: false
 
   registry.nlark.com/@vitejs/plugin-vue/1.8.1_ece4885f8f1ae7d2e7306f4ece6a44cf:
@@ -1198,6 +1230,7 @@ packages:
       svg-tags: registry.nlark.com/svg-tags/1.0.0
     transitivePeerDependencies:
       - '@babel/core'
+      - supports-color
     dev: false
 
   registry.nlark.com/@vue/compiler-core/3.2.12:
@@ -1292,6 +1325,8 @@ packages:
       eslint: registry.nlark.com/eslint/7.32.0
       eslint-plugin-vue: registry.nlark.com/eslint-plugin-vue/7.18.0_eslint@7.32.0
       vue-eslint-parser: registry.nlark.com/vue-eslint-parser/7.11.0_eslint@7.32.0
+    transitivePeerDependencies:
+      - supports-color
     dev: true
 
   registry.nlark.com/@vue/reactivity/3.2.12:
@@ -2115,6 +2150,11 @@ packages:
     name: debug
     version: 4.3.2
     engines: {node: '>=6.0'}
+    peerDependencies:
+      supports-color: '*'
+    peerDependenciesMeta:
+      supports-color:
+        optional: true
     dependencies:
       ms: registry.nlark.com/ms/2.1.2
 
@@ -2277,7 +2317,11 @@ packages:
     engines: {node: '>=6.0.0'}
     peerDependencies:
       eslint: '>=5.0.0'
+      eslint-config-prettier: '*'
       prettier: '>=1.13.0'
+    peerDependenciesMeta:
+      eslint-config-prettier:
+        optional: true
     dependencies:
       eslint: registry.nlark.com/eslint/7.32.0
       prettier: registry.nlark.com/prettier/1.19.1
@@ -2298,6 +2342,8 @@ packages:
       natural-compare: registry.nlark.com/natural-compare/1.4.0
       semver: registry.nlark.com/semver/6.3.0
       vue-eslint-parser: registry.nlark.com/vue-eslint-parser/7.11.0_eslint@7.32.0
+    transitivePeerDependencies:
+      - supports-color
     dev: true
 
   registry.nlark.com/eslint-scope/5.1.1:
@@ -2393,6 +2439,8 @@ packages:
       table: registry.nlark.com/table/6.7.1
       text-table: registry.nlark.com/text-table/0.2.0
       v8-compile-cache: registry.nlark.com/v8-compile-cache/2.3.0
+    transitivePeerDependencies:
+      - supports-color
     dev: true
 
   registry.nlark.com/espree/6.2.1:
@@ -3841,7 +3889,7 @@ packages:
       prosemirror-model: registry.nlark.com/prosemirror-model/1.14.3
     dev: false
 
-  registry.nlark.com/prosemirror-utils/0.9.6_87ca06b3142c7ed9ea271d2b49e100bd:
+  registry.nlark.com/prosemirror-utils/0.9.6_81e766e3389d14617552a44d566cf7ce:
     resolution: {integrity: sha1-PZe9hYl+O1NVVYZ9yVpROZEWqXM=, registry: https://registry.npm.taobao.org/, tarball: https://registry.nlark.com/prosemirror-utils/download/prosemirror-utils-0.9.6.tgz}
     id: registry.nlark.com/prosemirror-utils/0.9.6
     name: prosemirror-utils
@@ -3851,6 +3899,7 @@ packages:
       prosemirror-state: ^1.0.1
       prosemirror-tables: ^0.9.1
     dependencies:
+      prosemirror-model: registry.nlark.com/prosemirror-model/1.14.3
       prosemirror-state: registry.nlark.com/prosemirror-state/1.3.4
       prosemirror-tables: registry.nlark.com/prosemirror-tables/1.1.1
     dev: false
@@ -4344,6 +4393,7 @@ packages:
       vue: registry.nlark.com/vue/3.2.12
     transitivePeerDependencies:
       - rollup
+      - supports-color
       - vite
       - webpack
     dev: true
@@ -4357,6 +4407,13 @@ packages:
       rollup: ^2.50.0
       vite: ^2.3.0
       webpack: 4 || 5
+    peerDependenciesMeta:
+      rollup:
+        optional: true
+      vite:
+        optional: true
+      webpack:
+        optional: true
     dependencies:
       upath: registry.nlark.com/upath/2.0.1
       vite: registry.nlark.com/vite/2.5.10
@@ -4459,6 +4516,9 @@ packages:
     peerDependencies:
       '@vue/composition-api': ^1.0.0-rc.1
       vue: ^3.0.0-0 || ^2.6.0
+    peerDependenciesMeta:
+      '@vue/composition-api':
+        optional: true
     dependencies:
       vue: registry.nlark.com/vue/3.2.12
     dev: false
@@ -4480,6 +4540,8 @@ packages:
       esquery: registry.nlark.com/esquery/1.4.0
       lodash: registry.nlark.com/lodash/4.17.21
       semver: registry.nlark.com/semver/6.3.0
+    transitivePeerDependencies:
+      - supports-color
     dev: true
 
   registry.nlark.com/vue-router/4.0.11_vue@3.2.12:
@@ -4647,7 +4709,7 @@ packages:
     dev: false
     optional: true
 
-  registry.nlark.com/y-prosemirror/1.0.9_c36d81cd8d20ecdefbea3bc0b78bed5a:
+  registry.nlark.com/y-prosemirror/1.0.9_6d32a8176ef7db431be4183dba248ee5:
     resolution: {integrity: sha1-wLW/TixmIAk7oGWMKspSBVNGpoM=, registry: https://registry.npm.taobao.org/, tarball: https://registry.nlark.com/y-prosemirror/download/y-prosemirror-1.0.9.tgz}
     id: registry.nlark.com/y-prosemirror/1.0.9
     name: y-prosemirror
@@ -4660,6 +4722,7 @@ packages:
       yjs: ^13.3.2
     dependencies:
       lib0: registry.nlark.com/lib0/0.2.42
+      prosemirror-model: registry.nlark.com/prosemirror-model/1.14.3
       prosemirror-state: registry.nlark.com/prosemirror-state/1.3.4
       prosemirror-view: registry.nlark.com/prosemirror-view/1.20.1
       yjs: registry.nlark.com/yjs/13.5.12

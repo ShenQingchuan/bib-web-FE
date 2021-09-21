@@ -53,16 +53,16 @@
 <script setup lang="ts">
 import { inject, onMounted } from 'vue';
 import { MergeCells, SplitCells } from '@icon-park/vue-next';
-import { EditorSchema } from "../editor-schema";
+import { EditorSchema } from "@editor/editor-schema";
 import Icon from '@ant-design/icons-vue';
-import IconInsertColBefore from '../icons/editor__insert-col-after.vue';
-import IconInsertColAfter from '../icons/editor__insert-row-after.vue';
-import IconInsertRowBefore from '../icons/editor__insert-row-before.vue';
-import IconInsertRowAfter from '../icons/editor__insert-col-before.vue';
+import IconInsertColBefore from '@editor/icons/editor__insert-col-after.vue';
+import IconInsertColAfter from '@editor/icons/editor__insert-row-after.vue';
+import IconInsertRowBefore from '@editor/icons/editor__insert-row-before.vue';
+import IconInsertRowAfter from '@editor/icons/editor__insert-col-before.vue';
 import * as pmutils from 'prosemirror-utils';
-import type { EditorInstance, TableCommand } from '../typings';
+import type { EditorInstance, TableCommand } from '@editor/typings';
 import type { Ref } from 'vue';
-import { shieldYjsTrascationEvent } from '../utils';
+import { shieldYjsTrascationEvent } from '@editor/utils';
 
 // @States:
 const editorInstance = inject<EditorInstance>('editorInstance')!;

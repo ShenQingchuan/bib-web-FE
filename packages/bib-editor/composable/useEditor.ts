@@ -66,7 +66,7 @@ export function useEditor(options: BibEditorOptions) {
   /** 初始化 EditorView 方法（可通过 ref hook） */
   const initEditor = (el: any) => {
     let initState: EditorState;
-    let plugins = importBasePlugins(options);
+    const plugins = importBasePlugins(options);
     const [yjsPlugins, provider] = useYjs(options, {
       cursorColor,
       onlineOtherUsers
@@ -74,11 +74,9 @@ export function useEditor(options: BibEditorOptions) {
 
     // 编辑模式 启用协同相关插件
     if (!options.readonly) {
-      plugins = plugins.concat(yjsPlugins);
-
       initState = EditorState.create({
         schema: EditorSchema,
-        plugins
+        plugins: plugins.concat(yjsPlugins)
       });
     } else {
       initState = EditorState.create({

@@ -23,9 +23,9 @@ import { undo, redo } from "y-prosemirror";
 import { undoInputRule } from "prosemirror-inputrules";
 import { keymap } from "prosemirror-keymap";
 import { mathBackspaceCmd } from "@benrbray/prosemirror-math";
-import { toggleMark, mayDeleteCodeBlock } from "../commands";
-import { trKeyToggleMark } from "../trKeys";
-import { toggleMarkState as toggleActive } from "../composable/useToggleableMarksState";
+import { toggleMark, mayDeleteCodeBlock } from "@editor/commands";
+import { trKeyToggleMark } from "@editor/trKeys";
+import { toggleMarkState as toggleActive } from "@editor/composable/useToggleableMarksState";
 
 const mac =
   typeof navigator != "undefined" ? /Mac/.test(navigator.platform) : false;

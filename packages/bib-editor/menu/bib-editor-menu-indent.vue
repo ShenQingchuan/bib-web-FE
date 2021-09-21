@@ -16,7 +16,7 @@
 <script setup lang="ts">
 import { inject } from 'vue';
 import { MenuUnfoldOutlined, MenuFoldOutlined } from '@ant-design/icons-vue';
-import type { EditorInstance } from '../typings';
+import type { EditorInstance } from '@editor/typings';
 
 // @States:
 const editorInstance = inject<EditorInstance>("editorInstance")!;

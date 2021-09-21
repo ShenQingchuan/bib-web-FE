@@ -1,7 +1,7 @@
 import { Command } from "prosemirror-commands";
 import { EditorState, Transaction } from "prosemirror-state";
-import { EditorSchema } from "../editor-schema";
-import { overlayClassName as codeBlockOverlayClassName } from "../node-views/code-block-view";
+import { EditorSchema } from "@editor/editor-schema";
+import { overlayClassName as codeBlockOverlayClassName } from "@editor/node-views";
 
 const codeBlockContainerSelector = (uuid: string) =>
   `.bib-editor__code-block-container[uuid=${uuid}]`;

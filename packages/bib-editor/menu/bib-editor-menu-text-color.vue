@@ -52,9 +52,9 @@
 <script setup lang="ts">
 import { ref, inject, onMounted, computed } from 'vue';
 import { DownOutlined } from '@ant-design/icons-vue';
-import { EditorSchema } from "../editor-schema"
-import type { EditorInstance } from "../typings";
-import { shieldYjsTrascationEvent } from '../utils';
+import { EditorSchema } from "@editor/editor-schema"
+import type { EditorInstance } from "@editor/typings";
+import { shieldYjsTrascationEvent } from '@editor/utils';
 
 const defaultColor = '#000000'
 // @States:

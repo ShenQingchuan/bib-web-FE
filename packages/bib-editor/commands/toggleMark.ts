@@ -1,8 +1,8 @@
 import { Command, toggleMark as _tm } from "prosemirror-commands"
 import { Transaction } from "prosemirror-state";
-import { EditorSchema } from "../editor-schema";
-import type { CanToggleMark } from "../typings";
-import { pipeBibEditorDispatch } from "../utils";
+import { EditorSchema } from "@editor/editor-schema";
+import type { CanToggleMark } from "@editor/typings";
+import { pipeBibEditorDispatch } from "@editor/utils";
 
 const toggleMark: (
   markType: CanToggleMark,

@@ -20,15 +20,15 @@
 <script setup lang="ts">
 import { inject, onMounted, ref, computed } from "vue";
 import { NodeType } from "prosemirror-model";
-import { EditorSchema, listTypeNames } from '../editor-schema';
+import { EditorSchema, listTypeNames } from '@editor/editor-schema';
 import {
   OrderedListOutlined,
   UnorderedListOutlined,
   CheckSquareOutlined
 } from '@ant-design/icons-vue';
 import { findParentNode } from "prosemirror-utils";
-import type { EditorInstance } from "../typings";
-import { shieldYjsTrascationEvent } from "../utils";
+import type { EditorInstance } from "@editor/typings";
+import { shieldYjsTrascationEvent } from "@editor/utils";
 
 // @States:
 const editorInstance = inject<EditorInstance>("editorInstance")!;

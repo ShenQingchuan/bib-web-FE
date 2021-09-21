@@ -32,7 +32,7 @@
 <script setup lang="ts">
 import { ref, inject } from 'vue';
 import { InsertTable } from '@icon-park/vue-next';
-import type { EditorInstance } from '../typings';
+import type { EditorInstance } from '@editor/typings';
 
 // @States:
 const gridVisible = ref(false);

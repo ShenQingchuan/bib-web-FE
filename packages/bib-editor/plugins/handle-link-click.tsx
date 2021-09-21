@@ -1,3 +1,4 @@
+import getMarkRange from "../helpers/get-mark-range";
 import getMarkAttributes from "../helpers/get-mark-attributes";
 import { Plugin, PluginKey } from "prosemirror-state";
 import { Modal, Form, Input } from "ant-design-vue";
@@ -7,7 +8,6 @@ import { EditorSchema } from "../editor-schema";
 import { trKeyLinkChange } from "../trKeys";
 import { EditorView } from "prosemirror-view";
 import { URL_REGEX } from "@/utils";
-import getMarkRange from "../helpers/get-mark-range";
 
 const {
   marks: { link: linkMarkType }

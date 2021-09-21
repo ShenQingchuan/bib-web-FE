@@ -1,38 +1,22 @@
+import { ref } from 'vue';
 import * as pmutils from 'prosemirror-utils';
-import * as Y from 'yjs';
-import randomColor from 'randomcolor';
 import TaskItemView from '../node-views/task-item-view';
-import placeholder from '../plugins/placeholder';
-import handleLinkClick from '../plugins/handle-link-click';
-import codeBlockPlugin, { removeCodeBlockOverlay } from '../plugins/code-view-plugin';
 import { EditorState } from 'prosemirror-state';
 import { EditorView } from 'prosemirror-view';
 import { Node, NodeType, MarkType, Schema } from 'prosemirror-model';
-import { addBibKeymap } from '../helpers/add-bib-keymap';
-import { buildInputRules, buildPasteRules } from '../input-rules';
-import { dropCursor } from 'prosemirror-dropcursor';
-import { gapCursor } from 'prosemirror-gapcursor';
-import { history } from 'prosemirror-history';
 import { EditorSchema } from '../editor-schema';
-import { ref } from 'vue';
 import {
   liftListItem,
   sinkListItem,
   wrapInList
 } from 'prosemirror-schema-list';
-import { WebsocketProvider } from 'y-websocket';
-import { ySyncPlugin, yCursorPlugin, yUndoPlugin } from 'y-prosemirror';
-import { keymap } from 'prosemirror-keymap';
 import {
-  baseKeymap,
   Command,
   lift,
   setBlockType,
   wrapIn
 } from 'prosemirror-commands';
-import CodeBlockView, {
-  arrowHandlersInCodeBlock
-} from '../node-views/code-block-view';
+import CodeBlockView from '../node-views/code-block-view';
 import type {
   BibEditorOptions,
   DispatchHook,
@@ -43,7 +27,7 @@ import type {
   OnlineUser,
   TableCommand
 } from '../typings';
-import { insertOnlineImage } from '../helpers/insert-online-img';
+import { insertOnlineImage } from '@editor/helpers/insert-online-img';
 import {
   trKeyToggleMark,
   trKeyHeading,
@@ -55,14 +39,14 @@ import {
   trKeyFontSize,
   trKeyIndent
 } from '../trKeys';
-import { mathPlugin, mathSerializer } from '@benrbray/prosemirror-math';
+import { mathSerializer } from '@benrbray/prosemirror-math';
 import VideoIframeView from '../node-views/video-iframe';
-import { insertVideoIframe } from '../helpers/insert-video-iframe';
-import { columnResizing, goToNextCell, tableEditing } from 'prosemirror-tables';
+import { insertVideoIframe } from '@editor/helpers/insert-video-iframe';
 import { insertTableCommand, clearNodes, toggleMark } from '../commands';
-import execTableCommandFn from '../helpers/exec-table-command';
+import execTableCommandFn from '@editor/helpers/exec-table-command';
 import pipeBibEditorDispatch from './pipeBibEditorDispatch';
-import { userDetailsStorageRef } from '@/utils';
+import { importBasePlugins, useYjs } from '../plugins';
+import { removeCodeBlockOverlay } from '../plugins/code-view-plugin';
 
 function isListNodeType(node: Node, schema: Schema) {
   return (
@@ -102,93 +86,16 @@ export function useEditor(options: BibEditorOptions) {
 
   /** 初始化 EditorView 方法（可通过 ref hook） */
   const initEditor = (el: any) => {
-    let initState: EditorState, provider: WebsocketProvider;
-    let plugins = [
-      history(),
-      buildInputRules(EditorSchema),
-      ...buildPasteRules(EditorSchema),
-      addBibKeymap(EditorSchema),
-      keymap(baseKeymap),
-      keymap({
-        Tab: goToNextCell(1),
-        'Shift-Tab': goToNextCell(-1)
-      }),
-      // @ts-ignore :: 此处 prosemirror-tables 类型定义存疑
-      columnResizing(),
-      tableEditing(),
-      dropCursor(),
-      gapCursor(),
-      placeholder(
-        !options.readonly
-          ? (options.placeholder || '写点什么吧 ...')
-          : '文章还没有任何内容...'
-      ),
-      arrowHandlersInCodeBlock,
-      handleLinkClick,
-      mathPlugin,
-      codeBlockPlugin(),
-    ];
+    let initState: EditorState;
+    let plugins = importBasePlugins(options);
+    const [yjsPlugins, provider] = useYjs(options, {
+      cursorColor,
+      onlineOtherUsers
+    });
 
     // 编辑模式 启用协同相关插件
     if (!options.readonly) {
-      const ydoc = new Y.Doc();
-      // Y.js 协同配置：
-      provider = new WebsocketProvider(
-        process.env.NODE_ENV === 'production'
-          ? 'wss://bibyjs.techdict.pro'
-          : 'ws://localhost:2048',
-        options.docName,
-        ydoc
-      );
-      const credential = options.credential;
-      plugins = plugins.concat([
-        ySyncPlugin(ydoc.getXmlFragment(options.docName)),
-        // @ts-ignore :: 此处该库类型定义存疑
-        yCursorPlugin(provider.awareness, {
-          cursorBuilder: (user) => {
-            const cursor = document.createElement('span');
-            cursor.classList.add('ProseMirror-yjs-cursor');
-            cursor.style.borderColor = user.color;
-
-            const dot = document.createElement('div');
-            dot.classList.add('ProseMirror-yjs-cursor__dot');
-            dot.style.backgroundColor = user.color;
-
-            const userDiv = document.createElement('div');
-            userDiv.classList.add('ProseMirror-yjs-cursor__user-name');
-            userDiv.style.backgroundColor = user.color;
-            userDiv.insertBefore(document.createTextNode(user.name), null);
-
-            cursor.insertBefore(dot, null);
-            cursor.insertBefore(userDiv, null);
-            return cursor;
-          }
-        }),
-        yUndoPlugin()
-      ]);
-
-      // 更新本文档在线的其他用户
-      // @ts-ignore
-      provider.awareness.on('update', () => {
-        onlineOtherUsers.value = [...provider.awareness.getStates().entries()]
-          .filter((s) => s[0] !== provider.awareness.clientID)
-          .map((s) => ({
-            userId: s[1].user.uid,
-            userName: s[1].user.name,
-            avatarURL: s[1].user.avatarURL,
-            color: s[1].user.color
-          }));
-      });
-
-      cursorColor.value = randomColor({
-        luminosity: 'dark'
-      });
-      provider.awareness.setLocalStateField('user', {
-        color: cursorColor.value,
-        name: credential?.userName,
-        uid: credential?.userId,
-        avatarURL: userDetailsStorageRef.value?.avatarURL || credential?.avatarURL || ''
-      });
+      plugins = plugins.concat(yjsPlugins);
 
       initState = EditorState.create({
         schema: EditorSchema,

@@ -1,23 +1,17 @@
-import { ref } from 'vue';
-import * as pmutils from 'prosemirror-utils';
-import TaskItemView from '../node-views/task-item-view';
-import { EditorState } from 'prosemirror-state';
-import { EditorView } from 'prosemirror-view';
-import { Node, NodeType, MarkType, Schema } from 'prosemirror-model';
-import { EditorSchema } from '../editor-schema';
+import { ref } from "vue";
+import { EditorState } from "prosemirror-state";
+import { EditorView } from "prosemirror-view";
+import { Node, NodeType, Schema } from "prosemirror-model";
+import { Command, lift, setBlockType, wrapIn } from "prosemirror-commands";
 import {
   liftListItem,
   sinkListItem,
   wrapInList
-} from 'prosemirror-schema-list';
+} from "prosemirror-schema-list";
+import * as pmutils from "prosemirror-utils";
+import { mathSerializer } from "@benrbray/prosemirror-math";
+import { EditorSchema } from "@editor/editor-schema";
 import {
-  Command,
-  lift,
-  setBlockType,
-  wrapIn
-} from 'prosemirror-commands';
-import CodeBlockView from '../node-views/code-block-view';
-import type {
   BibEditorOptions,
   DispatchHook,
   EditorCompose,
@@ -26,8 +20,7 @@ import type {
   InsertImageType,
   OnlineUser,
   TableCommand
-} from '../typings';
-import { insertOnlineImage } from '@editor/helpers/insert-online-img';
+} from "@editor/typings";
 import {
   trKeyToggleMark,
   trKeyHeading,
@@ -38,15 +31,25 @@ import {
   trKeyHr,
   trKeyFontSize,
   trKeyIndent
-} from '../trKeys';
-import { mathSerializer } from '@benrbray/prosemirror-math';
-import VideoIframeView from '../node-views/video-iframe';
-import { insertVideoIframe } from '@editor/helpers/insert-video-iframe';
-import { insertTableCommand, clearNodes, toggleMark } from '../commands';
-import execTableCommandFn from '@editor/helpers/exec-table-command';
-import pipeBibEditorDispatch from './pipeBibEditorDispatch';
-import { importBasePlugins, useYjs } from '../plugins';
-import { removeCodeBlockOverlay } from '../plugins/code-view-plugin';
+} from "@editor/trKeys";
+import {
+  VideoIframeView,
+  CodeBlockView,
+  TaskItemView
+} from "@editor/node-views";
+import {
+  importBasePlugins,
+  useYjs,
+  removeCodeBlockOverlay
+} from "@editor/plugins";
+import { insertTableCommand, clearNodes, toggleMark } from "@editor/commands";
+import {
+  execTableCommand as execTableCommandFn,
+  insertVideoIframe,
+  insertOnlineImage,
+  createToggleColorCommand
+} from "@editor/helpers";
+import { pipeBibEditorDispatch } from "@editor/utils";
 
 function isListNodeType(node: Node, schema: Schema) {
   return (
@@ -58,31 +61,7 @@ function isListNodeType(node: Node, schema: Schema) {
 
 export function useEditor(options: BibEditorOptions) {
   const onlineOtherUsers = ref<OnlineUser[]>([]);
-  const cursorColor = ref('');
-
-  // inner helper: 创建切换颜色的 Command，分别用于文字颜色和高亮颜色
-  const createToggleColorCommand = (view: EditorView, markType: MarkType, trKey: string) => {
-    return (color: string) => {
-      const { state, dispatch } = view;
-      const { selection, tr } = state;
-      const { from, to, empty } = selection;
-
-      const colorMark = markType.create({
-        color
-      });
-      // 是选区状态
-      if (!empty) {
-        tr.addMark(from, to, colorMark);
-      }
-      // 是光标状态
-      else {
-        tr.addStoredMark(colorMark);
-      }
-
-      tr.setMeta('trKey', trKey);
-      dispatch(tr);
-    };
-  };
+  const cursorColor = ref("");
 
   /** 初始化 EditorView 方法（可通过 ref hook） */
   const initEditor = (el: any) => {
@@ -103,7 +82,10 @@ export function useEditor(options: BibEditorOptions) {
       });
     } else {
       initState = EditorState.create({
-        doc: Node.fromJSON(EditorSchema, JSON.parse(options.contentForViewRender!)),
+        doc: Node.fromJSON(
+          EditorSchema,
+          JSON.parse(options.contentForViewRender!)
+        ),
         schema: EditorSchema,
         plugins
       });
@@ -115,11 +97,11 @@ export function useEditor(options: BibEditorOptions) {
         try {
           const newState = view.state.apply(tr);
           view.updateState(newState);
-          editorInstance.dispatchHooks.forEach((hook) => {
+          editorInstance.dispatchHooks.forEach(hook => {
             hook(tr, hook.hookMeta);
           });
         } catch (err) {
-          console.log('[BibEditor ProseMirror Error]: ', err);
+          console.log("[BibEditor ProseMirror Error]: ", err);
         }
       },
       nodeViews: {
@@ -137,7 +119,7 @@ export function useEditor(options: BibEditorOptions) {
       editable() {
         return !options.readonly;
       },
-      clipboardTextSerializer: (slice) => {
+      clipboardTextSerializer: slice => {
         return mathSerializer.serializeSlice(slice);
       }
     });
@@ -154,13 +136,11 @@ export function useEditor(options: BibEditorOptions) {
       toggleHeading(attrs: { level: number }) {
         view.focus();
         const { level } = attrs;
-        setBlockType(EditorSchema.nodes.heading, attrs)(
-          view.state,
-          (tr) =>
-            pipeBibEditorDispatch(view.dispatch, tr, {
-              trKey: trKeyHeading,
-              level
-            })
+        setBlockType(EditorSchema.nodes.heading, attrs)(view.state, tr =>
+          pipeBibEditorDispatch(view.dispatch, tr, {
+            trKey: trKeyHeading,
+            level
+          })
         );
       },
       /** 切换 字体大小 */
@@ -182,7 +162,7 @@ export function useEditor(options: BibEditorOptions) {
           tr.addStoredMark(sizeMark);
         }
 
-        tr.setMeta('trKey', trKeyFontSize);
+        tr.setMeta("trKey", trKeyFontSize);
         dispatch(tr);
       },
       /** 切换 文字对齐方向 */
@@ -208,7 +188,7 @@ export function useEditor(options: BibEditorOptions) {
           const selection = view.state.selection;
           const { from, to } = selection;
           const parent = pmutils.findParentNode(
-            (node) => node.type.name === 'list_item'
+            node => node.type.name === "list_item"
           )(selection);
           if (parent) {
             const newAttrs = {
@@ -225,25 +205,25 @@ export function useEditor(options: BibEditorOptions) {
           });
         }
 
-        tr.setMeta('trKey', trKeyAlign);
+        tr.setMeta("trKey", trKeyAlign);
         view.dispatch(tr);
       },
       /** 增加/减少缩进 */
-      updateIndent(t: '+' | '-') {
+      updateIndent(t: "+" | "-") {
         view.focus();
         const { state, dispatch } = view;
         const { selection, tr, doc } = state;
         const { from, to } = selection;
 
-        const listParent = pmutils.findParentNode((node) =>
-          ['bullet_list', 'ordered_list', 'task_list'].includes(node.type.name)
+        const listParent = pmutils.findParentNode(node =>
+          ["bullet_list", "ordered_list", "task_list"].includes(node.type.name)
         )(selection);
         // 对于在 List 里的情况，特殊化处理：
         if (listParent) {
           const listItemType = EditorSchema.nodes.list_item,
             taskItemType = EditorSchema.nodes.task_item;
           const runCommandForListCases = (cmd: Command) => {
-            cmd(state, (tr) =>
+            cmd(state, tr =>
               pipeBibEditorDispatch(view.dispatch, tr, {
                 trKey: trKeyIndent
               })
@@ -253,11 +233,11 @@ export function useEditor(options: BibEditorOptions) {
             listParent.node.type === EditorSchema.nodes.ordered_list ||
             listParent.node.type === EditorSchema.nodes.bullet_list
           ) {
-            t === '+'
+            t === "+"
               ? runCommandForListCases(sinkListItem(listItemType))
               : runCommandForListCases(liftListItem(listItemType));
           } else if (listParent.node.type === EditorSchema.nodes.task_list) {
-            t === '+'
+            t === "+"
               ? runCommandForListCases(sinkListItem(taskItemType))
               : runCommandForListCases(liftListItem(taskItemType));
           }
@@ -269,12 +249,12 @@ export function useEditor(options: BibEditorOptions) {
               return;
             }
             let textIndent = node.attrs?.textIndent;
-            t === '+' ? (textIndent += 1) : (textIndent -= 1);
+            t === "+" ? (textIndent += 1) : (textIndent -= 1);
             tr.setNodeMarkup(pos, null as any, {
               ...node.attrs,
               textIndent
             });
-            tr.setMeta('trKey', trKeyIndent);
+            tr.setMeta("trKey", trKeyIndent);
             dispatch(tr);
           });
         }
@@ -289,10 +269,14 @@ export function useEditor(options: BibEditorOptions) {
         if (!range) {
           return;
         }
-        const parentList = pmutils.findParentNode((node) =>
+        const parentList = pmutils.findParentNode(node =>
           isListNodeType(node, schema)
         )(selection);
-        if (range.depth >= 1 && parentList && range.depth - parentList.depth <= 1) {
+        if (
+          range.depth >= 1 &&
+          parentList &&
+          range.depth - parentList.depth <= 1
+        ) {
           // turn-off this kind of list when it's already active
           if (parentList.node.type === listType) {
             liftListItem(itemType)(state, dispatch);
@@ -304,7 +288,7 @@ export function useEditor(options: BibEditorOptions) {
           if (isListNodeType(parentList.node, schema) && dispatch) {
             if (listType.validContent(parentList.node.content)) {
               tr.setNodeMarkup(parentList.pos, listType);
-              tr.setMeta('trKey', trKeyList);
+              tr.setMeta("trKey", trKeyList);
               return dispatch(tr);
             } else {
               clearNodes()(state, dispatch);
@@ -331,23 +315,25 @@ export function useEditor(options: BibEditorOptions) {
       toggleTextColor: createToggleColorCommand(
         view,
         EditorSchema.marks.colored,
-        trKeyTextColor,
+        trKeyTextColor
       ),
       /** 切换 文字背景高亮颜色 */
       toggleTextBgColor: createToggleColorCommand(
         view,
         EditorSchema.marks.hightlighted,
-        trKeyTextColor,
+        trKeyTextColor
       ),
       /** 切换 文字引用块 */
       toggleQuoteBlock() {
         view.focus();
         const { selection } = view.state;
-        const parentHasQuote = pmutils.findParentNode((node) => {
-          return ['blockquote'].includes(node.type.name);
+        const parentHasQuote = pmutils.findParentNode(node => {
+          return ["blockquote"].includes(node.type.name);
         })(selection);
-        const command = parentHasQuote ? lift : wrapIn(EditorSchema.nodes.blockquote);
-        command(view.state, (tr) =>
+        const command = parentHasQuote
+          ? lift
+          : wrapIn(EditorSchema.nodes.blockquote);
+        command(view.state, tr =>
           pipeBibEditorDispatch(view.dispatch, tr, {
             trKey: trKeyQuote
           })
@@ -359,16 +345,16 @@ export function useEditor(options: BibEditorOptions) {
         tr.replaceSelectionWith(
           EditorSchema.nodes.horizontal_line.create()
         ).scrollIntoView();
-        tr.setMeta('trKey', trKeyHr);
+        tr.setMeta("trKey", trKeyHr);
         view.dispatch(tr);
         view.focus();
       },
       /** 插入 图片 */
       insertImage(insertType: InsertImageType) {
         view.focus();
-        if (insertType === 'local') {
+        if (insertType === "local") {
           const inputer: HTMLInputElement | null = document.querySelector(
-            '.bib-editor__local-image-inputer'
+            ".bib-editor__local-image-inputer"
           );
           inputer?.click();
           // 呼出文件上传窗口，后续由 input 的 @change 事件接管
@@ -422,14 +408,13 @@ export function useEditor(options: BibEditorOptions) {
     options.onViewCreated?.(view);
 
     // editor pointer trasaction handle
-    editorInstance.onEditorDispatched((tr) => {
-      if (tr.getMeta('pointer') === true) {
+    editorInstance.onEditorDispatched(tr => {
+      if (tr.getMeta("pointer") === true) {
         removeCodeBlockOverlay();
       }
     });
     return editorInstance;
   };
-  
 
   return {
     initEditor,

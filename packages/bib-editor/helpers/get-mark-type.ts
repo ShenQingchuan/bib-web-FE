@@ -1,6 +1,6 @@
 import { MarkType, Schema } from "prosemirror-model";
 
-export default function getMarkType(
+export function getMarkType(
   nameOrType: string | MarkType,
   schema: Schema
 ): MarkType {

@@ -3,7 +3,7 @@ import { Modal, Form, Input } from "ant-design-vue";
 import { Transaction } from "prosemirror-state";
 import { EditorSchema } from "../editor-schema";
 import { trKeyInsertVideo } from "../trKeys";
-import getIframeSrc from "./getIframeSrc";
+import { getIframeSrc } from "./getIframeSrc";
 
 export function insertVideoIframe(
   icon: string,

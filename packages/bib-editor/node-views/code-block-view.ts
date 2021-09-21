@@ -106,7 +106,7 @@ export const arrowHandlersInCodeBlock = keymap({
 });
 
 export const overlayClassName = "bib-editor__code-block-overlay";
-export default class CodeBlockView implements NodeView {
+export class CodeBlockView implements NodeView {
   dom: HTMLElement;
   node: Node;
   view: EditorView;

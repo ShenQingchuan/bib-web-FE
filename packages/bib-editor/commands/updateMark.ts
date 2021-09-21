@@ -1,6 +1,6 @@
 import { MarkType } from "prosemirror-model";
 import { EditorState, Transaction } from "prosemirror-state";
-import getMarkRange from "../helpers/get-mark-range";
+import { getMarkRange } from "@editor/helpers";
 
 const updateMark = (type: MarkType, attrs?: Record<string, any>) => {
   return (state: EditorState, dispatch: (tr: Transaction) => void) => {

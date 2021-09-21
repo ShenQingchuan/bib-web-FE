@@ -1,7 +1,7 @@
 import { Node } from "prosemirror-model";
 import { EditorView, NodeView } from "prosemirror-view";
 
-export default class VideoIframeView implements NodeView {
+export class VideoIframeView implements NodeView {
   dom: HTMLElement;
   node: Node;
   view: EditorView;

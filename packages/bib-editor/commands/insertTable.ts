@@ -1,5 +1,5 @@
 import { EditorState, TextSelection, Transaction } from "prosemirror-state";
-import createTable, { CreateTableArgs } from "../helpers/create-table";
+import { createTable, CreateTableArgs } from "@editor/helpers";
 import { trKeyInsertTable } from "../trKeys";
 
 const insertTableCommand = ({

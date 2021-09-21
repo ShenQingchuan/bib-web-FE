@@ -28,12 +28,10 @@ const tableToolkits = {
 };
 
 /** 表格工具命令 */
-const execTableCommand = (
+export const execTableCommand = (
   state: EditorState,
   dispatch: (tr: Transaction) => void,
   cmdName: TableCommand
 ) => {
   tableToolkits[cmdName](state, dispatch);
 };
-
-export default execTableCommand;

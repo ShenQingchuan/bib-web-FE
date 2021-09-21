@@ -9,7 +9,7 @@ export interface CreateTableArgs {
   cellContent?: any;
 }
 
-export default function createTable(
+export function createTable(
   state: EditorState,
   rowsCount: number,
   colsCount: number,

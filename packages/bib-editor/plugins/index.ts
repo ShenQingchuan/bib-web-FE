@@ -2,10 +2,10 @@ import { Plugin } from "prosemirror-state";
 import { history } from "prosemirror-history";
 import { EditorSchema } from "../editor-schema";
 import { buildInputRules, buildPasteRules } from "../input-rules";
-import { addBibKeymap } from "../helpers/add-bib-keymap";
+import { addBibKeymap } from "@editor/helpers";
 import { keymap } from "prosemirror-keymap";
 import { baseKeymap } from "prosemirror-commands";
-import { goToNextCell, tableEditing } from "prosemirror-tables";
+import { goToNextCell, tableEditing, columnResizing } from "prosemirror-tables";
 import { dropCursor } from "prosemirror-dropcursor";
 import { gapCursor } from "prosemirror-gapcursor";
 import { arrowHandlersInCodeBlock } from "../node-views/code-block-view";
@@ -20,6 +20,10 @@ import handleLinkClick from "./handle-link-click";
 import codeBlockPlugin from "./code-view-plugin";
 import { WebsocketProvider } from "y-websocket";
 import { Ref } from "vue";
+
+export * from "./placeholder";
+export * from "./code-view-plugin";
+export * from "./handle-link-click";
 
 interface YjsPluginContext {
   cursorColor: Ref<string>;

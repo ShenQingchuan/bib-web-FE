@@ -2,7 +2,7 @@ import { Node } from "prosemirror-model";
 import { EditorView, NodeView } from "prosemirror-view";
 import { EditorSchema } from "../editor-schema";
 
-export default class TaskItemView implements NodeView {
+export class TaskItemView implements NodeView {
   dom: HTMLElement;
   contentDOM?: HTMLElement;
   node: Node;

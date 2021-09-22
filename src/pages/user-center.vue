@@ -230,7 +230,7 @@ const fetchUserActivity = async () => {
   }
   const UserActivitiesRes = await fusions.get(`/activity/?userName=${userName}&pageNum=${page.value}`);
   if (UserActivitiesRes.data.responseOk) {
-    activities.value.push(...UserActivitiesRes.data.data.items);
+    activities.value.push(...UserActivitiesRes.data.data.activities);
 
     if (page.value === 0) {
       pageTotal.value = UserActivitiesRes.data.data.pageTotal;

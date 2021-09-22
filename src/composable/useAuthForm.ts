@@ -20,7 +20,7 @@ export enum LoginRegisterFormError {
   USEREMAIL_FORMAT_INVALID = "邮箱格式不正确！",
   USEREMAIL_NOTFOUND = "该邮箱未注册！",
   USERNAME_FORMAT_INVALID = "用户名格式不正确！",
-  PASSWORD_FORMAT_INVALID = "密码格式不正确！",
+  PASSWORD_FORMAT_INVALID = "密码格式6-16位，必须含大写、小写字母、数字",
   PHONE_FORMAT_INVALID = "手机号码格式不正确！",
   PHONE_VERIFY_FORMAT_INVALID = "短信验证码格式不正确！",
   PASSWORD_NOTSAME = "两次密码输入不一致！",
@@ -149,20 +149,25 @@ export function useLoginForm() {
             );
             return;
           }
-          const res = await fusions.post(
-            "/user/login",
-            _.omit(loginForm, ["userEmail"])
-          );
-          if (res.data.responseOk) {
-            message.success($content("登录成功！"));
-            tokenStorageRef.value = res.data.data.token;
-            nextTick(() => {
-              router.push("/dashboard");
-            });
-          }
+          fusions
+            .post("/user/login", _.omit(loginForm, ["userEmail"]))
+            .then(res => {
+              if (res.data.responseOk) {
+                message.success($content("登录成功！"));
+                tokenStorageRef.value = res.data.data.token;
+                nextTick(() => {
+                  router.push("/dashboard");
+                });
+              }
+            })
+            .catch(() =>
+              message.error(
+                $content(LoginRegisterFormError.LOGIN_REQUEST_FAILED)
+              )
+            );
         })
         .catch(() => {
-          message.error($content(LoginRegisterFormError.LOGIN_REQUEST_FAILED));
+          message.error($content(LoginRegisterFormError.FORM_VALIDATE_FAILED));
         });
     },
     2000,
@@ -277,24 +282,27 @@ export function useRegisterForm() {
             return;
           }
 
-          const res = await fusions.post(
-            "/user/register",
-            _.omit(registerForm, ["confirmPassword"])
-          );
-          if (res.data.responseOk) {
-            message.success($content("注册成功！"));
-            router.push({
-              path: "/login",
-              query: {
-                userName: registerForm.userName
+          fusions
+            .post("/user/register", _.omit(registerForm, ["confirmPassword"]))
+            .then(res => {
+              if (res.data.responseOk) {
+                message.success($content("注册成功！"));
+                router.push({
+                  path: "/login",
+                  query: {
+                    userName: registerForm.userName
+                  }
+                });
               }
+            })
+            .catch(() => {
+              message.error(
+                $content(LoginRegisterFormError.REGISTER_REQUEST_FAILED)
+              );
             });
-          }
         })
         .catch(() => {
-          message.error(
-            $content(LoginRegisterFormError.REGISTER_REQUEST_FAILED)
-          );
+          message.error($content(LoginRegisterFormError.FORM_VALIDATE_FAILED));
         });
     },
     2000,

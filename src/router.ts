@@ -164,6 +164,7 @@ router.beforeEach(async (to, from, next) => {
       next("/dashboard");
     } else if (to.path === "/login") {
       message.warn("您已经登录，若要重新登录请退出当前帐号！");
+      next("/dashboard");
     } else if (/^\/wiki\/\d+\/manage$/g.test(to.path)) {
       next(to.path + "/docs");
     } else next();

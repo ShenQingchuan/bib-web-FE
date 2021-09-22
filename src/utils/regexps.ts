@@ -1,8 +1,8 @@
 // （中国大陆）手机号：宽松版本，1 开头的 10 位
 export const MOBILE_PHONE_REGEXP = /^\d{11}$/;
 
-// 密码： 最少6位，包括至少1个大写字母，1个小写字母，1个数字，1个特殊字符
-export const PASSWORD_REGEXP = /^\S*(?=\S{6,})(?=\S*\d)(?=\S*[A-Z])(?=\S*[a-z])(?=\S*[!@\-#$%^&*? ])\S*$/;
+// 密码：最少 6 位，最多 16 位，包括至少1个大写字母，1个小写字母，1个数字，可以包含特殊字符 ~!@#$%^&*
+export const PASSWORD_REGEXP = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])[a-zA-Z0-9~!@#$%^&*-]{6,16}$/;
 
 // 用户名：
 export const USERNAME_REGEXP = /^[a-zA-Z0-9#._-]{4,16}$/;

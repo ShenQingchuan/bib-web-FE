@@ -16,7 +16,7 @@
       <a-menu>
         <a-menu-item
           v-for="lang in supportLangs"
-          @click="setLangSpec(lang)"
+          @click="setLangSpec(lang.toLowerCase())"
           :key="lang"
         >
           {{ lang }}

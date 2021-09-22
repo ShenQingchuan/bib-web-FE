@@ -53,6 +53,8 @@ import {
 } from "@editor/helpers";
 import { pipeBibEditorDispatch } from "@editor/utils";
 import { useTableOfContents } from "./useTableOfContents";
+import { Keys } from "@/utils";
+import { message } from "ant-design-vue";
 
 function isListNodeType(node: Node, schema: Schema) {
   return (
@@ -81,6 +83,19 @@ export function useEditor(options: BibEditorOptions) {
       initState = EditorState.create({
         schema: EditorSchema,
         plugins: plugins.concat(yjsPlugins)
+      });
+      (el as HTMLElement).addEventListener("keydown", (e: KeyboardEvent) => {
+        if (
+          (e.metaKey || e.ctrlKey) &&
+          e.key === Keys.Key_S.keyName.toLowerCase()
+        ) {
+          e.preventDefault(); // 阻止浏览器保存网页
+          message.success({
+            content: "文档内容已经实时保存",
+            key: "doc-already-auto-saved-msg",
+            duration: 1
+          });
+        }
       });
     }
     // 只读模式

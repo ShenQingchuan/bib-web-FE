@@ -124,10 +124,11 @@ import { useRoute } from 'vue-router';
 import { ThumbsUp, FileLock } from '@icon-park/vue-next';
 import { fetchDocFromPersistence, fusions } from '@/fusions';
 import { useEditor } from "@editor/composable/useEditor";
-import { bindClickScrollHandler } from '@editor/composable/useTableOfContents';
+import { bindClickScrollHandler, initLoadFromHash } from '@editor/composable/useTableOfContents';
 import { usePayloadFromToken, isBibUserTokenValid } from "@/utils";
 import { savedDocViewData } from "./editing-doc-storage-ref";
 import { message } from "ant-design-vue";
+import { bibEditorHeadingSelector } from "@editor/constants";
 import DocViewHeader from '@/components/page-doc-view/doc-view-header.vue';
 import DocComment from '@/components/page-doc-view/doc-comment.vue';
 import DocSideToc from '@/components/DocSideToc/doc-side-toc.vue';
@@ -290,10 +291,11 @@ Promise.all([
     nextTick(() => {
       headingRefs.value = Array.from(
         docViewRef.value!.querySelectorAll(
-          '.ProseMirror h1,h2,h3,h4,h5,h6'
+          bibEditorHeadingSelector
         ) as NodeListOf<HTMLHeadingElement>
       );
       bindClickScrollHandler(headingRefs, tocItemRefs);
+      initLoadFromHash(headingRefs);
     });
   }
 });

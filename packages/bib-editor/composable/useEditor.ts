@@ -10,7 +10,7 @@ import {
 } from "prosemirror-schema-list";
 import * as pmutils from "prosemirror-utils";
 import { mathSerializer } from "@benrbray/prosemirror-math";
-import { EditorSchema } from "@editor/editor-schema";
+import { EditorSchema } from "@editor/schemas";
 import {
   BibEditorOptions,
   DispatchHook,
@@ -55,6 +55,7 @@ import { pipeBibEditorDispatch } from "@editor/utils";
 import { useTableOfContents } from "./useTableOfContents";
 import { Keys } from "@/utils";
 import { message } from "ant-design-vue";
+import { bibEditorHeadingSelector } from "../constants";
 
 function isListNodeType(node: Node, schema: Schema) {
   return (

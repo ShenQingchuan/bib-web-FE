@@ -20,7 +20,7 @@
 <script setup lang="ts">
 import { inject, onMounted, ref, computed } from "vue";
 import { NodeType } from "prosemirror-model";
-import { EditorSchema, listTypeNames } from '@editor/editor-schema';
+import { EditorSchema, listTypeNames } from '@editor/schemas';
 import {
   OrderedListOutlined,
   UnorderedListOutlined,

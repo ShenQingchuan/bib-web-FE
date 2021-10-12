@@ -15,7 +15,7 @@
 
 <script setup lang="ts">
 import { inject, ref, onMounted } from 'vue';
-import { EditorSchema } from '@editor/editor-schema';
+import { EditorSchema } from '@editor/schemas';
 import Icon from "@ant-design/icons-vue";
 import QuoteNodeIcon from '@editor/icons/quote-node-icon.vue';
 import type { EditorInstance } from "@editor/typings";

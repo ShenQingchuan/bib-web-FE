@@ -18,7 +18,7 @@
 import { inject, onMounted, Ref } from "vue";
 import type { EditorInstance, CanToggleMark } from "@editor/typings";
 import us from "underscore";
-import { EditorSchema } from "@editor/editor-schema";
+import { EditorSchema } from "@editor/schemas";
 import { shieldYjsTrascationEvent } from "@editor/utils";
 import { toggleMarkState, useMarks } from "@editor/composable/useToggleableMarksState";
 import { trKeyToggleMark } from "@editor/trKeys";

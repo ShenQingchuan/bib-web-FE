@@ -1,6 +1,6 @@
 import { Command } from "prosemirror-commands";
 import { EditorState, Transaction } from "prosemirror-state";
-import { EditorSchema } from "@editor/editor-schema";
+import { EditorSchema } from "@editor/schemas";
 import { overlayClassName as codeBlockOverlayClassName } from "@editor/node-views";
 
 const codeBlockContainerSelector = (uuid: string) =>

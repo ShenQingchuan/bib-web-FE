@@ -28,7 +28,7 @@
 <script setup lang="ts">
 import { ref, inject, onMounted } from 'vue';
 import { CaretDownOutlined, CheckOutlined } from "@ant-design/icons-vue";
-import { EditorSchema } from "@editor/editor-schema"
+import { EditorSchema } from "@editor/schemas"
 import type { EditorInstance } from "@editor/typings";
 import { shieldYjsTrascationEvent } from '@editor/utils';
 

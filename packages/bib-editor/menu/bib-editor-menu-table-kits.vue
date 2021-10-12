@@ -53,7 +53,7 @@
 <script setup lang="ts">
 import { inject, onMounted } from 'vue';
 import { MergeCells, SplitCells } from '@icon-park/vue-next';
-import { EditorSchema } from "@editor/editor-schema";
+import { EditorSchema } from "@editor/schemas";
 import Icon from '@ant-design/icons-vue';
 import IconInsertColBefore from '@editor/icons/editor__insert-col-after.vue';
 import IconInsertColAfter from '@editor/icons/editor__insert-row-after.vue';

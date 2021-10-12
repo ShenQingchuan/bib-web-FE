@@ -92,7 +92,7 @@ export function headingRule(nodeType: NodeType, maxLevel: number) {
   return textblockTypeInputRule(
     new RegExp("^(#{1," + maxLevel + "})\\s$"),
     nodeType,
-    match => ({ level: match[1].length })
+    match => ({ level: match[1].length, uuid: getUUID(6) })
   );
 }
 

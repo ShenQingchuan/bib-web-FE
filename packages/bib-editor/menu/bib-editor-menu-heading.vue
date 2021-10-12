@@ -33,10 +33,12 @@
 import { computed, inject, onMounted, ref } from "vue";
 import { CaretDownOutlined } from "@ant-design/icons-vue";
 import { setBlockType } from 'prosemirror-commands';
-import { EditorSchema } from "@editor/editor-schema";
+import { EditorSchema } from "@editor/schemas";
 import { trKeyHeading } from '@editor/trKeys';
 import { findParentNode } from "prosemirror-utils";
 import type { EditorInstance } from "@editor/typings";
+import { getUUID } from "@/utils";
+import { extend } from "underscore";
 
 type DisplayLevelEnumItem = { label: string, fs?: number, attrs?: { level: number } };
 const DisplayLevelEnum: Record<string, DisplayLevelEnumItem> = {
@@ -84,7 +86,7 @@ const toggleHeaderLevel = (it: DisplayLevelEnumItem) => {
     );
     displayLevel.value = 0;
   } else {
-    editorInstance?.toggleHeading(it.attrs!);
+    editorInstance?.toggleHeading(extend({ uuid: getUUID(6) }, it.attrs!));
     displayLevel.value = it.attrs!.level;
   }
 }

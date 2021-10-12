@@ -91,6 +91,7 @@ export interface DocContentElement {
 
 export interface DocHeading extends DocContentElement {
   attrs: {
+    uuid: string;
     level: number;
     [key: string]: any;
   };
@@ -98,6 +99,7 @@ export interface DocHeading extends DocContentElement {
 }
 
 export interface DocTableOfContentsUnit {
+  uuid: string;
   title: string;
   level: number;
   children: DocTableOfContentsUnit[];

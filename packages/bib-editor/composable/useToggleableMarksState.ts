@@ -9,6 +9,7 @@ import {
 import CodeMarkIcon from "@editor/icons/code-mark-icon.vue";
 import SuperScriptIcon from "@editor/icons/superscript-mark-icon.vue";
 import SubScriptIcon from "@editor/icons/subscript-mark-icon.vue";
+import { activeHighlightClassName } from "../constants";
 
 type MarkCompose = { mark: CanToggleMark; icon: any; isActive: Ref };
 const createMarkMenuItem = (mark: CanToggleMark, icon: any) => ({

@@ -1,6 +1,6 @@
 import { Plugin } from "prosemirror-state";
 import { history } from "prosemirror-history";
-import { EditorSchema } from "@editor/editor-schema";
+import { EditorSchema } from "@editor/schemas";
 import { buildInputRules, buildPasteRules } from "@editor/input-rules";
 import { addBibKeymap } from "@editor/helpers";
 import { keymap } from "prosemirror-keymap";

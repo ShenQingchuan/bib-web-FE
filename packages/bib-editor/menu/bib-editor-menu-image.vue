@@ -48,7 +48,7 @@ import {
 } from '@/utils';
 import { message } from 'ant-design-vue';
 import { trKeyInsertImage } from '@editor/trKeys';
-import { EditorSchema } from '@editor/editor-schema';
+import { EditorSchema } from '@editor/schemas';
 import type { EditorInstance, InsertImageType } from '@editor/typings';
 
 // @States:

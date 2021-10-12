@@ -36,13 +36,13 @@
           block
           @click="
             $router.push({
-              path: '/user-settings#profile'
+              path: '/user-settings#profile',
             })
           "
           >编辑资料</a-button
         >
         <a-button v-else class="m-b-20" block @click="onFollowUser">{{
-          focused ? '取消关注' : '关注'
+          focused ? "取消关注" : "关注"
         }}</a-button>
 
         <div class="w-p100 m-tb-6 text-left">
@@ -80,7 +80,7 @@
           :imageStyle="{
             width: '24px',
             height: '24px',
-            margin: '10px auto'
+            margin: '10px auto',
           }"
         />
         <div class="flex-row anis-center p-6">
@@ -230,7 +230,7 @@ const fetchUserActivity = async () => {
   }
   const UserActivitiesRes = await fusions.get(`/activity/?userName=${userName}&pageNum=${page.value}`);
   if (UserActivitiesRes.data.responseOk) {
-    activities.value.push(...UserActivitiesRes.data.data.activities);
+    activities.value.push(...UserActivitiesRes.data.data.items);
 
     if (page.value === 0) {
       pageTotal.value = UserActivitiesRes.data.data.pageTotal;
@@ -282,7 +282,7 @@ const onFollowUser = us.debounce(() => {
 }
 </style>
 <style lang="less" scoped>
-@import '@/less/color.less';
+@import "@/less/color.less";
 .page-user-info__wrapper {
   .user-avatar {
     width: 160px;

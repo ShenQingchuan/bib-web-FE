@@ -1,7 +1,7 @@
 import { ref } from "vue";
 import { Modal, Form, Input } from "ant-design-vue";
 import { Transaction } from "prosemirror-state";
-import { EditorSchema } from "@editor/editor-schema";
+import { EditorSchema } from "@editor/schemas";
 import { trKeyInsertImage } from "@editor/trKeys";
 
 export function insertOnlineImage(

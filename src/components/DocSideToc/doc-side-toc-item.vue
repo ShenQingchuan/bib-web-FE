@@ -2,14 +2,14 @@
   <div
     class="doc-side-toc__item"
     :style="{
-      paddingLeft: `${(item.level - 1) * 10}px`,
+      paddingLeft: `${(item.level - 1) * 10}px`
     }"
     :data-toc-index="index"
   >
     <div
       class="doc-side-toc__item-title p-tb-6 m-b-2 fs-12 p-lr-6 to-ellipsis"
       :class="{
-        active: !needScrolling && activeIndexKey === index,
+        active: !needScrolling && activeIndexKey === index
       }"
       @click.self="updateIndexKey(index)"
     >

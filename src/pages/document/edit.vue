@@ -13,7 +13,7 @@
     top="65px"
   />
 
-  <doc-side-toc :top="150" fixed />
+  <doc-side-toc class="page-doc-edit__bib-doc-toc" :top="150" fixed />
 
   <div class="page-doc-edit__bib-editor-wrapper">
     <input
@@ -35,13 +35,14 @@ import { usePayloadFromToken } from "@/utils";
 import { fusions } from '@/fusions';
 import { editingDocViewData, savedDocViewData } from './editing-doc-storage-ref';
 import { useEditor } from "@editor/composable/useEditor";
+import { message } from 'ant-design-vue';
+import { bibEditorHeadingSelector } from '@editor/constants';
 import DocViewHeader from '@/components/page-doc-view/doc-view-header.vue';
 import DocSideToc from '@/components/DocSideToc/doc-side-toc.vue';
 import BibEditorMenu from '@editor/menu/bib-editor-menu.vue';
 import us from 'underscore';
 import type { DocTableOfContentsUnit, EditorInstance } from '@editor/typings';
 import type { DocumentViewData } from '@/models';
-import { message } from 'ant-design-vue';
 
 const route = useRoute(), router = useRouter();
 const credential = usePayloadFromToken()!;
@@ -77,7 +78,7 @@ const initEditorViewRef = (el: any) => {
     tableOfContentsData.value = newVal;
     headingRefs.value = Array.from(
       el.querySelectorAll(
-        '.ProseMirror h1,h2,h3,h4,h5,h6'
+        bibEditorHeadingSelector
       ) as NodeListOf<HTMLHeadingElement>
     );
     nextTick(() => {
@@ -155,5 +156,11 @@ if (!us.isEmpty(editingDocViewData.value)) {
   outline: none;
   border: none;
   width: 100%;
+}
+
+@media screen and (max-width: 1300px) {
+  .page-doc-edit__bib-doc-toc {
+    display: none;
+  }
 }
 </style>

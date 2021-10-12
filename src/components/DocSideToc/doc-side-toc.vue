@@ -18,7 +18,8 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted, provide, inject, withDefaults, watch } from "vue";
+import { ref, onMounted, onUnmounted, provide, inject, withDefaults } from "vue";
+import { useRoute } from 'vue-router';
 import DocSideTocItem from './doc-side-toc-item.vue';
 import type { Ref } from 'vue';
 import type { DocTableOfContentsUnit } from '@editor/typings';

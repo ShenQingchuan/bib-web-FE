@@ -1,7 +1,13 @@
 import { getUUID } from "@/utils";
 import { Schema, Node, Mark } from "prosemirror-model";
 import { tableNodes } from "prosemirror-tables";
-import us from "underscore";
+
+import {
+  extendsTextBlockAttrs,
+  stylesOfTextBlock,
+  getTextBlockStyleAttrs
+} from "./common";
+import { getHeadingAttrs } from "./heading";
 
 const blockquoteDOM = ["blockquote", 0],
   brDOM = ["br"],
@@ -14,61 +20,6 @@ const blockquoteDOM = ["blockquote", 0],
   codeDOM = ["code", 0],
   olDOM = ["ol", 0];
 
-const extends_textBlockAttrs = (
-  others: Record<string, any> = {},
-  excludes?: string[]
-) => {
-  let textBlockAttrs: Record<string, any> = us.extend(
-    {
-      textAlign: { default: "" },
-      textIndent: { default: 0 }
-    },
-    others
-  );
-  if (excludes) {
-    textBlockAttrs = us.omit(textBlockAttrs, ...excludes);
-  }
-  return textBlockAttrs;
-};
-const stylesOfTextBlock = (node: Node, append?: (node: Node) => string) => {
-  let style = "";
-  if (node.attrs.textAlign) {
-    style += `text-align:${node.attrs.textAlign};`;
-  }
-  if (node.attrs.textIndent > 0) {
-    style += `padding-left:${node.attrs.textIndent}em;`;
-  }
-  // ... more styles
-
-  if (append) {
-    style = style + append(node);
-  }
-  return style;
-};
-const extendsTextBlockStyleAttrs = (
-  computeOther?: (_dom: HTMLElement) => Record<string, any>
-) => (dom: HTMLElement) => {
-  const textBlockStylesAttrs: Record<string, any> = {};
-
-  // 对其方向
-  if (dom.style.textAlign) {
-    textBlockStylesAttrs.textAlign = dom.style.textAlign;
-  }
-
-  // 缩进
-  if (dom.style.paddingLeft) {
-    if (dom.style.paddingLeft.endsWith("px")) {
-      const paddingNumber = Number(dom.style.paddingLeft.slice(0, -2));
-      textBlockStylesAttrs.textIndent = paddingNumber;
-    }
-  }
-
-  const otherAttrs = computeOther ? computeOther(dom) : {};
-  return {
-    ...otherAttrs,
-    ...textBlockStylesAttrs
-  };
-};
 const getCommentAttrs = (el: HTMLElement) => {
   const id = el.getAttribute("bib-comment-id");
   const content = el.getAttribute("bib-comment-content");
@@ -90,13 +41,13 @@ export const nodes: {
   // :: NodeSpec A plain paragraph textblock. Represented in the DOM
   // as a `<p>` element.
   paragraph: {
-    attrs: extends_textBlockAttrs(),
+    attrs: extendsTextBlockAttrs(),
     content: "inline*",
     group: "block",
     parseDOM: [
       {
         tag: "p",
-        getAttrs: extendsTextBlockStyleAttrs()
+        getAttrs: getTextBlockStyleAttrs()
       }
     ],
     toDOM(node: Node) {
@@ -129,39 +80,33 @@ export const nodes: {
   // should hold the number 1 to 6. Parsed and serialized as `<h1>` to
   // `<h6>` elements.
   heading: {
-    attrs: extends_textBlockAttrs({ level: { default: 1 } }),
+    attrs: extendsTextBlockAttrs({
+      level: { default: 1 },
+      uuid: { default: "" }
+      // 不在 Schema 中提供默认值，
+      // 否则会使所有的 heading 的 id 都是同一个，
+      // 在创建时显式生成 UUID
+    }),
     content: "inline*",
     group: "block",
     defining: true,
-    parseDOM: [
-      {
-        tag: "h1",
-        getAttrs: extendsTextBlockStyleAttrs(() => ({ level: 1 }))
-      },
-      {
-        tag: "h2",
-        getAttrs: extendsTextBlockStyleAttrs(() => ({ level: 2 }))
-      },
-      {
-        tag: "h3",
-        getAttrs: extendsTextBlockStyleAttrs(() => ({ level: 3 }))
-      },
-      {
-        tag: "h4",
-        getAttrs: extendsTextBlockStyleAttrs(() => ({ level: 4 }))
-      },
-      {
-        tag: "h5",
-        getAttrs: extendsTextBlockStyleAttrs(() => ({ level: 5 }))
-      },
-      {
-        tag: "h6",
-        getAttrs: extendsTextBlockStyleAttrs(() => ({ level: 6 }))
-      }
-    ],
+    parseDOM: Array(6).map((_, i) => ({
+      tag: `h${i + 1}`,
+      getAttrs: getHeadingAttrs
+    })),
     toDOM(node: Node) {
       const style = stylesOfTextBlock(node);
-      return ["h" + node.attrs.level, { style }, 0];
+      const { level, uuid } = node.attrs;
+      return [
+        "h" + (level ?? ""),
+        {
+          style,
+          id: uuid ?? getUUID(6)
+          // 若 Node 的 Attrs 没有 uuid，说明是没有生成过 id 的 heading
+          // 这里兜底在编辑文档时帮生成一个，保存之后重新加载时，ProseMirror 中通过 parseDOM 就能拿到 attrs.uuid 了
+        },
+        0
+      ];
     }
   },
 
@@ -288,13 +233,13 @@ export const nodes: {
     }
   },
   list_item: {
-    attrs: extends_textBlockAttrs(undefined, ["textIndent"]),
+    attrs: extendsTextBlockAttrs(undefined, ["textIndent"]),
     content: "paragraph block*",
     defining: true,
     parseDOM: [
       {
         tag: "li",
-        getAttrs: extendsTextBlockStyleAttrs()
+        getAttrs: getTextBlockStyleAttrs()
       }
     ],
     toDOM(node: Node) {
@@ -303,7 +248,7 @@ export const nodes: {
     }
   },
   task_item: {
-    attrs: extends_textBlockAttrs({ checked: { default: false } }, [
+    attrs: extendsTextBlockAttrs({ checked: { default: false } }, [
       "textIndent"
     ]),
     content: "paragraph block*",
@@ -312,7 +257,7 @@ export const nodes: {
       {
         tag: 'li[data-type="task-item"][data-checked]',
         priority: 51,
-        getAttrs: extendsTextBlockStyleAttrs(dom => {
+        getAttrs: getTextBlockStyleAttrs(dom => {
           return {
             checked: dom.getAttribute("data-checked") === "true"
           };

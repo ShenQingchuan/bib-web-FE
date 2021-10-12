@@ -4,8 +4,11 @@ import {
   DocTableOfContentsUnit
 } from "@editor/typings";
 import { Ref } from "vue";
+import {
+  activeHighlightClassName,
+  headingIdRouteHashRegExp
+} from "../constants";
 
-const activeHighlightClassName = "bib__active-highlight-heading";
 const decodeContentJSON = (content: string): DocContentElement => {
   return JSON.parse(content) as DocContentElement;
 };
@@ -39,6 +42,7 @@ export const useTableOfContents = (
   if (!headings.length) return [];
 
   const generateTocUnit = (h: DocHeading): DocTableOfContentsUnit => ({
+    uuid: h.attrs.uuid,
     title: _text(h),
     level: _level(h),
     children: []
@@ -71,6 +75,14 @@ export const useTableOfContents = (
 
   return toc;
 };
+
+export const toggleTocItemActiveStyle = (target: HTMLElement) => {
+  target.classList.add(activeHighlightClassName);
+  setTimeout(() => {
+    target.classList.remove(activeHighlightClassName);
+  }, 1000);
+};
+
 export const bindClickScrollHandler = (
   headingRefs: Ref<HTMLHeadingElement[]>,
   tocItemRefs: Ref<HTMLElement[]>
@@ -81,15 +93,35 @@ export const bindClickScrollHandler = (
   tocItemRefs.value.forEach((tocItem, i) => {
     tocItem.onclick = e => {
       const target = headingRefs.value[i];
+      let newAddressWithHash = "";
+      const newHash = `#${target.id}`;
+      if (headingIdRouteHashRegExp.test(window.location.href)) {
+        newAddressWithHash = window.location.href.replace(
+          headingIdRouteHashRegExp,
+          newHash
+        );
+      } else {
+        newAddressWithHash = window.location.href + newHash;
+      }
+      window.history.pushState({}, "", newAddressWithHash);
       window.scrollTo({
-        top: target.offsetTop - target.clientHeight,
-        behavior: "smooth"
+        top: target.offsetTop - target.clientHeight
       });
-      target.classList.add(activeHighlightClassName);
-      setTimeout(() => {
-        target.classList.remove(activeHighlightClassName);
-      }, 1000);
+      toggleTocItemActiveStyle(target);
       e.stopPropagation();
     };
   });
 };
+
+export function initLoadFromHash(headingRefs: Ref<HTMLHeadingElement[]>) {
+  if (window.location.hash !== "") {
+    const i = headingRefs.value.findIndex(
+      h => h.id === window.location.hash.slice(1)
+    );
+    const target = headingRefs.value[i];
+    window.scrollTo({
+      top: target.offsetTop - target.clientHeight
+    });
+    toggleTocItemActiveStyle(target);
+  }
+}

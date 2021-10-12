@@ -10,7 +10,7 @@ import {
   TextSelection,
   Transaction
 } from "prosemirror-state";
-import { EditorSchema } from "@editor/editor-schema";
+import { EditorSchema } from "@editor/schemas";
 import { keymap } from "prosemirror-keymap";
 import { omit } from "underscore";
 import CodeBlockLangSwitcher from "@editor/components/code-block-lang-switcher.vue";
